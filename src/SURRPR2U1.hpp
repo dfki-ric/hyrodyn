@@ -9,16 +9,15 @@
 #ifndef SURRPR2U1_H
 #define SURRPR2U1_H
 
-#include <Eigen/Dense>
-#include <iostream>
 #include <math.h>
+#include <rbdl/rbdl.h>
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
 
+#include <Eigen/Dense>
 #include <fstream>
-
-#include <rbdl/rbdl.h>
+#include <iostream>
 
 #ifndef RBDL_BUILD_ADDON_URDFREADER
 #error "Error: RBDL addon URDFReader not enabled."
@@ -82,8 +81,7 @@ namespace SURRPR2U1 {
  */
 
 class surrPr2u1 : public ExplicitLoopConstraints::ExplicitLoopConstraintSet {
-
-protected:
+ protected:
   // Physical parameters of the mechanism
 
   /// \brief Spanning tree joint position state at zero configuration
@@ -115,7 +113,7 @@ protected:
   /// sphere formed by US stud intersects the virtual circle (refer figure)
   double h1, h2;
 
-public:
+ public:
   // Constructor
   /** \brief Constructor of the surrPr2u1 mechanism class
    *
@@ -126,8 +124,8 @@ public:
   surrPr2u1(string file_path, std::vector<string> jointnames_spanningtree,
             std::vector<string> jointnames_independent);
 
-  surrPr2u1(Vector3d b1, Vector3d b2, Vector3d c1, Vector3d c2, Vector3d e1_ee,
-            Vector3d e2_ee, Vector3d k1_zero, Vector3d k2_zero);
+  surrPr2u1(Vector3d b1, Vector3d b2, Vector3d c1, Vector3d c2, Vector3d e1_ee, Vector3d e2_ee,
+            Vector3d k1_zero, Vector3d k2_zero);
 
   // Contains the symbolic code
   /** \brief Returns spanning tree state at position (q) level from independent
@@ -138,7 +136,7 @@ public:
    *
    * \param y vector of independent joint positions
    */
-  VectorXd calc_loopclosure_function(const Math::VectorNd &y);
+  VectorXd calc_loopclosure_function(const Math::VectorNd& y);
 
   /** \brief Returns the loop closure Jacobian (G) from independent joint
    * position (y)
@@ -148,7 +146,7 @@ public:
    *
    * \param y vector of independent joint positions
    */
-  MatrixXd calc_loopclosure_Jacobian(const Math::VectorNd &y);
+  MatrixXd calc_loopclosure_Jacobian(const Math::VectorNd& y);
 
   /** \brief Returns the loop closure Jacobian derivative (Gdot) from
    * independent joint position and velocity (y, yd)
@@ -159,8 +157,7 @@ public:
    * \param y vector of independent joint positions
    * \param ydot vector of independent joint velocities
    */
-  MatrixXd calc_loopclosure_Jacobiand(const Math::VectorNd &y,
-                                      const Math::VectorNd &ydot);
+  MatrixXd calc_loopclosure_Jacobiand(const Math::VectorNd& y, const Math::VectorNd& ydot);
 
   /** \brief Returns the loop closure bias acceleration (g) from independent
    * joint position and velocity (y, yd)
@@ -171,14 +168,12 @@ public:
    * \param y vector of independent joint positions
    * \param ydot vector of independent joint velocities
    */
-  VectorXd calc_loopclosure_g(const Math::VectorNd &y,
-                              const Math::VectorNd &ydot);
+  VectorXd calc_loopclosure_g(const Math::VectorNd& y, const Math::VectorNd& ydot);
 
   VectorXd calc_geometricmodel_inverse(const Math::VectorNd y);
 
-  VectorXd calc_geometricmodel_forward(const Math::VectorNd u,
-                                       unsigned int max_iterations = 20,
-                                       double step_tol = 1.0e-8); // numerical
+  VectorXd calc_geometricmodel_forward(const Math::VectorNd u, unsigned int max_iterations = 20,
+                                       double step_tol = 1.0e-8);  // numerical
 
   Matrix2d compute_kinematic_Jacobian(const Math::VectorNd y);
 
@@ -186,6 +181,6 @@ public:
   void print_physical_parameters();
 };
 
-} // end namespace SURRPR2U1
+}  // end namespace SURRPR2U1
 
-#endif // SURRPR2U1
+#endif  // SURRPR2U1

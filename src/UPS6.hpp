@@ -1,16 +1,15 @@
 #ifndef UPS6_H
 #define UPS6_H
 
-#include <Eigen/Dense>
-#include <iostream>
 #include <math.h>
+#include <rbdl/rbdl.h>
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
 
+#include <Eigen/Dense>
 #include <fstream>
-
-#include <rbdl/rbdl.h>
+#include <iostream>
 
 #ifndef RBDL_BUILD_ADDON_URDFREADER
 #error "Error: RBDL addon URDFReader not enabled."
@@ -31,7 +30,7 @@ namespace UPS6 {
  * schematic: \image html 6UPS_geometry.png
  */
 class uPs6 : public ExplicitLoopConstraints::ExplicitLoopConstraintSet {
-public:
+ public:
   /// \brief RBDL Model of the parallel mechanism of type 6-UPS
   Model m;
 
@@ -108,7 +107,7 @@ public:
    *
    * \param y vector of independent joint positions
    */
-  VectorXd calc_loopclosure_function(const Math::VectorNd &y);
+  VectorXd calc_loopclosure_function(const Math::VectorNd& y);
 
   /** \brief Returns the loop closure Jacobian (G) from independent joint
    * position (y)
@@ -118,7 +117,7 @@ public:
    *
    * \param y vector of independent joint positions
    */
-  MatrixXd calc_loopclosure_Jacobian(const Math::VectorNd &y);
+  MatrixXd calc_loopclosure_Jacobian(const Math::VectorNd& y);
 
   /** \brief Returns the loop closure Jacobian derivative (Gdot) from
    * independent joint position and velocity (y, yd)
@@ -129,8 +128,7 @@ public:
    * \param y vector of independent joint positions
    * \param ydot vector of independent joint velocities
    */
-  MatrixXd calc_loopclosure_Jacobiand(const Math::VectorNd &y,
-                                      const Math::VectorNd &ydot);
+  MatrixXd calc_loopclosure_Jacobiand(const Math::VectorNd& y, const Math::VectorNd& ydot);
 
   /** \brief Returns the loop closure bias acceleration (g) from independent
    * joint position and velocity (y, yd)
@@ -141,8 +139,7 @@ public:
    * \param y vector of independent joint positions
    * \param ydot vector of independent joint velocities
    */
-  VectorXd calc_loopclosure_g(const Math::VectorNd &y,
-                              const Math::VectorNd &ydot);
+  VectorXd calc_loopclosure_g(const Math::VectorNd& y, const Math::VectorNd& ydot);
 
   /** \brief Returns the loop closure Jacobian of 6-UPS leg from independent
    * joint position y, position vector of leg base joint in base frame b, vector
@@ -154,8 +151,7 @@ public:
    * \param e_ee position vector of endeffector joint of the leg in ee frame
    * \param RotMat_b rotation of base joint frame of the leg in base frame
    */
-  MatrixXd compute_loopclosure_Jacobian_UPS6(const Math::VectorNd y,
-                                             const Math::Vector3d b,
+  MatrixXd compute_loopclosure_Jacobian_UPS6(const Math::VectorNd y, const Math::Vector3d b,
                                              const Math::Vector3d e_ee,
                                              const Math::Matrix3d RotMat_b);
 
@@ -170,13 +166,11 @@ public:
    * \param e_ee position vector of endeffector joint of the leg in ee frame
    * \param RotMat_b rotation of base joint frame of the leg in base frame
    */
-  MatrixXd compute_loopclosure_Jacobiandot_UPS6(const Math::VectorNd y,
-                                                const Math::VectorNd ydot,
-                                                const Math::Vector3d b,
-                                                const Math::Vector3d e_ee,
+  MatrixXd compute_loopclosure_Jacobiandot_UPS6(const Math::VectorNd y, const Math::VectorNd ydot,
+                                                const Math::Vector3d b, const Math::Vector3d e_ee,
                                                 const Math::Matrix3d RotMat_b);
 };
 
-} // end namespace UPS6
+}  // end namespace UPS6
 
-#endif // UPS6
+#endif  // UPS6

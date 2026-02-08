@@ -10,13 +10,12 @@ void HyRoDyn_Utils::initFromYaml(string filepath) {
   } catch (std::exception e) {
     std::stringstream ss;
     ss << "Yaml parsing error: File " << filepath
-       << " either doesn't exist or is not a valid joint limits file"
-       << std::endl;
+       << " either doesn't exist or is not a valid joint limits file" << std::endl;
     throw std::invalid_argument(ss.str());
   }
 
-  const YAML::Node &names_node = doc["limits"]["names"];
-  const YAML::Node &elements_node = doc["limits"]["elements"];
+  const YAML::Node& names_node = doc["limits"]["names"];
+  const YAML::Node& elements_node = doc["limits"]["elements"];
 
   if (elements_node.size() != names_node.size()) {
     throw std::invalid_argument(
@@ -43,7 +42,7 @@ void HyRoDyn_Utils::initFromYaml(string filepath) {
   }
 }
 
-std::string SplitRobotName(const std::string &str) {
+std::string SplitRobotName(const std::string& str) {
   std::string file, path;
   //  std::cout << "Splitting: " << str << '\n';
   std::size_t found = str.find_last_of("/\\");
@@ -57,10 +56,8 @@ std::string SplitRobotName(const std::string &str) {
   return modelname;
 }
 
-HyRoDyn_Utils::HyRoDyn_Utils(string filepath_urdf,
-                             string filepath_submechanisms,
-                             string filepath_jointlimits,
-                             int num_steps_per_joint) {
+HyRoDyn_Utils::HyRoDyn_Utils(string filepath_urdf, string filepath_submechanisms,
+                             string filepath_jointlimits, int num_steps_per_joint) {
   robot_model = new RobotModel_HyRoDyn;
   num_steps = num_steps_per_joint;
 
@@ -77,11 +74,9 @@ HyRoDyn_Utils::HyRoDyn_Utils(string filepath_urdf,
   cout << "Input Joint Limits: " << endl;
   for (unsigned int i = 0; i < jointnames_input.size(); i++) {
     cout << "Joint Name: " << jointnames_input[i] << " Pos Min: " << pos_min(i)
-         << " Pos Max: " << pos_max(i) << " Resolution: " << pos_resolution[i]
-         << endl;
+         << " Pos Max: " << pos_max(i) << " Resolution: " << pos_resolution[i] << endl;
     if (pos_min(i) > pos_max(i)) {
-      cerr << "pos_min is greater than pos_max for joint name: "
-           << jointnames_input[i] << endl;
+      cerr << "pos_min is greater than pos_max for joint name: " << jointnames_input[i] << endl;
       abort();
     }
   }
@@ -98,8 +93,7 @@ HyRoDyn_Utils::HyRoDyn_Utils(string filepath_urdf,
   sorted_jointnames_active = robot_model->jointnames_active;
 
   std::sort(sorted_jointnames_input.begin(), sorted_jointnames_input.end());
-  std::sort(sorted_jointnames_independent.begin(),
-            sorted_jointnames_independent.end());
+  std::sort(sorted_jointnames_independent.begin(), sorted_jointnames_independent.end());
   std::sort(sorted_jointnames_active.begin(), sorted_jointnames_active.end());
 
   input_is_independent_joints =
@@ -108,8 +102,7 @@ HyRoDyn_Utils::HyRoDyn_Utils(string filepath_urdf,
   input_is_active_joints =
       std::equal(sorted_jointnames_input.begin(), sorted_jointnames_input.end(),
                  sorted_jointnames_active.begin());
-  cout << "input_is_independent_joints: " << input_is_independent_joints
-       << endl;
+  cout << "input_is_independent_joints: " << input_is_independent_joints << endl;
   cout << "input_is_active_joints: " << input_is_active_joints << endl;
 
   if (input_is_independent_joints == input_is_active_joints)
@@ -118,8 +111,8 @@ HyRoDyn_Utils::HyRoDyn_Utils(string filepath_urdf,
          << endl;
 
   // discretize_input_space();
-  discretized_input_matrix = discretize_input_space(
-      num_steps, num_input_joints, pos_min, pos_max, pos_resolution);
+  discretized_input_matrix =
+      discretize_input_space(num_steps, num_input_joints, pos_min, pos_max, pos_resolution);
   // discretized_input_vel_matrix = discretize_input_space(num_steps,
   // num_input_joints, vel_min, vel_max, vel_resolution);
   //	cout<<"Matrix input: "<<discretized_input_matrix<<endl;
@@ -127,13 +120,10 @@ HyRoDyn_Utils::HyRoDyn_Utils(string filepath_urdf,
 
 //
 //
-MatrixXd HyRoDyn_Utils::discretize_input_space(int num_steps,
-                                               int num_input_joints,
-                                               VectorXd min, VectorXd max,
-                                               VectorXd resolution) {
+MatrixXd HyRoDyn_Utils::discretize_input_space(int num_steps, int num_input_joints, VectorXd min,
+                                               VectorXd max, VectorXd resolution) {
   MatrixXd discretized_input_matrix;
-  discretized_input_matrix.setZero(pow(num_steps, num_input_joints),
-                                   num_input_joints);
+  discretized_input_matrix.setZero(pow(num_steps, num_input_joints), num_input_joints);
   std::vector<double> jv;
 
   for (uint k = 0; k < num_input_joints; k++) {
@@ -144,12 +134,11 @@ MatrixXd HyRoDyn_Utils::discretize_input_space(int num_steps,
 
   while (true) {
     // Compute discretized points in a matrix
-    for (uint k = 0; k < num_input_joints; k++)
-      discretized_input_matrix(i, k) = jv[k];
+    for (uint k = 0; k < num_input_joints; k++) discretized_input_matrix(i, k) = jv[k];
     i = i + 1;
 
     // Iterate and check for overflow
-    bool overflow = true; // Always inc first element
+    bool overflow = true;  // Always inc first element
     for (uint k = 0; k < num_input_joints; k++) {
       // if overflow
       if (overflow) {
@@ -177,8 +166,7 @@ MatrixXd HyRoDyn_Utils::discretize_input_space(int num_steps,
 void HyRoDyn_Utils::log_sysstate_q() {
   ofstream file("../results/" + robot_name + "_sysstate_q.csv");
 
-  for (std::size_t i = 0; i < robot_model->jointnames_spanningtree.size();
-       ++i) {
+  for (std::size_t i = 0; i < robot_model->jointnames_spanningtree.size(); ++i) {
     if (i != robot_model->jointnames_spanningtree.size() - 1)
       file << "q_" + robot_model->jointnames_spanningtree[i] << ",";
     else
@@ -203,15 +191,14 @@ void HyRoDyn_Utils::log_sysstate_q() {
       robot_model->u = discretized_input_matrix.row(i);
       robot_model->calculate_forward_system_state();
     }
-    for (std::size_t i = 0; i < robot_model->jointnames_spanningtree.size();
-         ++i) {
+    for (std::size_t i = 0; i < robot_model->jointnames_spanningtree.size(); ++i) {
       if (i != robot_model->jointnames_spanningtree.size() - 1)
         file << robot_model->Q[i] << ",";
       else
         file << robot_model->Q[i];
     }
-    file << "," << robot_model->inv_cond_loop_closure_independent_jointspace
-         << "," << robot_model->inv_cond_loop_closure_active_jointspace;
+    file << "," << robot_model->inv_cond_loop_closure_independent_jointspace << ","
+         << robot_model->inv_cond_loop_closure_active_jointspace;
     file << endl;
   }
 
@@ -276,16 +263,13 @@ void HyRoDyn_Utils::log_actuatorforces_Tau() {
   file << endl;
 
   for (uint i = 0; i < pow(num_steps, num_input_joints); i++) {
-
     if (input_is_independent_joints)
-      robot_model->y =
-          discretized_input_matrix.row(i); // y is the independent joint space
+      robot_model->y = discretized_input_matrix.row(i);  // y is the independent joint space
     else {
       // compute the full system state via the forward model
       robot_model->u = discretized_input_matrix.row(i);
-      robot_model
-          ->calculate_forward_system_state(); // this will implicitly update the
-                                              // independent joint space y
+      robot_model->calculate_forward_system_state();  // this will implicitly update the
+                                                      // independent joint space y
     }
 
     robot_model->calculate_inverse_dynamics();
@@ -318,8 +302,7 @@ void HyRoDyn_Utils::log_independentjointstate_y() {
     for (uint i = 0; i < pow(num_steps, num_input_joints); i++) {
       robot_model->u = discretized_input_matrix.row(i);
       robot_model->calculate_forward_system_state();
-      for (std::size_t i = 0; i < robot_model->jointnames_independent.size();
-           ++i) {
+      for (std::size_t i = 0; i < robot_model->jointnames_independent.size(); ++i) {
         if (i != robot_model->jointnames_independent.size() - 1)
           file << robot_model->y[i] << ",";
         else
@@ -329,8 +312,7 @@ void HyRoDyn_Utils::log_independentjointstate_y() {
     }
   } else {
     for (uint i = 0; i < pow(num_steps, num_input_joints); i++) {
-      for (std::size_t j = 0; j < robot_model->jointnames_independent.size();
-           ++j) {
+      for (std::size_t j = 0; j < robot_model->jointnames_independent.size(); ++j) {
         if (j != robot_model->jointnames_independent.size() - 1)
           file << discretized_input_matrix.row(i)(j) << ",";
         else
@@ -344,7 +326,7 @@ void HyRoDyn_Utils::log_independentjointstate_y() {
 }
 
 void HyRoDyn_Utils::log_forwardkinematics_x(string body_name) {
-  const char *dir_path = "../results/";
+  const char* dir_path = "../results/";
 
   is_directory_existing(dir_path);
   // ofstream file(dir_path + robot_name + "_forwardkinematics_x.csv");
@@ -373,26 +355,23 @@ void HyRoDyn_Utils::log_forwardkinematics_x(string body_name) {
   file << endl;
 
   for (uint i = 0; i < pow(num_steps, num_input_joints); i++) {
-
     if (input_is_independent_joints)
-      robot_model->y =
-          discretized_input_matrix.row(i); // y is the independent joint space
+      robot_model->y = discretized_input_matrix.row(i);  // y is the independent joint space
     else {
       // compute the full system state via the forward model
       robot_model->u = discretized_input_matrix.row(i);
-      robot_model
-          ->calculate_forward_system_state(); // this will implicitly update the
-                                              // independent joint space y
+      robot_model->calculate_forward_system_state();  // this will implicitly update the
+                                                      // independent joint space y
     }
 
     robot_model->calculate_forward_kinematics(body_name);
 
     if (num_input_joints < 6)
       robot_model->calculate_condition_number(
-          body_name, true); // condition number is computed for point jacobian
+          body_name, true);  // condition number is computed for point jacobian
     else
       robot_model->calculate_condition_number(
-          body_name); // condition number is computed for full jacobian
+          body_name);  // condition number is computed for full jacobian
     for (std::size_t i = 0; i < 7; ++i) {
       file << robot_model->pose[i] << ", ";
     }
@@ -404,7 +383,7 @@ void HyRoDyn_Utils::log_forwardkinematics_x(string body_name) {
   std::cout << "FK log saved!" << std::endl;
 }
 
-void HyRoDyn_Utils::is_directory_existing(const char *dir_path) {
+void HyRoDyn_Utils::is_directory_existing(const char* dir_path) {
   struct stat sb;
 
   // checking if the results directory exists
@@ -418,4 +397,4 @@ void HyRoDyn_Utils::is_directory_existing(const char *dir_path) {
   }
 }
 
-} // namespace HyRoDyn_Utils
+}  // namespace HyRoDyn_Utils

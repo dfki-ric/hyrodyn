@@ -1,12 +1,9 @@
 #include "SPRR2U1.hpp"
 
 namespace SPRR2U1 {
-void sPrr2u1::calc_permutationmatrix(
-    std::vector<string> jointnames_spanningtree,
-    std::vector<string> jointnames_active) {
-
-  permutation_matrix.setZero(jointnames_active.size(),
-                             jointnames_spanningtree.size());
+void sPrr2u1::calc_permutationmatrix(std::vector<string> jointnames_spanningtree,
+                                     std::vector<string> jointnames_active) {
+  permutation_matrix.setZero(jointnames_active.size(), jointnames_spanningtree.size());
 
   for (unsigned int i = 0; i < jointnames_active.size(); i++) {
     for (unsigned int j = 0; j < jointnames_spanningtree.size(); j++) {
@@ -29,13 +26,11 @@ double sPrr2u1::wrap2pi(double x) {
 // Constructor
 sPrr2u1::sPrr2u1(string file_path, std::vector<string> jointnames_spanningtree,
                  std::vector<string> jointnames_active) {
-
   // Model m;
 
-  const char *ext;
+  const char* ext;
   ext = strrchr(file_path.c_str(), '.');
-  if (!strcmp(ext, ".urdf") || !strcmp(ext, ".URDF") ||
-      !strcmp(ext, ".robot")) {
+  if (!strcmp(ext, ".urdf") || !strcmp(ext, ".URDF") || !strcmp(ext, ".robot")) {
     // cout<<"Input file is URDF"<<endl;
     if (!Addons::URDFReadFromFile(file_path.c_str(), &m, false)) {
       std::cerr << "Error loading model rh5_knee.urdf" << std::endl;
@@ -49,7 +44,7 @@ sPrr2u1::sPrr2u1(string file_path, std::vector<string> jointnames_spanningtree,
   //	cout<<"Model DoF overview:"<<Utils::GetModelDOFOverview(m)<<endl;
   //	cout<<"Model Hierarchy overview:"<<Utils::GetModelHierarchy(m)<<endl;
   //	cout<<"Named Body Origins
-  //overview:"<<Utils::GetNamedBodyOriginsOverview(m)<<endl;
+  // overview:"<<Utils::GetNamedBodyOriginsOverview(m)<<endl;
 
   VectorNd Q(VectorNd::Zero(m.dof_count));
   UpdateKinematicsCustom(m, &Q, NULL, NULL);
@@ -78,10 +73,8 @@ sPrr2u1::sPrr2u1(string file_path, std::vector<string> jointnames_spanningtree,
   s2y = s2(1);
   s2z = s2(2);
 
-  Vector3d k1 =
-      CalcBodyToBaseCoordinates(m, Q, 7., Vector3d(0., 0., 0.), false);
-  Vector3d k2 =
-      CalcBodyToBaseCoordinates(m, Q, 10., Vector3d(0., 0., 0.), false);
+  Vector3d k1 = CalcBodyToBaseCoordinates(m, Q, 7., Vector3d(0., 0., 0.), false);
+  Vector3d k2 = CalcBodyToBaseCoordinates(m, Q, 10., Vector3d(0., 0., 0.), false);
   //	cout<<"k1: "<<k1.transpose()<<endl;
   //	cout<<"k2: "<<k2.transpose()<<endl;
 
@@ -117,7 +110,7 @@ sPrr2u1::sPrr2u1(string file_path, std::vector<string> jointnames_spanningtree,
   Q_zero = calc_loopclosure_function(y);
 }
 
-VectorXd sPrr2u1::calc_loopclosure_function(const Math::VectorNd &y) {
+VectorXd sPrr2u1::calc_loopclosure_function(const Math::VectorNd& y) {
   // This function calculates the loop closure functions gamma
   // for the mechanism
   //
@@ -129,11 +122,11 @@ VectorXd sPrr2u1::calc_loopclosure_function(const Math::VectorNd &y) {
   Matrix3d RotMat_x, RotMat_y, RotMat;
 
   double roll, pitch;
-  roll = y(0);  // roll
-  pitch = y(1); // pitch
+  roll = y(0);   // roll
+  pitch = y(1);  // pitch
 
-  Q(0) = y(0); // roll
-  Q(1) = y(1); // pitch
+  Q(0) = y(0);  // roll
+  Q(1) = y(1);  // pitch
 
   RotMat_x << 1, 0, 0, 0, cos(roll), -sin(roll), 0, sin(roll), cos(roll);
 
@@ -157,10 +150,8 @@ VectorXd sPrr2u1::calc_loopclosure_function(const Math::VectorNd &y) {
   Vector3d delta1 = s1 - f1;
   Vector3d delta2 = s2 - f2;
 
-  double d1 =
-      sqrt(pow(i1.dot(delta1), 2) + pow((i1.cross(delta1)).norm() - r1, 2));
-  double d2 =
-      sqrt(pow(i2.dot(delta2), 2) + pow((i2.cross(delta2)).norm() - r2, 2));
+  double d1 = sqrt(pow(i1.dot(delta1), 2) + pow((i1.cross(delta1)).norm() - r1, 2));
+  double d2 = sqrt(pow(i2.dot(delta2), 2) + pow((i2.cross(delta2)).norm() - r2, 2));
   //	cout<<"d1: "<<d1<<endl;
   //	cout<<"d2: "<<d2<<endl;
 
@@ -245,21 +236,21 @@ VectorXd sPrr2u1::calc_loopclosure_function(const Math::VectorNd &y) {
   //	cout <<"roll universal_2 = "<<roll_s2<<"pitch_universal_2 =
   //"<<pitch_s2<<endl;
 
-  Q(2) = theta1; // theta 1
-  Q(3) = theta2; // theta 2
+  Q(2) = theta1;  // theta 1
+  Q(3) = theta2;  // theta 2
   Q(4) = roll_s1;
   Q(5) = pitch_s1;
-  Q(6) = d1; // actor 1 length
+  Q(6) = d1;  // actor 1 length
   Q(7) = roll_s2;
   Q(8) = pitch_s2;
-  Q(9) = d2; // actor 2 length
+  Q(9) = d2;  // actor 2 length
 
-  Q = Q - Q_zero; // wrt to zero position of assembly
-                  //	cout<<"Q vector: \n"<<Q.transpose()<<endl;
+  Q = Q - Q_zero;  // wrt to zero position of assembly
+                   //	cout<<"Q vector: \n"<<Q.transpose()<<endl;
   return Q;
 }
 
-MatrixXd sPrr2u1::calc_loopclosure_Jacobian(const Math::VectorNd &y) {
+MatrixXd sPrr2u1::calc_loopclosure_Jacobian(const Math::VectorNd& y) {
   // This function calculates the loop closure Jacobian G
   // for the mechanism
 
@@ -284,8 +275,7 @@ MatrixXd sPrr2u1::calc_loopclosure_Jacobian(const Math::VectorNd &y) {
   return G;
 }
 
-MatrixXd sPrr2u1::calc_loopclosure_Jacobiand(const Math::VectorNd &y,
-                                             const Math::VectorNd &ydot) {
+MatrixXd sPrr2u1::calc_loopclosure_Jacobiand(const Math::VectorNd& y, const Math::VectorNd& ydot) {
   // This function calculates the loop closure Jacobiand Gdot
   // for the mechanism
   //
@@ -302,10 +292,8 @@ MatrixXd sPrr2u1::calc_loopclosure_Jacobiand(const Math::VectorNd &y,
   G1dot.setZero(3, 2);
   G2dot.setZero(3, 2);
 
-  G1dot = compute_loopclosure_Jacobiandot_UP_leg(y, ydot, i1_ee, r1, f1_ee, s1,
-                                                 RotMat_s1);
-  G2dot = compute_loopclosure_Jacobiandot_UP_leg(y, ydot, i2_ee, r2, f2_ee, s2,
-                                                 RotMat_s2);
+  G1dot = compute_loopclosure_Jacobiandot_UP_leg(y, ydot, i1_ee, r1, f1_ee, s1, RotMat_s1);
+  G2dot = compute_loopclosure_Jacobiandot_UP_leg(y, ydot, i2_ee, r2, f2_ee, s2, RotMat_s2);
 
   Gdot.block(4, 0, 3, 2) = G1dot;
   Gdot.block(7, 0, 3, 2) = G2dot;
@@ -313,8 +301,7 @@ MatrixXd sPrr2u1::calc_loopclosure_Jacobiand(const Math::VectorNd &y,
   return Gdot;
 }
 
-VectorXd sPrr2u1::calc_loopclosure_g(const Math::VectorNd &y,
-                                     const Math::VectorNd &ydot) {
+VectorXd sPrr2u1::calc_loopclosure_g(const Math::VectorNd& y, const Math::VectorNd& ydot) {
   // This function calculates the loop closure bias acceleration g= Gdot*ydot
   // for the mechanism
   //
@@ -326,10 +313,8 @@ VectorXd sPrr2u1::calc_loopclosure_g(const Math::VectorNd &y,
   return calc_loopclosure_Jacobiand(y, ydot) * ydot;
 }
 
-VectorXd sPrr2u1::calc_geometricmodel_forward(const Math::VectorNd u,
-                                              unsigned int max_iterations,
+VectorXd sPrr2u1::calc_geometricmodel_forward(const Math::VectorNd u, unsigned int max_iterations,
                                               double step_tol) {
-
   VectorNd y(VectorNd::Zero(dof_active));
   VectorNd u_i(VectorNd::Zero(dof_active));
   VectorNd du(VectorNd::Zero(dof_active));
@@ -348,8 +333,8 @@ VectorXd sPrr2u1::calc_geometricmodel_forward(const Math::VectorNd u,
       break;
 
     J = sPrr2u1::compute_kinematic_Jacobian(y);
-    dy = J.inverse() * du; // It takes too much time to compute symbolic inverse
-                           // of the Jacobian matrix in MATLAB.
+    dy = J.inverse() * du;  // It takes too much time to compute symbolic inverse
+                            // of the Jacobian matrix in MATLAB.
     y = y + dy;
 
     i = i + 1;
@@ -367,7 +352,6 @@ VectorXd sPrr2u1::calc_geometricmodel_forward(const Math::VectorNd u,
 }
 
 VectorXd sPrr2u1::calc_geometricmodel_inverse(const Math::VectorNd y) {
-
   double roll, pitch;
   roll = y(0);
   pitch = y(1);
@@ -396,10 +380,8 @@ VectorXd sPrr2u1::calc_geometricmodel_inverse(const Math::VectorNd y) {
   Vector3d delta1 = s1 - f1;
   Vector3d delta2 = s2 - f2;
 
-  double d1 =
-      sqrt(pow(i1.dot(delta1), 2) + pow((i1.cross(delta1)).norm() - r1, 2));
-  double d2 =
-      sqrt(pow(i2.dot(delta2), 2) + pow((i2.cross(delta2)).norm() - r2, 2));
+  double d1 = sqrt(pow(i1.dot(delta1), 2) + pow((i1.cross(delta1)).norm() - r1, 2));
+  double d2 = sqrt(pow(i2.dot(delta2), 2) + pow((i2.cross(delta2)).norm() - r2, 2));
   //	cout<<"d1: "<<d1<<endl;
   //	cout<<"d2: "<<d2<<endl;
 
@@ -411,7 +393,6 @@ VectorXd sPrr2u1::calc_geometricmodel_inverse(const Math::VectorNd y) {
 }
 
 Matrix2d sPrr2u1::compute_kinematic_Jacobian(const Math::VectorNd y) {
-
   Matrix2d J = Matrix2d::Zero();
 
   double roll = y(0);
@@ -474,9 +455,8 @@ Matrix2d sPrr2u1::compute_kinematic_Jacobian(const Math::VectorNd y) {
   double t63 = f1z * s1x * t2 * t29 * 2.0;
   double t64 = f1y * s1z * t4 * t19 * 2.0;
   double t65 = f1z * s1z * t3 * t5 * 2.0;
-  double t52 = t33 + t34 + t35 + t36 + t37 + t38 + t39 + t40 + t41 + t42 + t43 +
-               t44 + t50 + t51 - t59 - t60 - t61 - t62 - t63 - t64 - t65 -
-               s1x * s1y * t2 * t4 * t5 * 2.0;
+  double t52 = t33 + t34 + t35 + t36 + t37 + t38 + t39 + t40 + t41 + t42 + t43 + t44 + t50 + t51 -
+               t59 - t60 - t61 - t62 - t63 - t64 - t65 - s1x * s1y * t2 * t4 * t5 * 2.0;
   double t53 = sqrt(t52);
   double t54 = t25 * t31;
   double t55 = f1x * f1x;
@@ -533,9 +513,9 @@ Matrix2d sPrr2u1::compute_kinematic_Jacobian(const Math::VectorNd y) {
   double t119 = f2z * s2x * t2 * t29 * 2.0;
   double t120 = f2y * s2z * t4 * t19 * 2.0;
   double t121 = f2z * s2z * t3 * t5 * 2.0;
-  double t109 = t90 + t91 + t92 + t93 + t94 + t95 + t96 + t97 + t98 + t99 +
-                t100 + t101 + t107 + t108 - t115 - t116 - t117 - t118 - t119 -
-                t120 - t121 - s2x * s2y * t2 * t4 * t5 * 2.0;
+  double t109 = t90 + t91 + t92 + t93 + t94 + t95 + t96 + t97 + t98 + t99 + t100 + t101 + t107 +
+                t108 - t115 - t116 - t117 - t118 - t119 - t120 - t121 -
+                s2x * s2y * t2 * t4 * t5 * 2.0;
   double t110 = sqrt(t109);
   double t111 = t25 * t88;
   double t112 = f2x * f2x;
@@ -543,28 +523,25 @@ Matrix2d sPrr2u1::compute_kinematic_Jacobian(const Math::VectorNd y) {
   double t114 = t19 * t29 * t87;
   double t122 = f2x * s2z * t2 * t3 * 2.0;
 
-  J(0, 0) = (t46 * (s1y * t2 * t3 + s1z * t2 * t4) * 2.0 +
-             t48 * t49 *
-                 (t7 * (t9 + t11 - t12) * 2.0 + t6 * (-t15 + t16 + t17) * 2.0 -
-                  t8 * t19 * (s1y * t4 - s1z * t3) * 2.0)) *
-            1.0 /
-            sqrt(t33 + t34 + t35 + t36 + t37 + t38 + t39 + t40 + t41 + t42 +
-                 t43 + t44 + t54 + t55 + t56 + t57 + t58 + t66 - r * t53 * 2.0 -
-                 f1x * s1x * t5 * 2.0 - f1x * s1y * t2 * t4 * 2.0 -
-                 f1y * s1y * t3 * t19 * 2.0 - f1y * s1y * t3 * t25 * 2.0 -
-                 f1z * s1x * t2 * t28 * 2.0 - f1z * s1x * t2 * t29 * 2.0 -
-                 f1y * s1z * t4 * t19 * 2.0 - f1y * s1z * t4 * t25 * 2.0 -
-                 f1z * s1z * t3 * t5 * 2.0) *
-            (-1.0 / 2.0);
+  J(0, 0) =
+      (t46 * (s1y * t2 * t3 + s1z * t2 * t4) * 2.0 +
+       t48 * t49 *
+           (t7 * (t9 + t11 - t12) * 2.0 + t6 * (-t15 + t16 + t17) * 2.0 -
+            t8 * t19 * (s1y * t4 - s1z * t3) * 2.0)) *
+      1.0 /
+      sqrt(t33 + t34 + t35 + t36 + t37 + t38 + t39 + t40 + t41 + t42 + t43 + t44 + t54 + t55 + t56 +
+           t57 + t58 + t66 - r * t53 * 2.0 - f1x * s1x * t5 * 2.0 - f1x * s1y * t2 * t4 * 2.0 -
+           f1y * s1y * t3 * t19 * 2.0 - f1y * s1y * t3 * t25 * 2.0 - f1z * s1x * t2 * t28 * 2.0 -
+           f1z * s1x * t2 * t29 * 2.0 - f1y * s1z * t4 * t19 * 2.0 - f1y * s1z * t4 * t25 * 2.0 -
+           f1z * s1z * t3 * t5 * 2.0) *
+      (-1.0 / 2.0);
   J(0, 1) = (t46 * (s1x * t2 - s1y * t4 * t5 + s1z * t3 * t5) * 2.0 +
              t48 * t49 *
                  (t7 * (s1y * t2 - f1y * t2 * t3 + s1x * t4 * t5) * 2.0 +
-                  t6 * (-s1z * t2 + f1y * t2 * t4 + s1x * t3 * t5) * 2.0 -
-                  t2 * t5 * t22 * 2.0)) *
+                  t6 * (-s1z * t2 + f1y * t2 * t4 + s1x * t3 * t5) * 2.0 - t2 * t5 * t22 * 2.0)) *
             1.0 /
-            sqrt(t33 + t34 + t35 + t36 + t37 + t38 + t39 + t40 + t41 + t42 +
-                 t43 + t44 + t54 + t55 + t56 + t57 + t58 - t59 - t60 - t61 -
-                 t62 - t63 - t64 - t65 + t66 - r * t53 * 2.0 -
+            sqrt(t33 + t34 + t35 + t36 + t37 + t38 + t39 + t40 + t41 + t42 + t43 + t44 + t54 + t55 +
+                 t56 + t57 + t58 - t59 - t60 - t61 - t62 - t63 - t64 - t65 + t66 - r * t53 * 2.0 -
                  f1x * s1x * t5 * 2.0 - f1x * s1y * t2 * t4 * 2.0) *
             (1.0 / 2.0);
   J(1, 0) =
@@ -573,31 +550,26 @@ Matrix2d sPrr2u1::compute_kinematic_Jacobian(const Math::VectorNd y) {
            (t68 * (t70 + t72 - t73) * 2.0 + t67 * (-t76 + t77 + t78) * 2.0 -
             t19 * t69 * (s2y * t4 - s2z * t3) * 2.0)) *
       1.0 /
-      sqrt(t56 + t90 + t91 + t92 + t93 + t94 + t95 + t96 + t97 + t98 + t99 +
-           t100 + t101 + t111 + t112 + t113 + t114 + t122 - r * t110 * 2.0 -
-           f2x * s2x * t5 * 2.0 - f2x * s2y * t2 * t4 * 2.0 -
-           f2y * s2y * t3 * t19 * 2.0 - f2y * s2y * t3 * t25 * 2.0 -
-           f2z * s2x * t2 * t28 * 2.0 - f2z * s2x * t2 * t29 * 2.0 -
-           f2y * s2z * t4 * t19 * 2.0 - f2y * s2z * t4 * t25 * 2.0 -
-           f2z * s2z * t3 * t5 * 2.0) *
+      sqrt(t56 + t90 + t91 + t92 + t93 + t94 + t95 + t96 + t97 + t98 + t99 + t100 + t101 + t111 +
+           t112 + t113 + t114 + t122 - r * t110 * 2.0 - f2x * s2x * t5 * 2.0 -
+           f2x * s2y * t2 * t4 * 2.0 - f2y * s2y * t3 * t19 * 2.0 - f2y * s2y * t3 * t25 * 2.0 -
+           f2z * s2x * t2 * t28 * 2.0 - f2z * s2x * t2 * t29 * 2.0 - f2y * s2z * t4 * t19 * 2.0 -
+           f2y * s2z * t4 * t25 * 2.0 - f2z * s2z * t3 * t5 * 2.0) *
       (-1.0 / 2.0);
   J(1, 1) = (t103 * (s2x * t2 - s2y * t4 * t5 + s2z * t3 * t5) * 2.0 +
              t105 * t106 *
                  (t68 * (s2y * t2 - f2y * t2 * t3 + s2x * t4 * t5) * 2.0 +
-                  t67 * (-s2z * t2 + f2y * t2 * t4 + s2x * t3 * t5) * 2.0 -
-                  t2 * t5 * t82 * 2.0)) *
+                  t67 * (-s2z * t2 + f2y * t2 * t4 + s2x * t3 * t5) * 2.0 - t2 * t5 * t82 * 2.0)) *
             1.0 /
-            sqrt(t56 + t90 + t91 + t92 + t93 + t94 + t95 + t96 + t97 + t98 +
-                 t99 + t100 + t101 + t111 + t112 + t113 + t114 - t115 - t116 -
-                 t117 - t118 - t119 - t120 - t121 + t122 - r * t110 * 2.0 -
-                 f2x * s2x * t5 * 2.0 - f2x * s2y * t2 * t4 * 2.0) *
+            sqrt(t56 + t90 + t91 + t92 + t93 + t94 + t95 + t96 + t97 + t98 + t99 + t100 + t101 +
+                 t111 + t112 + t113 + t114 - t115 - t116 - t117 - t118 - t119 - t120 - t121 + t122 -
+                 r * t110 * 2.0 - f2x * s2x * t5 * 2.0 - f2x * s2y * t2 * t4 * 2.0) *
             (1.0 / 2.0);
 
   return J;
 }
 
-Matrix2d sPrr2u1::compute_kinematic_Jacobiandot(const Math::VectorNd y,
-                                                const Math::VectorNd yd) {
+Matrix2d sPrr2u1::compute_kinematic_Jacobiandot(const Math::VectorNd y, const Math::VectorNd yd) {
   Matrix2d Jdot = Matrix2d::Zero();
 
   double roll = y(0);
@@ -668,8 +640,8 @@ Matrix2d sPrr2u1::compute_kinematic_Jacobiandot(const Math::VectorNd y,
   double t64 = f1y * s1z * t3 * t4 * 2.0;
   double t65 = f1y * f1z * t2 * t4 * t15 * 2.0;
   double t66 = f1y * f1z * t2 * t4 * t16 * 2.0;
-  double t54 = t26 + t27 + t28 + t31 + t32 + t33 + t34 + t35 + t36 + t37 + t38 +
-               t39 + t40 + t53 - t59 - t60 - t61 - t62 - t63 - t64 - t65 - t66;
+  double t54 = t26 + t27 + t28 + t31 + t32 + t33 + t34 + t35 + t36 + t37 + t38 + t39 + t40 + t53 -
+               t59 - t60 - t61 - t62 - t63 - t64 - t65 - t66;
   double t55 = sqrt(t54);
   double t56 = f1x * f1x;
   double t57 = r * r;
@@ -686,9 +658,8 @@ Matrix2d sPrr2u1::compute_kinematic_Jacobiandot(const Math::VectorNd y,
   double t76 = t74 + t75 - t79;
   double t95 = r * t55 * 2.0;
   double t96 = f1x * s1x * t3 * 2.0;
-  double t77 = t26 + t27 + t28 + t31 + t32 + t33 + t34 + t35 + t36 + t37 + t38 +
-               t39 + t40 + t51 + t52 + t56 + t57 + t58 - t59 - t60 - t61 - t62 -
-               t63 - t64 - t65 - t66 - t95 - t96;
+  double t77 = t26 + t27 + t28 + t31 + t32 + t33 + t34 + t35 + t36 + t37 + t38 + t39 + t40 + t51 +
+               t52 + t56 + t57 + t58 - t59 - t60 - t61 - t62 - t63 - t64 - t65 - t66 - t95 - t96;
   double t78 = 1.0 / sqrt(t77);
   double t80 = 1.0 / sqrt(t44);
   double t81 = roll_dot * t2 * t4 * t29 * 2.0;
@@ -727,11 +698,9 @@ Matrix2d sPrr2u1::compute_kinematic_Jacobiandot(const Math::VectorNd y,
   double t119 = f1y * roll_dot * s1x * t2 * t5 * 2.0;
   double t120 = roll_dot * t2 * t4 * t15 * t29 * 2.0;
   double t121 = roll_dot * t2 * t4 * t16 * t29 * 2.0;
-  double t109 = t81 + t82 + t83 + t84 + t85 + t86 + t87 + t88 + t89 + t90 +
-                t91 + t92 + t93 + t94 + t107 + t108 - t110 - t113 - t114 -
-                t115 - t116 - t117 - t118 - t119 - t120 - t121 -
-                pitch_dot * s1x * s1z * t16 * 2.0 -
-                pitch_dot * t3 * t5 * t23 * 2.0;
+  double t109 = t81 + t82 + t83 + t84 + t85 + t86 + t87 + t88 + t89 + t90 + t91 + t92 + t93 + t94 +
+                t107 + t108 - t110 - t113 - t114 - t115 - t116 - t117 - t118 - t119 - t120 - t121 -
+                pitch_dot * s1x * s1z * t16 * 2.0 - pitch_dot * t3 * t5 * t23 * 2.0;
   double t111 = f1x * pitch_dot * s1z * t3 * 2.0;
   double t112 = f1x * pitch_dot * s1x * t5 * 2.0;
   double t122 = 1.0 / pow(t77, 3.0 / 2.0);
@@ -788,9 +757,8 @@ Matrix2d sPrr2u1::compute_kinematic_Jacobiandot(const Math::VectorNd y,
   double t176 = f2y * s2z * t3 * t4 * 2.0;
   double t177 = f2y * f2z * t2 * t4 * t15 * 2.0;
   double t178 = f2y * f2z * t2 * t4 * t16 * 2.0;
-  double t167 = t140 + t141 + t142 + t144 + t145 + t146 + t147 + t148 + t149 +
-                t150 + t151 + t152 + t153 + t166 - t171 - t172 - t173 - t174 -
-                t175 - t176 - t177 - t178;
+  double t167 = t140 + t141 + t142 + t144 + t145 + t146 + t147 + t148 + t149 + t150 + t151 + t152 +
+                t153 + t166 - t171 - t172 - t173 - t174 - t175 - t176 - t177 - t178;
   double t168 = sqrt(t167);
   double t169 = f2x * f2x;
   double t170 = f2x * s2z * t5 * 2.0;
@@ -806,10 +774,9 @@ Matrix2d sPrr2u1::compute_kinematic_Jacobiandot(const Math::VectorNd y,
   double t188 = t186 + t187 - t191;
   double t207 = r * t168 * 2.0;
   double t208 = f2x * s2x * t3 * 2.0;
-  double t189 = t57 + t140 + t141 + t142 + t144 + t145 + t146 + t147 + t148 +
-                t149 + t150 + t151 + t152 + t153 + t164 + t165 + t169 + t170 -
-                t171 - t172 - t173 - t174 - t175 - t176 - t177 - t178 - t207 -
-                t208;
+  double t189 = t57 + t140 + t141 + t142 + t144 + t145 + t146 + t147 + t148 + t149 + t150 + t151 +
+                t152 + t153 + t164 + t165 + t169 + t170 - t171 - t172 - t173 - t174 - t175 - t176 -
+                t177 - t178 - t207 - t208;
   double t190 = 1.0 / sqrt(t189);
   double t192 = 1.0 / sqrt(t157);
   double t193 = roll_dot * t2 * t4 * t143 * 2.0;
@@ -848,111 +815,90 @@ Matrix2d sPrr2u1::compute_kinematic_Jacobiandot(const Math::VectorNd y,
   double t231 = f2y * roll_dot * s2x * t2 * t5 * 2.0;
   double t232 = roll_dot * t2 * t4 * t15 * t143 * 2.0;
   double t233 = roll_dot * t2 * t4 * t16 * t143 * 2.0;
-  double t221 = t193 + t194 + t195 + t196 + t197 + t198 + t199 + t200 + t201 +
-                t202 + t203 + t204 + t205 + t206 + t219 + t220 - t222 - t225 -
-                t226 - t227 - t228 - t229 - t230 - t231 - t232 - t233 -
-                pitch_dot * s2x * s2z * t16 * 2.0 -
-                pitch_dot * t3 * t5 * t138 * 2.0;
+  double t221 = t193 + t194 + t195 + t196 + t197 + t198 + t199 + t200 + t201 + t202 + t203 + t204 +
+                t205 + t206 + t219 + t220 - t222 - t225 - t226 - t227 - t228 - t229 - t230 - t231 -
+                t232 - t233 - pitch_dot * s2x * s2z * t16 * 2.0 - pitch_dot * t3 * t5 * t138 * 2.0;
   double t223 = f2x * pitch_dot * s2z * t3 * 2.0;
   double t224 = f2x * pitch_dot * s2x * t5 * 2.0;
   double t234 = 1.0 / pow(t189, 3.0 / 2.0);
 
   Jdot(0, 0) =
       (t73 * t76 * t98 * 1.0 /
-       sqrt(t26 + t27 + t28 + t31 + t32 + t33 + t34 + t35 + t36 + t37 + t38 +
-            t39 + t40 + t51 + t52 + t56 + t57 + t58 - r * t55 * 2.0 -
-            f1x * s1x * t3 * 2.0 - f1y * s1x * t4 * t5 * 2.0 -
-            f1z * s1x * t2 * t5 * 2.0 - f1y * s1y * t2 * t15 * 2.0 -
-            f1y * s1y * t2 * t16 * 2.0 - f1y * s1z * t3 * t4 * 2.0 -
-            f1z * s1z * t2 * t3 * 2.0 - f1y * f1z * t2 * t4 * t15 * 2.0 -
-            f1y * f1z * t2 * t4 * t16 * 2.0)) /
+       sqrt(t26 + t27 + t28 + t31 + t32 + t33 + t34 + t35 + t36 + t37 + t38 + t39 + t40 + t51 +
+            t52 + t56 + t57 + t58 - r * t55 * 2.0 - f1x * s1x * t3 * 2.0 -
+            f1y * s1x * t4 * t5 * 2.0 - f1z * s1x * t2 * t5 * 2.0 - f1y * s1y * t2 * t15 * 2.0 -
+            f1y * s1y * t2 * t16 * 2.0 - f1y * s1z * t3 * t4 * 2.0 - f1z * s1z * t2 * t3 * 2.0 -
+            f1y * f1z * t2 * t4 * t15 * 2.0 - f1y * f1z * t2 * t4 * t16 * 2.0)) /
           4.0 -
       (t68 * t78 * t80 *
-       (t8 * t14 * -2.0 - t47 * t48 * 2.0 + t8 * t15 * t17 * 2.0 +
-        t8 * t16 * t17 * 2.0 + t10 * t15 * t50 * 2.0 + t10 * t16 * t50 * 2.0)) /
+       (t8 * t14 * -2.0 - t47 * t48 * 2.0 + t8 * t15 * t17 * 2.0 + t8 * t16 * t17 * 2.0 +
+        t10 * t15 * t50 * 2.0 + t10 * t16 * t50 * 2.0)) /
           2.0 +
       (t68 * t76 * t80 * t122 *
-       (t81 + t82 + t83 + t84 + t85 + t86 + t87 + t88 + t89 + t90 + t91 + t92 +
-        t93 + t94 + t111 + t112 - r * t106 * t109 -
-        f1y * f1z * roll_dot * t30 * 2.0 - roll_dot * t2 * t4 * t24 * 2.0 -
-        f1y * f1z * roll_dot * t15 * t25 * 2.0 -
-        f1y * f1z * roll_dot * t16 * t25 * 2.0 -
-        f1y * pitch_dot * s1x * t3 * t4 * 2.0 -
-        f1z * pitch_dot * s1x * t2 * t3 * 2.0 -
-        f1y * roll_dot * s1x * t2 * t5 * 2.0 -
-        f1y * roll_dot * s1z * t2 * t3 * 2.0 -
-        roll_dot * t2 * t4 * t15 * t29 * 2.0 -
-        roll_dot * t2 * t4 * t16 * t29 * 2.0)) /
+       (t81 + t82 + t83 + t84 + t85 + t86 + t87 + t88 + t89 + t90 + t91 + t92 + t93 + t94 + t111 +
+        t112 - r * t106 * t109 - f1y * f1z * roll_dot * t30 * 2.0 - roll_dot * t2 * t4 * t24 * 2.0 -
+        f1y * f1z * roll_dot * t15 * t25 * 2.0 - f1y * f1z * roll_dot * t16 * t25 * 2.0 -
+        f1y * pitch_dot * s1x * t3 * t4 * 2.0 - f1z * pitch_dot * s1x * t2 * t3 * 2.0 -
+        f1y * roll_dot * s1x * t2 * t5 * 2.0 - f1y * roll_dot * s1z * t2 * t3 * 2.0 -
+        roll_dot * t2 * t4 * t15 * t29 * 2.0 - roll_dot * t2 * t4 * t16 * t29 * 2.0)) /
           4.0 +
       (t68 * t73 * t76 * t78 * t104) / 4.0;
-  Jdot(0, 1) =
-      (t78 *
-       (t102 * t105 * 2.0 - (t46 - t69) * (f1x + t97 - s1x * t3) * 2.0 -
-        t14 * t68 * t80 * t102 * 2.0 + t14 * t73 * t98 * t99 -
-        t47 * t68 * t80 * t99 * 2.0 + t14 * t68 * t73 * t104 * (t97 - t103))) /
-          2.0 -
-      (t122 * (t105 * (f1x + t97 - t103) * 2.0 - t14 * t68 * t80 * t99 * 2.0) *
-       (t81 + t82 + t83 + t84 + t85 + t86 + t87 + t88 + t89 + t90 + t91 + t92 +
-        t93 + t94 - t110 + t111 + t112 - t113 - t114 - t115 - t116 - t117 -
-        t118 - t119 - t120 - t121 - r * t106 * t109)) /
-          4.0;
+  Jdot(0, 1) = (t78 * (t102 * t105 * 2.0 - (t46 - t69) * (f1x + t97 - s1x * t3) * 2.0 -
+                       t14 * t68 * t80 * t102 * 2.0 + t14 * t73 * t98 * t99 -
+                       t47 * t68 * t80 * t99 * 2.0 + t14 * t68 * t73 * t104 * (t97 - t103))) /
+                   2.0 -
+               (t122 * (t105 * (f1x + t97 - t103) * 2.0 - t14 * t68 * t80 * t99 * 2.0) *
+                (t81 + t82 + t83 + t84 + t85 + t86 + t87 + t88 + t89 + t90 + t91 + t92 + t93 + t94 -
+                 t110 + t111 + t112 - t113 - t114 - t115 - t116 - t117 - t118 - t119 - t120 - t121 -
+                 r * t106 * t109)) /
+                   4.0;
   Jdot(1, 0) =
       (t185 * t188 * t210 * 1.0 /
-       sqrt(t57 + t140 + t141 + t142 + t144 + t145 + t146 + t147 + t148 + t149 +
-            t150 + t151 + t152 + t153 + t164 + t165 + t169 + t170 -
-            r * t168 * 2.0 - f2x * s2x * t3 * 2.0 - f2y * s2x * t4 * t5 * 2.0 -
-            f2z * s2x * t2 * t5 * 2.0 - f2y * s2y * t2 * t15 * 2.0 -
-            f2y * s2y * t2 * t16 * 2.0 - f2y * s2z * t3 * t4 * 2.0 -
-            f2z * s2z * t2 * t3 * 2.0 - f2y * f2z * t2 * t4 * t15 * 2.0 -
-            f2y * f2z * t2 * t4 * t16 * 2.0)) /
+       sqrt(t57 + t140 + t141 + t142 + t144 + t145 + t146 + t147 + t148 + t149 + t150 + t151 +
+            t152 + t153 + t164 + t165 + t169 + t170 - r * t168 * 2.0 - f2x * s2x * t3 * 2.0 -
+            f2y * s2x * t4 * t5 * 2.0 - f2z * s2x * t2 * t5 * 2.0 - f2y * s2y * t2 * t15 * 2.0 -
+            f2y * s2y * t2 * t16 * 2.0 - f2y * s2z * t3 * t4 * 2.0 - f2z * s2z * t2 * t3 * 2.0 -
+            f2y * f2z * t2 * t4 * t15 * 2.0 - f2y * f2z * t2 * t4 * t16 * 2.0)) /
           4.0 -
       (t180 * t190 * t192 *
-       (t125 * t131 * -2.0 - t160 * t161 * 2.0 + t15 * t125 * t132 * 2.0 +
-        t16 * t125 * t132 * 2.0 + t15 * t127 * t163 * 2.0 +
-        t16 * t127 * t163 * 2.0)) /
+       (t125 * t131 * -2.0 - t160 * t161 * 2.0 + t15 * t125 * t132 * 2.0 + t16 * t125 * t132 * 2.0 +
+        t15 * t127 * t163 * 2.0 + t16 * t127 * t163 * 2.0)) /
           2.0 +
       (t180 * t188 * t192 * t234 *
-       (t193 + t194 + t195 + t196 + t197 + t198 + t199 + t200 + t201 + t202 +
-        t203 + t204 + t205 + t206 + t223 + t224 - r * t218 * t221 -
-        f2y * f2z * roll_dot * t30 * 2.0 - roll_dot * t2 * t4 * t139 * 2.0 -
-        f2y * f2z * roll_dot * t15 * t25 * 2.0 -
-        f2y * f2z * roll_dot * t16 * t25 * 2.0 -
-        f2y * pitch_dot * s2x * t3 * t4 * 2.0 -
-        f2z * pitch_dot * s2x * t2 * t3 * 2.0 -
-        f2y * roll_dot * s2x * t2 * t5 * 2.0 -
-        f2y * roll_dot * s2z * t2 * t3 * 2.0 -
-        roll_dot * t2 * t4 * t15 * t143 * 2.0 -
+       (t193 + t194 + t195 + t196 + t197 + t198 + t199 + t200 + t201 + t202 + t203 + t204 + t205 +
+        t206 + t223 + t224 - r * t218 * t221 - f2y * f2z * roll_dot * t30 * 2.0 -
+        roll_dot * t2 * t4 * t139 * 2.0 - f2y * f2z * roll_dot * t15 * t25 * 2.0 -
+        f2y * f2z * roll_dot * t16 * t25 * 2.0 - f2y * pitch_dot * s2x * t3 * t4 * 2.0 -
+        f2z * pitch_dot * s2x * t2 * t3 * 2.0 - f2y * roll_dot * s2x * t2 * t5 * 2.0 -
+        f2y * roll_dot * s2z * t2 * t3 * 2.0 - roll_dot * t2 * t4 * t15 * t143 * 2.0 -
         roll_dot * t2 * t4 * t16 * t143 * 2.0)) /
           4.0 +
       (t180 * t185 * t188 * t190 * t216) / 4.0;
   Jdot(1, 1) =
-      (t190 *
-       (t214 * t217 * 2.0 - (t159 - t181) * (f2x + t209 - s2x * t3) * 2.0 -
-        t131 * t180 * t192 * t214 * 2.0 + t131 * t185 * t210 * t211 -
-        t160 * t180 * t192 * t211 * 2.0 +
-        t131 * t180 * t185 * t216 * (t209 - t215))) /
+      (t190 * (t214 * t217 * 2.0 - (t159 - t181) * (f2x + t209 - s2x * t3) * 2.0 -
+               t131 * t180 * t192 * t214 * 2.0 + t131 * t185 * t210 * t211 -
+               t160 * t180 * t192 * t211 * 2.0 + t131 * t180 * t185 * t216 * (t209 - t215))) /
           2.0 -
-      (t234 *
-       (t217 * (f2x + t209 - t215) * 2.0 - t131 * t180 * t192 * t211 * 2.0) *
-       (t193 + t194 + t195 + t196 + t197 + t198 + t199 + t200 + t201 + t202 +
-        t203 + t204 + t205 + t206 - t222 + t223 + t224 - t225 - t226 - t227 -
-        t228 - t229 - t230 - t231 - t232 - t233 - r * t218 * t221)) /
+      (t234 * (t217 * (f2x + t209 - t215) * 2.0 - t131 * t180 * t192 * t211 * 2.0) *
+       (t193 + t194 + t195 + t196 + t197 + t198 + t199 + t200 + t201 + t202 + t203 + t204 + t205 +
+        t206 - t222 + t223 + t224 - t225 - t226 - t227 - t228 - t229 - t230 - t231 - t232 - t233 -
+        r * t218 * t221)) /
           4.0;
 
   return Jdot;
 }
 
-MatrixXd sPrr2u1::compute_loopclosure_Jacobian_UP_leg(
-    const Math::VectorNd y, const Vector3d i_ee, const double r,
-    const Vector3d f_ee, const Vector3d s, const Matrix3d RotMat_s) {
+MatrixXd sPrr2u1::compute_loopclosure_Jacobian_UP_leg(const Math::VectorNd y, const Vector3d i_ee,
+                                                      const double r, const Vector3d f_ee,
+                                                      const Vector3d s, const Matrix3d RotMat_s) {
   MatrixXd J;
   J.setZero(3, 2);
 
   Matrix3d RotMat_x, RotMat_y, RotMat;
 
   double roll, pitch;
-  roll = y(0);  // roll
-  pitch = y(1); // pitch
+  roll = y(0);   // roll
+  pitch = y(1);  // pitch
 
   RotMat_x << 1, 0, 0, 0, cos(roll), -sin(roll), 0, sin(roll), cos(roll);
 
@@ -991,7 +937,7 @@ MatrixXd sPrr2u1::compute_loopclosure_Jacobian_UP_leg(
   double pitch_u = atan2(sin_pitch_s, sqrt(1 - pow(sin_pitch_s, 2)));
 
   double sx, sy, sz, nx, ny, nz, ax, ay,
-      az; // elements of rotation matrix to the s frame
+      az;  // elements of rotation matrix to the s frame
   // fixed params(rotation matrix transformation to shank joint frame)
   sx = RotMat_s(0, 0);
   sy = RotMat_s(1, 0);
@@ -1146,35 +1092,34 @@ MatrixXd sPrr2u1::compute_loopclosure_Jacobian_UP_leg(
   double t127 = sx * t96;
   double t129 = t118 + t119 - ay * t92;
 
-  J(0, 0) = t55 * t57 * t63 *
-                (t108 + t109 +
-                 sy * (r * t26 * 1.0 / sqrt(t34 + t35 + t10 * t10) -
-                       r * t6 * t49 * t50 * (1.0 / 2.0))) +
-            t55 * t57 * t89 * t106;
+  J(0, 0) =
+      t55 * t57 * t63 *
+          (t108 + t109 +
+           sy * (r * t26 * 1.0 / sqrt(t34 + t35 + t10 * t10) - r * t6 * t49 * t50 * (1.0 / 2.0))) +
+      t55 * t57 * t89 * t106;
   J(0, 1) = -t55 * t57 * t63 * t129 - t55 * t57 * t89 * t117;
-  J(1, 0) =
-      -t55 * t56 * t123 + t55 * t63 * t106 * t107 - t55 * t89 * t107 * t125;
-  J(1, 1) = t55 * t56 * (t126 + t127 - ax * t92) - t55 * t63 * t107 * t117 +
-            t55 * t89 * t107 * t129;
+  J(1, 0) = -t55 * t56 * t123 + t55 * t63 * t106 * t107 - t55 * t89 * t107 * t125;
+  J(1, 1) =
+      t55 * t56 * (t126 + t127 - ax * t92) - t55 * t63 * t107 * t117 + t55 * t89 * t107 * t129;
   J(2, 0) = -t107 * t123 - t56 * t63 * t106 + t56 * t89 * t125;
-  J(2, 1) = t107 * (t126 + t127 - ax * t92) + t56 * t63 * (t115 + t116 - t128) -
-            t56 * t89 * t129;
+  J(2, 1) = t107 * (t126 + t127 - ax * t92) + t56 * t63 * (t115 + t116 - t128) - t56 * t89 * t129;
 
   return J;
 }
 
-MatrixXd sPrr2u1::compute_loopclosure_Jacobiandot_UP_leg(
-    const Math::VectorNd y, const Math::VectorNd yd, const Vector3d i_ee,
-    const double r, const Vector3d f_ee, const Vector3d s,
-    const Matrix3d RotMat_s) {
+MatrixXd sPrr2u1::compute_loopclosure_Jacobiandot_UP_leg(const Math::VectorNd y,
+                                                         const Math::VectorNd yd,
+                                                         const Vector3d i_ee, const double r,
+                                                         const Vector3d f_ee, const Vector3d s,
+                                                         const Matrix3d RotMat_s) {
   MatrixXd J;
   J.setZero(3, 2);
 
   Matrix3d RotMat_x, RotMat_y, RotMat;
 
   double roll, pitch;
-  roll = y(0);  // roll
-  pitch = y(1); // pitch
+  roll = y(0);   // roll
+  pitch = y(1);  // pitch
 
   RotMat_x << 1, 0, 0, 0, cos(roll), -sin(roll), 0, sin(roll), cos(roll);
 
@@ -1213,7 +1158,7 @@ MatrixXd sPrr2u1::compute_loopclosure_Jacobiandot_UP_leg(
   double pitch_u = atan2(sin_pitch_s, sqrt(1 - pow(sin_pitch_s, 2)));
 
   double sx, sy, sz, nx, ny, nz, ax, ay,
-      az; // elements of rotation matrix to the s frame
+      az;  // elements of rotation matrix to the s frame
   // fixed params(rotation matrix transformation to shank joint frame)
   sx = RotMat_s(0, 0);
   sy = RotMat_s(1, 0);
@@ -1242,8 +1187,7 @@ MatrixXd sPrr2u1::compute_loopclosure_Jacobiandot_UP_leg(
   double roll_dot = yd(0);
   double pitch_dot = yd(1);
 
-  Vector3d qd =
-      compute_loopclosure_Jacobian_UP_leg(y, i_ee, r, f_ee, s, RotMat_s) * yd;
+  Vector3d qd = compute_loopclosure_Jacobian_UP_leg(y, i_ee, r, f_ee, s, RotMat_s) * yd;
 
   double roll_u_dot = qd(0);
   double pitch_u_dot = qd(1);
@@ -1297,8 +1241,8 @@ MatrixXd sPrr2u1::compute_loopclosure_Jacobiandot_UP_leg(
   double t115 = roll_dot * shy * t12 * 2.0;
   double t116 = roll_dot * shy * t7 * t8 * 2.0;
   double t117 = roll_dot * shz * t3 * t6 * t7 * 4.0;
-  double t44 = -t11 + t36 + t37 + t38 + t39 + t40 + t41 + t42 + t43 - t45 -
-               t46 - t47 - t115 - t116 - t117;
+  double t44 =
+      -t11 + t36 + t37 + t38 + t39 + t40 + t41 + t42 + t43 - t45 - t46 - t47 - t115 - t116 - t117;
   double t48 = fy * roll_dot * t6;
   double t49 = pitch_dot * shx * t6 * t35;
   double t50 = fz * roll_dot * t2 * t3;
@@ -1314,8 +1258,8 @@ MatrixXd sPrr2u1::compute_loopclosure_Jacobiandot_UP_leg(
   double t85 = pitch_dot * shy * t2 * t4 * 2.0;
   double t86 = fz * pitch_dot * t4 * t6;
   double t87 = roll_dot * shx * t2 * t3 * t4;
-  double t56 = t48 + t49 + t50 + t51 + t52 + t53 + t54 + t55 - t81 - t82 - t83 -
-               t84 - t85 - t86 - t87;
+  double t56 =
+      t48 + t49 + t50 + t51 + t52 + t53 + t54 + t55 - t81 - t82 - t83 - t84 - t85 - t86 - t87;
   double t57 = fz * pitch_dot * t2;
   double t58 = pitch_dot * shy * t6 * t7;
   double t59 = pitch_dot * shz * t3 * t35;
@@ -1332,8 +1276,7 @@ MatrixXd sPrr2u1::compute_loopclosure_Jacobiandot_UP_leg(
   double t94 = roll_dot * shz * t3 * t6 * 2.0;
   double t95 = roll_dot * shy * t7 * t12;
   double t96 = pitch_dot * shy * t2 * t3 * t4 * t6 * 2.0;
-  double t66 = t11 - t38 - t40 - t41 + t45 + t46 + t47 + t63 + t64 + t65 - t93 -
-               t94 - t95 - t96;
+  double t66 = t11 - t38 - t40 - t41 + t45 + t46 + t47 + t63 + t64 + t65 - t93 - t94 - t95 - t96;
   double t67 = t34 * t34;
   double t68 = t17 + t25 + t67;
   double t69 = 1.0 / pow(t68, 3.0 / 2.0);
@@ -1373,8 +1316,8 @@ MatrixXd sPrr2u1::compute_loopclosure_Jacobiandot_UP_leg(
   double t129 = roll_dot * shy * t3 * t6 * 4.0;
   double t130 = roll_dot * shz * t7 * t8 * 2.0;
   double t131 = pitch_dot * shy * t2 * t4 * t12 * 2.0;
-  double t112 = t48 + t49 + t50 + t51 - t83 - t86 - t87 + t108 + t109 + t110 +
-                t111 - t128 - t129 - t130 - t131;
+  double t112 = t48 + t49 + t50 + t51 - t83 - t86 - t87 + t108 + t109 + t110 + t111 - t128 - t129 -
+                t130 - t131;
   double t113 = t9 * t112 * 2.0;
   double t114 = t62 * t78 * 2.0;
   double t121 = t5 * t106 * 2.0;
@@ -1404,8 +1347,7 @@ MatrixXd sPrr2u1::compute_loopclosure_Jacobiandot_UP_leg(
   double t148 = fx * roll_dot * t3 * t4;
   double t149 = r * t9 * t97 * t102 * t126 * (3.0 / 4.0);
   double t281 = r * t9 * t69 * t124 * (1.0 / 2.0);
-  double t150 =
-      -t48 - t50 + t86 + t144 + t145 + t146 + t147 + t148 + t149 - t281;
+  double t150 = -t48 - t50 + t86 + t144 + t145 + t146 + t147 + t148 + t149 - t281;
   double t151 = sin(roll_u);
   double t152 = r * t78 * t127;
   double t161 = r * t5 * t69 * t102 * (1.0 / 2.0);
@@ -1475,15 +1417,14 @@ MatrixXd sPrr2u1::compute_loopclosure_Jacobiandot_UP_leg(
   double t233 = pitch_dot * shz * t3 * t6 * t7 * 2.0;
   double t234 = roll_dot * shz * t2 * t4 * t8 * 2.0;
   double t235 = pitch_dot * shx * t2 * t4 * t6 * 4.0;
-  double t213 = t205 + t206 + t207 + t208 + t209 + t210 + t211 + t212 - t230 -
-                t231 - t232 - t233 - t234 - t235;
+  double t213 = t205 + t206 + t207 + t208 + t209 + t210 + t211 + t212 - t230 - t231 - t232 - t233 -
+                t234 - t235;
   double t214 = roll_dot * shx * t6 * t7;
   double t215 = pitch_dot * shz * t7 * t8 * 2.0;
   double t216 = pitch_dot * shy * t3 * t6 * t35 * 2.0;
   double t217 = roll_dot * shy * t2 * t4 * t12 * 2.0;
   double t218 = pitch_dot * shx * t2 * t3 * t4 * 4.0;
-  double t219 = t179 - t180 - t181 - t182 - t183 - t184 - t185 + t214 + t215 +
-                t216 + t217 + t218;
+  double t219 = t179 - t180 - t181 - t182 - t183 - t184 - t185 + t214 + t215 + t216 + t217 + t218;
   double t220 = t9 * t219 * 2.0;
   double t221 = t56 * t189 * 2.0;
   double t222 = t66 * t193 * 2.0;
@@ -1547,8 +1488,7 @@ MatrixXd sPrr2u1::compute_loopclosure_Jacobiandot_UP_leg(
   double t277 = r * t44 * t127;
   double t282 = fx * pitch_dot * t2 * t3;
   double t283 = r * t34 * t97 * t102 * t126 * (3.0 / 4.0);
-  double t278 =
-      t11 - t40 - t41 + t136 + t137 + t138 + t139 + t277 - t282 - t283;
+  double t278 = t11 - t40 - t41 + t136 + t137 + t138 + t139 + t277 - t282 - t283;
   double t284 = sz * t143;
   double t285 = az * t150;
   double t315 = nz * t278;
@@ -1583,50 +1523,38 @@ MatrixXd sPrr2u1::compute_loopclosure_Jacobiandot_UP_leg(
             t133 * t135 * t160 *
                 (t287 + t288 -
                  ny * (t11 - t40 - t41 + t136 + t137 + t138 + t139 +
-                       r * t44 * 1.0 / sqrt(t17 + t25 + t10 * t10) -
-                       fx * pitch_dot * t2 * t3 -
+                       r * t44 * 1.0 / sqrt(t17 + t25 + t10 * t10) - fx * pitch_dot * t2 * t3 -
                        r * t34 * t97 * t102 * t126 * (3.0 / 4.0))) -
-            l_dot * t135 * t151 * t159 * t172 -
-            l_dot * t135 * t159 * t160 * t168 -
-            roll_u_dot * t133 * t135 * t151 * t168 +
-            roll_u_dot * t133 * t135 * t160 * t172 +
+            l_dot * t135 * t151 * t159 * t172 - l_dot * t135 * t159 * t160 * t168 -
+            roll_u_dot * t133 * t135 * t151 * t168 + roll_u_dot * t133 * t135 * t160 * t172 +
             pitch_u_dot * t133 * t151 * t172 * t173 * t174 +
             pitch_u_dot * t133 * t160 * t168 * t173 * t174;
   J(0, 1) = -t133 * t135 * t151 * t306 - t133 * t135 * t160 * t309 +
-            l_dot * t135 * t151 * t159 * t276 +
-            l_dot * t135 * t159 * t160 * t275 +
-            roll_u_dot * t133 * t135 * t151 * t275 -
-            roll_u_dot * t133 * t135 * t160 * t276 -
+            l_dot * t135 * t151 * t159 * t276 + l_dot * t135 * t159 * t160 * t275 +
+            roll_u_dot * t133 * t135 * t151 * t275 - roll_u_dot * t133 * t135 * t160 * t276 -
             pitch_u_dot * t133 * t151 * t173 * t174 * t276 -
             pitch_u_dot * t133 * t160 * t173 * t174 * t275;
-  J(1, 0) = t133 * t134 * t314 + l_dot * t134 * t159 * t292 +
-            pitch_u_dot * t133 * t174 * t292 - t133 * t160 * t174 * t286 +
-            t133 * t151 * t174 * t316 + l_dot * t151 * t159 * t168 * t174 -
-            l_dot * t159 * t160 * t172 * t174 -
-            pitch_u_dot * t133 * t134 * t151 * t168 +
-            pitch_u_dot * t133 * t134 * t160 * t172 -
-            roll_u_dot * t133 * t151 * t172 * t174 -
-            roll_u_dot * t133 * t160 * t168 * t174;
-  J(1, 1) = t133 * t134 * t319 - l_dot * t134 * t159 * t303 -
-            pitch_u_dot * t133 * t174 * t303 + t133 * t151 * t174 * t309 -
-            t133 * t160 * t174 * t306 +
+  J(1, 0) = t133 * t134 * t314 + l_dot * t134 * t159 * t292 + pitch_u_dot * t133 * t174 * t292 -
+            t133 * t160 * t174 * t286 + t133 * t151 * t174 * t316 +
+            l_dot * t151 * t159 * t168 * t174 - l_dot * t159 * t160 * t172 * t174 -
+            pitch_u_dot * t133 * t134 * t151 * t168 + pitch_u_dot * t133 * t134 * t160 * t172 -
+            roll_u_dot * t133 * t151 * t172 * t174 - roll_u_dot * t133 * t160 * t168 * t174;
+  J(1, 1) = t133 * t134 * t319 - l_dot * t134 * t159 * t303 - pitch_u_dot * t133 * t174 * t303 +
+            t133 * t151 * t174 * t309 - t133 * t160 * t174 * t306 +
             l_dot * t159 * t160 * t174 * (t269 + t272 - t310) +
             pitch_u_dot * t133 * t134 * t151 * (t273 + t274 - t311) +
             roll_u_dot * t133 * t151 * t174 * (t269 + t272 - t310) +
             roll_u_dot * t133 * t160 * t174 * (t273 + t274 - t311) -
-            l_dot * t151 * t159 * t174 * t275 -
-            pitch_u_dot * t133 * t134 * t160 * t276;
-  J(2, 0) = t174 * t314 - pitch_u_dot * t134 * t292 + t134 * t160 * t286 -
-            t134 * t151 * t316 - pitch_u_dot * t151 * t168 * t174 +
-            pitch_u_dot * t160 * t172 * t174 + roll_u_dot * t134 * t151 * t172 +
-            roll_u_dot * t134 * t160 * t168;
-  J(2, 1) = t174 * t319 + pitch_u_dot * t134 * (t301 + t302 - t320) -
-            t134 * t151 * t309 + t134 * t160 * t306 -
-            pitch_u_dot * t160 * t174 * t276 - roll_u_dot * t134 * t151 * t276 -
-            roll_u_dot * t134 * t160 * t275 +
+            l_dot * t151 * t159 * t174 * t275 - pitch_u_dot * t133 * t134 * t160 * t276;
+  J(2, 0) = t174 * t314 - pitch_u_dot * t134 * t292 + t134 * t160 * t286 - t134 * t151 * t316 -
+            pitch_u_dot * t151 * t168 * t174 + pitch_u_dot * t160 * t172 * t174 +
+            roll_u_dot * t134 * t151 * t172 + roll_u_dot * t134 * t160 * t168;
+  J(2, 1) = t174 * t319 + pitch_u_dot * t134 * (t301 + t302 - t320) - t134 * t151 * t309 +
+            t134 * t160 * t306 - pitch_u_dot * t160 * t174 * t276 -
+            roll_u_dot * t134 * t151 * t276 - roll_u_dot * t134 * t160 * t275 +
             pitch_u_dot * t151 * t174 * (t273 + t274 - t311);
 
   return J;
 }
 
-} // namespace SPRR2U1
+}  // namespace SPRR2U1

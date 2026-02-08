@@ -1,14 +1,14 @@
+#include <rbdl/rbdl.h>
+
+#include <iostream>
+
 #include "HyRoDyn_Limit_Checker.hpp"
 #include "HyRoDyn_Utils.hpp"
 #include "robot_model_hyrodyn.hpp"
-#include <iostream>
-
-#include <rbdl/rbdl.h>
 
 using namespace RigidBodyDynamics;
 using namespace RigidBodyDynamics::Math;
-int main(int argc, char **argv) {
-
+int main(int argc, char** argv) {
   hyrodyn::RobotModel_HyRoDyn rh5;
   rh5.welcome();
 

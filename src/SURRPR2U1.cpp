@@ -11,24 +11,20 @@
 namespace SURRPR2U1 {
 
 // Constructor
-surrPr2u1::surrPr2u1(string file_path,
-                     std::vector<string> jointnames_spanningtree,
+surrPr2u1::surrPr2u1(string file_path, std::vector<string> jointnames_spanningtree,
                      std::vector<string> jointnames_independent) {
-
   Model m;
 
-  const char *ext;
+  const char* ext;
   ext = strrchr(file_path.c_str(), '.');
-  if (!strcmp(ext, ".urdf") || !strcmp(ext, ".URDF") ||
-      !strcmp(ext, ".robot")) {
-    if (!Addons::URDFReadFromFileWithModularity(
-            file_path.c_str(), &m, jointnames_spanningtree, false)) {
+  if (!strcmp(ext, ".urdf") || !strcmp(ext, ".URDF") || !strcmp(ext, ".robot")) {
+    if (!Addons::URDFReadFromFileWithModularity(file_path.c_str(), &m, jointnames_spanningtree,
+                                                false)) {
       std::cerr << "Error loading urdf model" << std::endl;
       abort();
     }
   } else {
-    std::cerr << "Unknown file type: Accepted file types are .urdf or .lua"
-              << endl;
+    std::cerr << "Unknown file type: Accepted file types are .urdf or .lua" << endl;
     abort();
   }
 
@@ -42,42 +38,32 @@ surrPr2u1::surrPr2u1(string file_path,
   // Extract the physical parameters of the mechanism from the RBDL model
 
   // end effector points
-  Vector3d e1_ee =
-      CalcBodyToBaseCoordinates(m, Q, 3, Vector3d(0., 0., 0.), false);
-  Vector3d e2_ee =
-      CalcBodyToBaseCoordinates(m, Q, 7, Vector3d(0., 0., 0.), false);
-  cout << "e1_ee: " << e1_ee.transpose() << ", e2_ee: " << e2_ee.transpose()
-       << endl;
+  Vector3d e1_ee = CalcBodyToBaseCoordinates(m, Q, 3, Vector3d(0., 0., 0.), false);
+  Vector3d e2_ee = CalcBodyToBaseCoordinates(m, Q, 7, Vector3d(0., 0., 0.), false);
+  cout << "e1_ee: " << e1_ee.transpose() << ", e2_ee: " << e2_ee.transpose() << endl;
 
   // base points
   unsigned int body_id_b1 = m.GetBodyId("ALWrist_AL1_Link");
   unsigned int body_id_b2 = m.GetBodyId("ALWrist_AR1_Link");
-  Vector3d b1 =
-      CalcBodyToBaseCoordinates(m, Q, 11, Vector3d(0., 0., 0.), false);
-  Vector3d b2 =
-      CalcBodyToBaseCoordinates(m, Q, 13, Vector3d(0., 0., 0.), false);
+  Vector3d b1 = CalcBodyToBaseCoordinates(m, Q, 11, Vector3d(0., 0., 0.), false);
+  Vector3d b2 = CalcBodyToBaseCoordinates(m, Q, 13, Vector3d(0., 0., 0.), false);
   cout << "b1: " << b1.transpose() << ", b2: " << b2.transpose() << endl;
   cout << "BID b1: " << body_id_b1 << ", BID b2: " << body_id_b2 << endl;
 
   // crank points
   unsigned int body_id_c1 = m.GetBodyId("ALWrist_BL1_Link");
   unsigned int body_id_c2 = m.GetBodyId("ALWrist_BR1_Link");
-  Vector3d c1 =
-      CalcBodyToBaseCoordinates(m, Q, 15., Vector3d(0., 0., 0.), false);
-  Vector3d c2 =
-      CalcBodyToBaseCoordinates(m, Q, 16., Vector3d(0., 0., 0.), false);
+  Vector3d c1 = CalcBodyToBaseCoordinates(m, Q, 15., Vector3d(0., 0., 0.), false);
+  Vector3d c2 = CalcBodyToBaseCoordinates(m, Q, 16., Vector3d(0., 0., 0.), false);
   cout << "c1: " << c1.transpose() << ", c2: " << c2.transpose() << endl;
   cout << "BID c1: " << body_id_c1 << ", BID c2: " << body_id_c2 << endl;
 
   // attachment points
   unsigned int body_id_k1 = m.GetBodyId("ALWrist_ActL_Link");
   unsigned int body_id_k2 = m.GetBodyId("ALWrist_ActR_Link");
-  Vector3d k1_zero =
-      CalcBodyToBaseCoordinates(m, Q, 12., Vector3d(0., 0., 0.), false);
-  Vector3d k2_zero =
-      CalcBodyToBaseCoordinates(m, Q, 14., Vector3d(0., 0., 0.), false);
-  cout << "k1_zero: " << k1_zero.transpose()
-       << ", k2_zero: " << k2_zero.transpose() << endl;
+  Vector3d k1_zero = CalcBodyToBaseCoordinates(m, Q, 12., Vector3d(0., 0., 0.), false);
+  Vector3d k2_zero = CalcBodyToBaseCoordinates(m, Q, 14., Vector3d(0., 0., 0.), false);
+  cout << "k1_zero: " << k1_zero.transpose() << ", k2_zero: " << k2_zero.transpose() << endl;
   cout << "BID k1: " << body_id_k1 << ", BID k2: " << body_id_k2 << endl;
   /*
   for(uint i = 0; i <= m.dof_count; i++){
@@ -131,8 +117,7 @@ surrPr2u1::surrPr2u1(string file_path,
   r2 = c2k2.norm();
   cout << "r1 = " << r1 << " r2 = " << r2 << endl;
 
-  cout << "d1_zero = " << (b1 - k1_zero).norm()
-       << " d2_zero = " << (b2 - k2_zero).norm() << endl;
+  cout << "d1_zero = " << (b1 - k1_zero).norm() << " d2_zero = " << (b2 - k2_zero).norm() << endl;
 
   // Normalize the zero vector of the crank ciki
   c1k1 = c1k1 / r1;
@@ -200,10 +185,8 @@ void surrPr2u1::print_physical_parameters() {
   cout << "r2: " << r2 << ", l2: " << l2 << ", h2: " << h2 << endl;
 }
 // Constructor from the physical parameters of the robot
-surrPr2u1::surrPr2u1(Vector3d b1, Vector3d b2, Vector3d c1, Vector3d c2,
-                     Vector3d e1_ee, Vector3d e2_ee, Vector3d k1_zero,
-                     Vector3d k2_zero) {
-
+surrPr2u1::surrPr2u1(Vector3d b1, Vector3d b2, Vector3d c1, Vector3d c2, Vector3d e1_ee,
+                     Vector3d e2_ee, Vector3d k1_zero, Vector3d k2_zero) {
   b1x = b1(0);
   b1y = b1(1);
   b1z = b1(2);
@@ -247,8 +230,7 @@ surrPr2u1::surrPr2u1(Vector3d b1, Vector3d b2, Vector3d c1, Vector3d c2,
   r2 = c2k2.norm();
   cout << "r1 = " << r1 << " r2 = " << r2 << endl;
 
-  cout << "d1_zero = " << (b1 - k1_zero).norm()
-       << " d2_zero = " << (b2 - k2_zero).norm() << endl;
+  cout << "d1_zero = " << (b1 - k1_zero).norm() << " d2_zero = " << (b2 - k2_zero).norm() << endl;
 
   // Normalize the zero vector of the crank ciki
   c1k1 = c1k1 / r1;
@@ -287,7 +269,7 @@ surrPr2u1::surrPr2u1(Vector3d b1, Vector3d b2, Vector3d c1, Vector3d c2,
   print_physical_parameters();
 }
 
-VectorXd surrPr2u1::calc_loopclosure_function(const Math::VectorNd &y) {
+VectorXd surrPr2u1::calc_loopclosure_function(const Math::VectorNd& y) {
   // This function calculates the loop closure function Gamma which is a vector
   // of size (n x 1).
 
@@ -311,7 +293,7 @@ VectorXd surrPr2u1::calc_loopclosure_function(const Math::VectorNd &y) {
   return Q;
 }
 
-MatrixXd surrPr2u1::calc_loopclosure_Jacobian(const Math::VectorNd &y) {
+MatrixXd surrPr2u1::calc_loopclosure_Jacobian(const Math::VectorNd& y) {
   // This function calculates the loop closure Jacobian matrix G which is a
   // matrix of size (n x m).
 
@@ -336,8 +318,8 @@ MatrixXd surrPr2u1::calc_loopclosure_Jacobian(const Math::VectorNd &y) {
   return G;
 }
 
-MatrixXd surrPr2u1::calc_loopclosure_Jacobiand(const Math::VectorNd &y,
-                                               const Math::VectorNd &ydot) {
+MatrixXd surrPr2u1::calc_loopclosure_Jacobiand(const Math::VectorNd& y,
+                                               const Math::VectorNd& ydot) {
   // This function calculates the 1st order time derivative of loop closure
   // Jacobian Gdot which is a matrix of size (n x m).
 
@@ -349,17 +331,14 @@ MatrixXd surrPr2u1::calc_loopclosure_Jacobiand(const Math::VectorNd &y,
   return Gdot;
 }
 
-VectorXd surrPr2u1::calc_loopclosure_g(const Math::VectorNd &y,
-                                       const Math::VectorNd &ydot) {
+VectorXd surrPr2u1::calc_loopclosure_g(const Math::VectorNd& y, const Math::VectorNd& ydot) {
   // This function calculates the loop closure bias acceleration g= Gdot*ydot
 
   return calc_loopclosure_Jacobiand(y, ydot) * ydot;
 }
 
-VectorXd surrPr2u1::calc_geometricmodel_forward(const Math::VectorNd u,
-                                                unsigned int max_iterations,
+VectorXd surrPr2u1::calc_geometricmodel_forward(const Math::VectorNd u, unsigned int max_iterations,
                                                 double step_tol) {
-
   VectorNd y(VectorNd::Zero(dof_active));
   VectorNd u_i(VectorNd::Zero(dof_active));
   VectorNd du(VectorNd::Zero(dof_active));
@@ -369,7 +348,6 @@ VectorXd surrPr2u1::calc_geometricmodel_forward(const Math::VectorNd u,
   unsigned int i = 0;
 
   while (1) {
-
     u_i = surrPr2u1::calc_geometricmodel_inverse(y);
 
     du = u - u_i;
@@ -395,10 +373,9 @@ VectorXd surrPr2u1::calc_geometricmodel_forward(const Math::VectorNd u,
 }
 
 VectorXd surrPr2u1::calc_geometricmodel_inverse(const Math::VectorNd y) {
-
   double roll, pitch;
-  roll = y(0);  // roll
-  pitch = y(1); // pitch
+  roll = y(0);   // roll
+  pitch = y(1);  // pitch
 
   double t2 = cos(pitch);
   double t3 = cos(roll);
@@ -582,8 +559,8 @@ VectorXd surrPr2u1::calc_geometricmodel_inverse(const Math::VectorNd y) {
   double d11 = sqrt(pow(-b1z - t10 + t40 + t74 + t76 + t78 + t114 + t152 +
                             n1x * t154 * t174 * t178 + n1y * t160 * t174 * t178,
                         2.0) +
-                    pow(b1y + t8 - t38 + t66 + t72 + t122 + t148 -
-                            n1x * t164 * t174 * t178 + n1z * t160 * t174 * t178,
+                    pow(b1y + t8 - t38 + t66 + t72 + t122 + t148 - n1x * t164 * t174 * t178 +
+                            n1z * t160 * t174 * t178,
                         2.0) +
                     pow(-b1x + t34 + t36 + t60 + t80 + t82 + t110 + t150 -
                             n1y * t164 * t174 * t178 - n1z * t154 * t174 * t178,
@@ -592,8 +569,8 @@ VectorXd surrPr2u1::calc_geometricmodel_inverse(const Math::VectorNd y) {
   double d21 = sqrt(pow(-b2z - t11 + t41 + t75 + t77 + t79 + t115 + t153 +
                             n2x * t155 * t175 * t179 + n2y * t161 * t175 * t179,
                         2.0) +
-                    pow(b2y + t9 - t39 + t67 + t73 + t123 + t149 -
-                            n2x * t165 * t175 * t179 + n2z * t161 * t175 * t179,
+                    pow(b2y + t9 - t39 + t67 + t73 + t123 + t149 - n2x * t165 * t175 * t179 +
+                            n2z * t161 * t175 * t179,
                         2.0) +
                     pow(-b2x + t35 + t37 + t61 + t81 + t83 + t111 + t151 -
                             n2y * t165 * t175 * t179 - n2z * t155 * t175 * t179,
@@ -607,14 +584,13 @@ VectorXd surrPr2u1::calc_geometricmodel_inverse(const Math::VectorNd y) {
 }
 
 Matrix2d surrPr2u1::compute_kinematic_Jacobian(const Math::VectorNd y) {
-
   // forward kinematic jacobian in terms of independent params
 
   Matrix2d J = Matrix2d::Zero();
 
   double roll, pitch;
-  roll = y(0);  // roll
-  pitch = y(1); // pitch
+  roll = y(0);   // roll
+  pitch = y(1);  // pitch
 
   double t2 = cos(pitch);
   double t3 = cos(roll);
@@ -926,38 +902,30 @@ Matrix2d surrPr2u1::compute_kinematic_Jacobian(const Math::VectorNd y) {
   double t309 = t239 * t279 * t284;
   double t310 = t240 * t278 * t282;
   double t311 = t241 * t279 * t284;
-  double t318 =
-      -t232 * t282 *
-      (t14 * t206 * (t152 - t156) * 2.0 + t16 * t206 * (t152 - t156) * 2.0 +
-       t18 * t206 * (t152 - t156) * 2.0);
-  double t319 =
-      -t233 * t284 *
-      (t15 * t207 * (t153 - t157) * 2.0 + t17 * t207 * (t153 - t157) * 2.0 +
-       t19 * t207 * (t153 - t157) * 2.0);
-  double t320 =
-      t232 * t282 *
-      (t14 * t206 * (t152 - t156) * 2.0 + t16 * t206 * (t152 - t156) * 2.0 +
-       t18 * t206 * (t152 - t156) * 2.0);
-  double t321 =
-      t233 * t284 *
-      (t15 * t207 * (t153 - t157) * 2.0 + t17 * t207 * (t153 - t157) * 2.0 +
-       t19 * t207 * (t153 - t157) * 2.0);
-  double t330 =
-      -t238 * t282 *
-      (t14 * t206 * (t152 - t156) * 2.0 + t16 * t206 * (t152 - t156) * 2.0 +
-       t18 * t206 * (t152 - t156) * 2.0);
-  double t331 =
-      -t239 * t284 *
-      (t15 * t207 * (t153 - t157) * 2.0 + t17 * t207 * (t153 - t157) * 2.0 +
-       t19 * t207 * (t153 - t157) * 2.0);
-  double t334 =
-      -t240 * t282 *
-      (t14 * t206 * (t152 - t156) * 2.0 + t16 * t206 * (t152 - t156) * 2.0 +
-       t18 * t206 * (t152 - t156) * 2.0);
-  double t335 =
-      -t241 * t284 *
-      (t15 * t207 * (t153 - t157) * 2.0 + t17 * t207 * (t153 - t157) * 2.0 +
-       t19 * t207 * (t153 - t157) * 2.0);
+  double t318 = -t232 * t282 *
+                (t14 * t206 * (t152 - t156) * 2.0 + t16 * t206 * (t152 - t156) * 2.0 +
+                 t18 * t206 * (t152 - t156) * 2.0);
+  double t319 = -t233 * t284 *
+                (t15 * t207 * (t153 - t157) * 2.0 + t17 * t207 * (t153 - t157) * 2.0 +
+                 t19 * t207 * (t153 - t157) * 2.0);
+  double t320 = t232 * t282 *
+                (t14 * t206 * (t152 - t156) * 2.0 + t16 * t206 * (t152 - t156) * 2.0 +
+                 t18 * t206 * (t152 - t156) * 2.0);
+  double t321 = t233 * t284 *
+                (t15 * t207 * (t153 - t157) * 2.0 + t17 * t207 * (t153 - t157) * 2.0 +
+                 t19 * t207 * (t153 - t157) * 2.0);
+  double t330 = -t238 * t282 *
+                (t14 * t206 * (t152 - t156) * 2.0 + t16 * t206 * (t152 - t156) * 2.0 +
+                 t18 * t206 * (t152 - t156) * 2.0);
+  double t331 = -t239 * t284 *
+                (t15 * t207 * (t153 - t157) * 2.0 + t17 * t207 * (t153 - t157) * 2.0 +
+                 t19 * t207 * (t153 - t157) * 2.0);
+  double t334 = -t240 * t282 *
+                (t14 * t206 * (t152 - t156) * 2.0 + t16 * t206 * (t152 - t156) * 2.0 +
+                 t18 * t206 * (t152 - t156) * 2.0);
+  double t335 = -t241 * t284 *
+                (t15 * t207 * (t153 - t157) * 2.0 + t17 * t207 * (t153 - t157) * 2.0 +
+                 t19 * t207 * (t153 - t157) * 2.0);
   double t338 = t232 * t282 * t288;
   double t339 = t233 * t284 * t289;
   double t342 = t238 * t282 * t288;
@@ -1002,35 +970,25 @@ Matrix2d surrPr2u1::compute_kinematic_Jacobian(const Math::VectorNd y) {
   double t379 = t181 + t295 + t321 + t347;
   double t384 = t84 + t88 + t192 + t296 + t340 + t356;
   double t385 = t85 + t89 + t193 + t297 + t341 + t357;
-  double t390 = t312 *
-                (t318 - t346 + (n1y * (t152 - t156)) / 2.0 +
-                 n1y * t278 * t282 * (t152 - t156)) *
-                -2.0;
-  double t391 = t313 *
-                (t319 - t347 + (n2y * (t153 - t157)) / 2.0 +
-                 n2y * t279 * t284 * (t153 - t157)) *
-                -2.0;
-  double t392 = t312 *
-                (t318 - t346 + (n1y * (t152 - t156)) / 2.0 +
-                 n1y * t278 * t282 * (t152 - t156)) *
-                2.0;
-  double t393 = t313 *
-                (t319 - t347 + (n2y * (t153 - t157)) / 2.0 +
-                 n2y * t279 * t284 * (t153 - t157)) *
-                2.0;
+  double t390 =
+      t312 * (t318 - t346 + (n1y * (t152 - t156)) / 2.0 + n1y * t278 * t282 * (t152 - t156)) * -2.0;
+  double t391 =
+      t313 * (t319 - t347 + (n2y * (t153 - t157)) / 2.0 + n2y * t279 * t284 * (t153 - t157)) * -2.0;
+  double t392 =
+      t312 * (t318 - t346 + (n1y * (t152 - t156)) / 2.0 + n1y * t278 * t282 * (t152 - t156)) * 2.0;
+  double t393 =
+      t313 * (t319 - t347 + (n2y * (t153 - t157)) / 2.0 + n2y * t279 * t284 * (t153 - t157)) * 2.0;
   double t398 = t322 *
                 (-t86 - t128 - t130 + t348 + (n1x * (t152 - t156)) / 2.0 +
                  t238 * t282 *
-                     (t14 * t206 * (t152 - t156) * 2.0 +
-                      t16 * t206 * (t152 - t156) * 2.0 +
+                     (t14 * t206 * (t152 - t156) * 2.0 + t16 * t206 * (t152 - t156) * 2.0 +
                       t18 * t206 * (t152 - t156) * 2.0) +
                  t278 * t282 * (t154 + n1x * (t152 - t156))) *
                 -2.0;
   double t399 = t323 *
                 (-t87 - t129 - t132 + t349 + (n2x * (t153 - t157)) / 2.0 +
                  t239 * t284 *
-                     (t15 * t207 * (t153 - t157) * 2.0 +
-                      t17 * t207 * (t153 - t157) * 2.0 +
+                     (t15 * t207 * (t153 - t157) * 2.0 + t17 * t207 * (t153 - t157) * 2.0 +
                       t19 * t207 * (t153 - t157) * 2.0) +
                  t279 * t284 * (t155 + n2x * (t153 - t157))) *
                 -2.0;
@@ -1092,10 +1050,8 @@ Matrix2d surrPr2u1::compute_kinematic_Jacobian(const Math::VectorNd y) {
   double t421 = -t417;
   double t422 = -t418;
   double t423 = -t419;
-  double t430 =
-      t36 + t44 + t50 + t106 + t110 + t112 + t222 + t310 + t406 + t412;
-  double t431 =
-      t37 + t45 + t51 + t107 + t111 + t114 + t223 + t311 + t408 + t414;
+  double t430 = t36 + t44 + t50 + t106 + t110 + t112 + t222 + t310 + t406 + t412;
+  double t431 = t37 + t45 + t51 + t107 + t111 + t114 + t223 + t311 + t408 + t414;
   double t428 = b1y + t8 + t76 + t90 + t104 + t230 + t306 + t413 + t420;
   double t429 = b2y + t9 + t77 + t91 + t105 + t231 + t307 + t415 + t422;
   double t434 = t430 * t430;
@@ -1112,151 +1068,119 @@ Matrix2d surrPr2u1::compute_kinematic_Jacobian(const Math::VectorNd y) {
   double t443 = 1.0 / sqrt(t441);
 
   J(0, 0) =
-      (t442 * (t430 *
-                   (t108 - t116 - t194 - t300 - t344 + t360 +
-                    n1x * t368 * t374 * t384 - n1y * t368 * t374 * t386 +
-                    (n1x * t312 * t369 * t374 * t426) / 2.0 +
-                    (n1x * t312 * t368 * t376 * t426) / 2.0 +
-                    (n1y * t322 * t369 * t374 * t426) / 2.0 +
-                    (n1y * t322 * t368 * t376 * t426) / 2.0) *
-                   2.0 +
-               t428 *
-                   (t384 + n1x * t368 * t374 * t388 - n1z * t368 * t374 * t386 -
-                    (n1x * t326 * t369 * t374 * t426) / 2.0 -
-                    (n1x * t326 * t368 * t376 * t426) / 2.0 +
-                    (n1z * t322 * t369 * t374 * t426) / 2.0 +
-                    (n1z * t322 * t368 * t376 * t426) / 2.0) *
-                   2.0 -
-               t436 *
-                   (t386 - n1y * t368 * t374 * t388 + n1z * t368 * t374 * t384 +
-                    (n1y * t326 * t369 * t374 * t426) / 2.0 +
-                    (n1y * t326 * t368 * t376 * t426) / 2.0 +
-                    (n1z * t312 * t369 * t374 * t426) / 2.0 +
-                    (n1z * t312 * t368 * t376 * t426) / 2.0) *
-                   2.0)) /
+      (t442 *
+       (t430 *
+            (t108 - t116 - t194 - t300 - t344 + t360 + n1x * t368 * t374 * t384 -
+             n1y * t368 * t374 * t386 + (n1x * t312 * t369 * t374 * t426) / 2.0 +
+             (n1x * t312 * t368 * t376 * t426) / 2.0 + (n1y * t322 * t369 * t374 * t426) / 2.0 +
+             (n1y * t322 * t368 * t376 * t426) / 2.0) *
+            2.0 +
+        t428 *
+            (t384 + n1x * t368 * t374 * t388 - n1z * t368 * t374 * t386 -
+             (n1x * t326 * t369 * t374 * t426) / 2.0 - (n1x * t326 * t368 * t376 * t426) / 2.0 +
+             (n1z * t322 * t369 * t374 * t426) / 2.0 + (n1z * t322 * t368 * t376 * t426) / 2.0) *
+            2.0 -
+        t436 *
+            (t386 - n1y * t368 * t374 * t388 + n1z * t368 * t374 * t384 +
+             (n1y * t326 * t369 * t374 * t426) / 2.0 + (n1y * t326 * t368 * t376 * t426) / 2.0 +
+             (n1z * t312 * t369 * t374 * t426) / 2.0 + (n1z * t312 * t368 * t376 * t426) / 2.0) *
+            2.0)) /
       2.0;
   J(0, 1) =
       (t442 *
        (t436 *
             (t382 - n1y * t368 * t374 * t380 -
              n1z * t368 * t374 *
-                 (t318 - t346 + (n1y * (t152 - t156)) / 2.0 +
-                  n1y * t278 * t282 * (t152 - t156)) +
-             (n1y * t326 * t369 * t374 * t424) / 2.0 +
-             (n1y * t326 * t368 * t376 * t424) / 2.0 +
-             (n1z * t312 * t369 * t374 * t424) / 2.0 +
-             (n1z * t312 * t368 * t376 * t424) / 2.0) *
+                 (t318 - t346 + (n1y * (t152 - t156)) / 2.0 + n1y * t278 * t282 * (t152 - t156)) +
+             (n1y * t326 * t369 * t374 * t424) / 2.0 + (n1y * t326 * t368 * t376 * t424) / 2.0 +
+             (n1z * t312 * t369 * t374 * t424) / 2.0 + (n1z * t312 * t368 * t376 * t424) / 2.0) *
             -2.0 +
         t428 *
             (t378 + n1x * t368 * t374 * t380 +
              n1z * t368 * t374 *
                  (-t86 - t128 - t130 + t348 + (n1x * (t152 - t156)) / 2.0 +
                   t238 * t282 *
-                      (t14 * t206 * (t152 - t156) * 2.0 +
-                       t16 * t206 * (t152 - t156) * 2.0 +
+                      (t14 * t206 * (t152 - t156) * 2.0 + t16 * t206 * (t152 - t156) * 2.0 +
                        t18 * t206 * (t152 - t156) * 2.0) +
                   t278 * t282 * (t154 + n1x * (t152 - t156))) -
-             (n1x * t326 * t369 * t374 * t424) / 2.0 -
-             (n1x * t326 * t368 * t376 * t424) / 2.0 +
-             (n1z * t322 * t369 * t374 * t424) / 2.0 +
-             (n1z * t322 * t368 * t376 * t424) / 2.0) *
+             (n1x * t326 * t369 * t374 * t424) / 2.0 - (n1x * t326 * t368 * t376 * t424) / 2.0 +
+             (n1z * t322 * t369 * t374 * t424) / 2.0 + (n1z * t322 * t368 * t376 * t424) / 2.0) *
             2.0 +
         t430 *
             (-t80 - t117 - t120 - t298 + t350 + (n1z * (t152 - t156)) / 2.0 +
              t240 * t282 *
-                 (t14 * t206 * (t152 - t156) * 2.0 +
-                  t16 * t206 * (t152 - t156) * 2.0 +
+                 (t14 * t206 * (t152 - t156) * 2.0 + t16 * t206 * (t152 - t156) * 2.0 +
                   t18 * t206 * (t152 - t156) * 2.0) -
              n1x * t368 * t374 *
-                 (t318 - t346 + (n1y * (t152 - t156)) / 2.0 +
-                  n1y * t278 * t282 * (t152 - t156)) +
+                 (t318 - t346 + (n1y * (t152 - t156)) / 2.0 + n1y * t278 * t282 * (t152 - t156)) +
              n1y * t368 * t374 *
                  (-t86 - t128 - t130 + t348 + (n1x * (t152 - t156)) / 2.0 +
                   t238 * t282 *
-                      (t14 * t206 * (t152 - t156) * 2.0 +
-                       t16 * t206 * (t152 - t156) * 2.0 +
+                      (t14 * t206 * (t152 - t156) * 2.0 + t16 * t206 * (t152 - t156) * 2.0 +
                        t18 * t206 * (t152 - t156) * 2.0) +
                   t278 * t282 * (t154 + n1x * (t152 - t156))) +
-             (n1x * t312 * t369 * t374 * t424) / 2.0 +
-             (n1x * t312 * t368 * t376 * t424) / 2.0 +
-             (n1y * t322 * t369 * t374 * t424) / 2.0 +
-             (n1y * t322 * t368 * t376 * t424) / 2.0) *
+             (n1x * t312 * t369 * t374 * t424) / 2.0 + (n1x * t312 * t368 * t376 * t424) / 2.0 +
+             (n1y * t322 * t369 * t374 * t424) / 2.0 + (n1y * t322 * t368 * t376 * t424) / 2.0) *
             2.0)) /
       2.0;
   J(1, 0) =
-      (t443 * (t431 *
-                   (t109 - t118 - t195 - t301 - t345 + t361 +
-                    n2x * t370 * t375 * t385 - n2y * t370 * t375 * t387 +
-                    (n2x * t313 * t371 * t375 * t427) / 2.0 +
-                    (n2x * t313 * t370 * t377 * t427) / 2.0 +
-                    (n2y * t323 * t371 * t375 * t427) / 2.0 +
-                    (n2y * t323 * t370 * t377 * t427) / 2.0) *
-                   2.0 +
-               t429 *
-                   (t385 + n2x * t370 * t375 * t389 - n2z * t370 * t375 * t387 -
-                    (n2x * t327 * t371 * t375 * t427) / 2.0 -
-                    (n2x * t327 * t370 * t377 * t427) / 2.0 +
-                    (n2z * t323 * t371 * t375 * t427) / 2.0 +
-                    (n2z * t323 * t370 * t377 * t427) / 2.0) *
-                   2.0 -
-               t437 *
-                   (t387 - n2y * t370 * t375 * t389 + n2z * t370 * t375 * t385 +
-                    (n2y * t327 * t371 * t375 * t427) / 2.0 +
-                    (n2y * t327 * t370 * t377 * t427) / 2.0 +
-                    (n2z * t313 * t371 * t375 * t427) / 2.0 +
-                    (n2z * t313 * t370 * t377 * t427) / 2.0) *
-                   2.0)) /
+      (t443 *
+       (t431 *
+            (t109 - t118 - t195 - t301 - t345 + t361 + n2x * t370 * t375 * t385 -
+             n2y * t370 * t375 * t387 + (n2x * t313 * t371 * t375 * t427) / 2.0 +
+             (n2x * t313 * t370 * t377 * t427) / 2.0 + (n2y * t323 * t371 * t375 * t427) / 2.0 +
+             (n2y * t323 * t370 * t377 * t427) / 2.0) *
+            2.0 +
+        t429 *
+            (t385 + n2x * t370 * t375 * t389 - n2z * t370 * t375 * t387 -
+             (n2x * t327 * t371 * t375 * t427) / 2.0 - (n2x * t327 * t370 * t377 * t427) / 2.0 +
+             (n2z * t323 * t371 * t375 * t427) / 2.0 + (n2z * t323 * t370 * t377 * t427) / 2.0) *
+            2.0 -
+        t437 *
+            (t387 - n2y * t370 * t375 * t389 + n2z * t370 * t375 * t385 +
+             (n2y * t327 * t371 * t375 * t427) / 2.0 + (n2y * t327 * t370 * t377 * t427) / 2.0 +
+             (n2z * t313 * t371 * t375 * t427) / 2.0 + (n2z * t313 * t370 * t377 * t427) / 2.0) *
+            2.0)) /
       2.0;
   J(1, 1) =
       (t443 *
        (t437 *
             (t383 - n2y * t370 * t375 * t381 -
              n2z * t370 * t375 *
-                 (t319 - t347 + (n2y * (t153 - t157)) / 2.0 +
-                  n2y * t279 * t284 * (t153 - t157)) +
-             (n2y * t327 * t371 * t375 * t425) / 2.0 +
-             (n2y * t327 * t370 * t377 * t425) / 2.0 +
-             (n2z * t313 * t371 * t375 * t425) / 2.0 +
-             (n2z * t313 * t370 * t377 * t425) / 2.0) *
+                 (t319 - t347 + (n2y * (t153 - t157)) / 2.0 + n2y * t279 * t284 * (t153 - t157)) +
+             (n2y * t327 * t371 * t375 * t425) / 2.0 + (n2y * t327 * t370 * t377 * t425) / 2.0 +
+             (n2z * t313 * t371 * t375 * t425) / 2.0 + (n2z * t313 * t370 * t377 * t425) / 2.0) *
             -2.0 +
         t429 *
             (t379 + n2x * t370 * t375 * t381 +
              n2z * t370 * t375 *
                  (-t87 - t129 - t132 + t349 + (n2x * (t153 - t157)) / 2.0 +
                   t239 * t284 *
-                      (t15 * t207 * (t153 - t157) * 2.0 +
-                       t17 * t207 * (t153 - t157) * 2.0 +
+                      (t15 * t207 * (t153 - t157) * 2.0 + t17 * t207 * (t153 - t157) * 2.0 +
                        t19 * t207 * (t153 - t157) * 2.0) +
                   t279 * t284 * (t155 + n2x * (t153 - t157))) -
-             (n2x * t327 * t371 * t375 * t425) / 2.0 -
-             (n2x * t327 * t370 * t377 * t425) / 2.0 +
-             (n2z * t323 * t371 * t375 * t425) / 2.0 +
-             (n2z * t323 * t370 * t377 * t425) / 2.0) *
+             (n2x * t327 * t371 * t375 * t425) / 2.0 - (n2x * t327 * t370 * t377 * t425) / 2.0 +
+             (n2z * t323 * t371 * t375 * t425) / 2.0 + (n2z * t323 * t370 * t377 * t425) / 2.0) *
             2.0 +
         t431 *
             (-t81 - t119 - t121 - t299 + t351 + (n2z * (t153 - t157)) / 2.0 +
              t241 * t284 *
-                 (t15 * t207 * (t153 - t157) * 2.0 +
-                  t17 * t207 * (t153 - t157) * 2.0 +
+                 (t15 * t207 * (t153 - t157) * 2.0 + t17 * t207 * (t153 - t157) * 2.0 +
                   t19 * t207 * (t153 - t157) * 2.0) -
              n2x * t370 * t375 *
-                 (t319 - t347 + (n2y * (t153 - t157)) / 2.0 +
-                  n2y * t279 * t284 * (t153 - t157)) +
+                 (t319 - t347 + (n2y * (t153 - t157)) / 2.0 + n2y * t279 * t284 * (t153 - t157)) +
              n2y * t370 * t375 *
                  (-t87 - t129 - t132 + t349 + (n2x * (t153 - t157)) / 2.0 +
                   t239 * t284 *
-                      (t15 * t207 * (t153 - t157) * 2.0 +
-                       t17 * t207 * (t153 - t157) * 2.0 +
+                      (t15 * t207 * (t153 - t157) * 2.0 + t17 * t207 * (t153 - t157) * 2.0 +
                        t19 * t207 * (t153 - t157) * 2.0) +
                   t279 * t284 * (t155 + n2x * (t153 - t157))) +
-             (n2x * t313 * t371 * t375 * t425) / 2.0 +
-             (n2x * t313 * t370 * t377 * t425) / 2.0 +
-             (n2y * t323 * t371 * t375 * t425) / 2.0 +
-             (n2y * t323 * t370 * t377 * t425) / 2.0) *
+             (n2x * t313 * t371 * t375 * t425) / 2.0 + (n2x * t313 * t370 * t377 * t425) / 2.0 +
+             (n2y * t323 * t371 * t375 * t425) / 2.0 + (n2y * t323 * t370 * t377 * t425) / 2.0) *
             2.0)) /
       2.0;
 
   return J;
 }
 
-} // namespace SURRPR2U1
+}  // namespace SURRPR2U1

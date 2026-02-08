@@ -1,12 +1,12 @@
 #ifndef EXPLICITLOOPCONSTRAINTS_H
 #define EXPLICITLOOPCONSTRAINTS_H
 
-#include <Eigen/Dense>
-#include <iostream>
 #include <math.h>
+#include <rbdl/rbdl.h>
 #include <stdio.h>
 
-#include <rbdl/rbdl.h>
+#include <Eigen/Dense>
+#include <iostream>
 
 using namespace std;
 using namespace RigidBodyDynamics;
@@ -17,7 +17,7 @@ using Eigen::VectorXd;
 namespace ExplicitLoopConstraints {
 // pure Abstract Class
 class ExplicitLoopConstraintSet {
-public:
+ public:
   /// \brief Degree of freedom of active joints (p)
   unsigned int dof_active;
   /// \brief Degree of freedom of spanning tree (n)
@@ -43,7 +43,7 @@ public:
    *
    * \param y vector of independent joint positions
    */
-  virtual VectorXd calc_loopclosure_function(const Math::VectorNd &y);
+  virtual VectorXd calc_loopclosure_function(const Math::VectorNd& y);
   /** \brief Returns the loop closure Jacobian (G) from independent joint
    * position (y)
    *
@@ -52,7 +52,7 @@ public:
    *
    * \param y vector of independent joint positions
    */
-  virtual MatrixXd calc_loopclosure_Jacobian(const Math::VectorNd &y);
+  virtual MatrixXd calc_loopclosure_Jacobian(const Math::VectorNd& y);
   /** \brief Returns the loop closure Jacobian derivative (Gdot) from
    * independent joint position and velocity (y, yd)
    *
@@ -62,8 +62,7 @@ public:
    * \param y vector of independent joint positions
    * \param ydot vector of independent joint velocities
    */
-  virtual MatrixXd calc_loopclosure_Jacobiand(const Math::VectorNd &y,
-                                              const Math::VectorNd &yd);
+  virtual MatrixXd calc_loopclosure_Jacobiand(const Math::VectorNd& y, const Math::VectorNd& yd);
 
   /** \brief Returns the loop closure bias acceleration (g) from independent
    * joint position and velocity (y, yd)
@@ -74,8 +73,7 @@ public:
    * \param y vector of independent joint positions
    * \param ydot vector of independent joint velocities
    */
-  virtual VectorXd calc_loopclosure_g(const Math::VectorNd &y,
-                                      const Math::VectorNd &yd);
+  virtual VectorXd calc_loopclosure_g(const Math::VectorNd& y, const Math::VectorNd& yd);
 
   /// \brief Returns the degree of freedom of spanning tree
   unsigned int get_dof_spanningtree() { return dof_spanningtree; };
@@ -87,19 +85,17 @@ public:
   /// \brief Returns the degree of freedom of active joints
   unsigned int get_dof_active() { return dof_active; };
   /// \brief Returns the degree of freedom of floating base joint
-  unsigned int get_dof_floatingbase() {
-    return dof_independent - dof_independent_robot;
-  };
+  unsigned int get_dof_floatingbase() { return dof_independent - dof_independent_robot; };
 
   /// \brief Returns Actuator selection matrix of size (p x n)
-  const MatrixXd &get_permutation_matrix() { return permutation_matrix; };
+  const MatrixXd& get_permutation_matrix() { return permutation_matrix; };
   /// \brief Returns Indepedent joints of the robot selection matrix of size (m
   /// - floating_dof x m)
-  const MatrixXd &get_permutation_matrix2() { return permutation_matrix2; };
+  const MatrixXd& get_permutation_matrix2() { return permutation_matrix2; };
   /// \brief Explicit Loop Constraint Set
   virtual ~ExplicitLoopConstraintSet(){};
 };
 
-} // namespace ExplicitLoopConstraints
+}  // namespace ExplicitLoopConstraints
 
-#endif // EXPLICITLOOPCONSTRAINTS
+#endif  // EXPLICITLOOPCONSTRAINTS

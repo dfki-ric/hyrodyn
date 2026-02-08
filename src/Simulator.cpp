@@ -3,7 +3,6 @@ using namespace hyrodyn;
 
 Simulator::Simulator(string filepath_urdf, string filepath_submechanisms,
                      string integrator_choice) {
-
   // Setup the hyrodyn robot model
   robot_plant.load_robotmodel(filepath_urdf, filepath_submechanisms);
 
@@ -21,8 +20,7 @@ Simulator::Simulator(string filepath_urdf, string filepath_submechanisms,
   state_dim = 2 * dof;
 }
 
-void Simulator::write_simulation_data_into_csv(const char *filename) {
-
+void Simulator::write_simulation_data_into_csv(const char* filename) {
   ofstream output_file(filename, ios::trunc | ios::out);
 
   if (!output_file) {
@@ -43,11 +41,9 @@ void Simulator::write_simulation_data_into_csv(const char *filename) {
   assert(pos_vector.size() == time_vector.size());
 
   for (unsigned int i = 0; i < pos_vector.size(); i++) {
-
     output_file << time_vector[i] << ",";
 
-    for (unsigned int j = 0; j < robot_plant.jointnames_spanningtree.size();
-         j++) {
+    for (unsigned int j = 0; j < robot_plant.jointnames_spanningtree.size(); j++) {
       output_file << pos_vector[i][j];
 
       if (j != pos_vector[i].size() - 1)
@@ -59,8 +55,7 @@ void Simulator::write_simulation_data_into_csv(const char *filename) {
   output_file.close();
 }
 
-VectorNd Simulator::rhs(double t, const VectorNd &y) {
-
+VectorNd Simulator::rhs(double t, const VectorNd& y) {
   // We build an ODE in generalized coordinates a.k.a independent joint space in
   // hyrodyn
 
@@ -82,9 +77,7 @@ VectorNd Simulator::rhs(double t, const VectorNd &y) {
   return res;
 }
 
-VectorNd Simulator::runge_integrator(const double t, const double h,
-                                     const VectorNd &y) {
-
+VectorNd Simulator::runge_integrator(const double t, const double h, const VectorNd& y) {
   VectorNd k1 = rhs(t, y);
   VectorNd k2 = rhs(t + 0.5 * h, y + 0.5 * h * k1);
   VectorNd k3 = rhs(t + 0.5 * h, y + 0.5 * h * k2);
@@ -93,27 +86,22 @@ VectorNd Simulator::runge_integrator(const double t, const double h,
   return 1 / 6. * (k1 + 2. * k2 + 2. * k3 + k4);
 }
 
-VectorNd Simulator::euler_integrator(const double t, const double h,
-                                     const VectorNd &y) {
+VectorNd Simulator::euler_integrator(const double t, const double h, const VectorNd& y) {
   return rhs(t, y);
 }
 
-VectorNd Simulator::simulate_over_period(const double t0, const VectorNd &y0,
-                                         const double tf, const double h,
-                                         bool dump_sim_output_into_csv) {
-
+VectorNd Simulator::simulate_over_period(const double t0, const VectorNd& y0, const double tf,
+                                         const double h, bool dump_sim_output_into_csv) {
   double t = t0;
   VectorNd y = y0;
 
   while (t <= tf) {
-
     switch (integrator_type) {
+      case euler:
+        y = y + h * euler_integrator(t, h, y);
 
-    case euler:
-      y = y + h * euler_integrator(t, h, y);
-
-    case runge_kutta:
-      y = y + h * runge_integrator(t, h, y);
+      case runge_kutta:
+        y = y + h * runge_integrator(t, h, y);
     }
 
     // y = y + h * integrator (t, y, h, rhs);
@@ -131,16 +119,12 @@ VectorNd Simulator::simulate_over_period(const double t0, const VectorNd &y0,
 }
 
 void Simulator::simulate(const double h) {
-
   switch (integrator_type) {
+    case euler:
+      current_state = current_state + h * euler_integrator(current_time, h, current_state);
 
-  case euler:
-    current_state =
-        current_state + h * euler_integrator(current_time, h, current_state);
-
-  case runge_kutta:
-    current_state =
-        current_state + h * runge_integrator(current_time, h, current_state);
+    case runge_kutta:
+      current_state = current_state + h * runge_integrator(current_time, h, current_state);
   }
 
   current_time = current_time + h;

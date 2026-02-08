@@ -1,18 +1,16 @@
 #ifndef EXTERIOR_H
 #define EXTERIOR_H
 
-#include <Eigen/Dense>
-#include <iostream>
 #include <math.h>
+#include <rbdl/addons/urdfreader/urdfreader.h>
+#include <rbdl/rbdl.h>
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
 
+#include <Eigen/Dense>
 #include <fstream>
-
-#include <rbdl/rbdl.h>
-
-#include <rbdl/addons/urdfreader/urdfreader.h>
+#include <iostream>
 
 #include "ExplicitLoopConstraints.hpp"
 
@@ -62,7 +60,7 @@ namespace EXTERIOR {
  * For more examples, see data/hybrid/recupera/dual_arm_exo_with_human.
  */
 class exterior : public ExplicitLoopConstraints::ExplicitLoopConstraintSet {
-public:
+ public:
   /// \brief Vector of offset values
   VectorXd offset;
   /// \brief Loop closure Jacobian matrix
@@ -91,7 +89,7 @@ public:
    *
    * \param y vector of independent joint positions
    */
-  VectorXd calc_loopclosure_function(const Math::VectorNd &y);
+  VectorXd calc_loopclosure_function(const Math::VectorNd& y);
 
   /** \brief Returns the loop closure Jacobian (G) from independent joint
    * position (y)
@@ -101,7 +99,7 @@ public:
    *
    * \param y vector of independent joint positions
    */
-  MatrixXd calc_loopclosure_Jacobian(const Math::VectorNd &y);
+  MatrixXd calc_loopclosure_Jacobian(const Math::VectorNd& y);
 
   /** \brief Returns the loop closure Jacobian derivative (Gdot) from
    * independent joint position and velocity (y, ydot)
@@ -112,8 +110,7 @@ public:
    * \param y vector of independent joint positions
    * \param ydot vector of independent joint velocities
    */
-  MatrixXd calc_loopclosure_Jacobiand(const Math::VectorNd &y,
-                                      const Math::VectorNd &ydot);
+  MatrixXd calc_loopclosure_Jacobiand(const Math::VectorNd& y, const Math::VectorNd& ydot);
 
   /** \brief Returns the loop closure bias acceleration (g) from independent
    * joint position and velocity (y, yd)
@@ -124,10 +121,9 @@ public:
    * \param y vector of independent joint positions
    * \param ydot vector of independent joint velocities
    */
-  VectorXd calc_loopclosure_g(const Math::VectorNd &y,
-                              const Math::VectorNd &ydot);
+  VectorXd calc_loopclosure_g(const Math::VectorNd& y, const Math::VectorNd& ydot);
 };
 
-} // end namespace EXTERIOR
+}  // end namespace EXTERIOR
 
-#endif // EXTERIOR
+#endif  // EXTERIOR

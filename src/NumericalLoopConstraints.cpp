@@ -1,23 +1,21 @@
 #include "NumericalLoopConstraints.hpp"
+
 #include <ostream>
 
 namespace NUMERICALLOOPCONSTRAINTS {
 // Constructor
 NumericalLoopConstraints::NumericalLoopConstraints(
-    const string &file_path, const std::vector<string> &jointnames_spanningtree,
-    const std::vector<string> &jointnames_independent,
-    const std::vector<string> &jointnames_active,
-    const std::vector<Loop_constraints> &loop_constraints_set) {
-
+    const string& file_path, const std::vector<string>& jointnames_spanningtree,
+    const std::vector<string>& jointnames_independent, const std::vector<string>& jointnames_active,
+    const std::vector<Loop_constraints>& loop_constraints_set) {
   cout << "NumericalLoopConstraint Constructor Called" << endl;
-  const char *ext;
+  const char* ext;
   ext = strrchr(file_path.c_str(), '.');
 
-  if (!strcmp(ext, ".urdf") || !strcmp(ext, ".URDF") ||
-      !strcmp(ext, ".robot")) {
+  if (!strcmp(ext, ".urdf") || !strcmp(ext, ".URDF") || !strcmp(ext, ".robot")) {
     //	cout<<"Input file is URDF"<<endl;
-    if (!Addons::URDFReadFromFileWithModularity(
-            file_path.c_str(), &m, jointnames_spanningtree, false)) {
+    if (!Addons::URDFReadFromFileWithModularity(file_path.c_str(), &m, jointnames_spanningtree,
+                                                false)) {
       std::cerr << "Error loading urdf model" << std::endl;
       abort();
     }
@@ -49,7 +47,6 @@ NumericalLoopConstraints::NumericalLoopConstraints(
 
   // Binding constraints to the model.
   for (uint i = 0; i < loop_constraints_set.size(); i++) {
-
     pred_body_id = m.GetBodyId(loop_constraints_set[i].pred_body.c_str());
     succ_body_id = m.GetBodyId(loop_constraints_set[i].succ_body.c_str());
 
@@ -60,10 +57,8 @@ NumericalLoopConstraints::NumericalLoopConstraints(
 
     // Setting the transformation matrix from root to predecessor and successor
     // body
-    pred_body_pos = CalcBodyToBaseCoordinates(m, Q, pred_body_id,
-                                              Vector3d(0., 0., 0.), false);
-    succ_body_pos = CalcBodyToBaseCoordinates(m, Q, succ_body_id,
-                                              Vector3d(0., 0., 0.), false);
+    pred_body_pos = CalcBodyToBaseCoordinates(m, Q, pred_body_id, Vector3d(0., 0., 0.), false);
+    succ_body_pos = CalcBodyToBaseCoordinates(m, Q, succ_body_id, Vector3d(0., 0., 0.), false);
     // cut_joint_pos = CalcBodyToBaseCoordinates(m, Q, cut_joint_id,
     //                                           Vector3d(0., 0., 0.), false);
 
@@ -92,11 +87,10 @@ NumericalLoopConstraints::NumericalLoopConstraints(
     for (uint j = 0; j < loop_constraints_set[i].constraint_axes.size(); j++) {
       // cout << "Axis :
       // "<<loop_constraints_set[i].constraint_axes[j].axis<<endl;
-      cs.AddLoopConstraint(
-          pred_body_id, succ_body_id, Tp_k, Ts_k,
-          loop_constraints_set[i].constraint_axes[j].axis, true,
-          loop_constraints_set[i].constraint_axes[j].baumg_stab_param,
-          loop_constraints_set[i].constraint_axes[j].name.c_str());
+      cs.AddLoopConstraint(pred_body_id, succ_body_id, Tp_k, Ts_k,
+                           loop_constraints_set[i].constraint_axes[j].axis, true,
+                           loop_constraints_set[i].constraint_axes[j].baumg_stab_param,
+                           loop_constraints_set[i].constraint_axes[j].name.c_str());
     }
   }
   cs.Bind(m);
@@ -110,8 +104,7 @@ NumericalLoopConstraints::NumericalLoopConstraints(
                       jointnames_independent.size());
   Gd = MatrixXd::Zero(dof_spanningtree - jointnames_independent.size(),
                       jointnames_independent.size());
-  Gi = MatrixNd::Identity(jointnames_independent.size(),
-                          jointnames_independent.size());
+  Gi = MatrixNd::Identity(jointnames_independent.size(), jointnames_independent.size());
   gi = VectorXd::Zero(jointnames_independent.size());
   gd = VectorXd::Zero(dof_spanningtree - jointnames_independent.size());
   G = MatrixXd(dof_spanningtree, jointnames_independent.size());
@@ -146,13 +139,10 @@ NumericalLoopConstraints::NumericalLoopConstraints(
   cout << "Numerical Constructor executed successfully" << endl;
 }
 
-VectorXd
-NumericalLoopConstraints::calc_loopclosure_function(const ::VectorNd &y) {
-
+VectorXd NumericalLoopConstraints::calc_loopclosure_function(const ::VectorNd& y) {
   bool succ;
   QInit = independent_joints_selection_matrix.transpose() * y +
-          dependent_joints_selection_matrix.transpose() *
-              dependent_joints_selection_matrix * Q;
+          dependent_joints_selection_matrix.transpose() * dependent_joints_selection_matrix * Q;
   succ = CalcAssemblyQ(m, QInit, cs, Q, weights);
   // std::cout << "\n G : \n" << G << std::endl;
   // Q = G * y;
@@ -178,8 +168,7 @@ NumericalLoopConstraints::calc_loopclosure_function(const ::VectorNd &y) {
   }
 }
 
-MatrixXd
-NumericalLoopConstraints::calc_loopclosure_Jacobian(const ::VectorNd &y) {
+MatrixXd NumericalLoopConstraints::calc_loopclosure_Jacobian(const ::VectorNd& y) {
   if (internal_y.isApprox(y)) {
     CalcConstraintsJacobian(m, Q, cs, K);
     // cout<<"Called Q before" <<endl;
@@ -194,9 +183,7 @@ NumericalLoopConstraints::calc_loopclosure_Jacobian(const ::VectorNd &y) {
   return G;
 }
 
-VectorXd NumericalLoopConstraints::calc_loopclosure_g(const ::VectorNd &y,
-                                                      const ::VectorNd &ydot) {
-
+VectorXd NumericalLoopConstraints::calc_loopclosure_g(const ::VectorNd& y, const ::VectorNd& ydot) {
   if (G.isApprox(internal_G)) {
     Q = calc_loopclosure_function(y);
     QDot = G * ydot;
@@ -209,8 +196,7 @@ VectorXd NumericalLoopConstraints::calc_loopclosure_g(const ::VectorNd &y,
   return calc_g_from_k(K, k);
 }
 
-MatrixXd NumericalLoopConstraints::calc_G_from_K(MatrixNd &K) {
-
+MatrixXd NumericalLoopConstraints::calc_G_from_K(MatrixNd& K) {
   Kd = K * dependent_joints_selection_matrix.transpose();
   Ki = K * independent_joints_selection_matrix.transpose();
 
@@ -222,8 +208,7 @@ MatrixXd NumericalLoopConstraints::calc_G_from_K(MatrixNd &K) {
   return G;
 }
 
-VectorXd NumericalLoopConstraints::calc_g_from_k(MatrixNd &K, VectorXd &k) {
-
+VectorXd NumericalLoopConstraints::calc_g_from_k(MatrixNd& K, VectorXd& k) {
   gd = Kd.colPivHouseholderQr().solve(k);
   // g << gi,gd;
   g = independent_joints_selection_matrix.transpose() * gi +
@@ -231,12 +216,10 @@ VectorXd NumericalLoopConstraints::calc_g_from_k(MatrixNd &K, VectorXd &k) {
   return g;
 }
 
-VectorXd NumericalLoopConstraints::calc_k(Model &m, const Math::VectorNd &Q,
-                                          const Math::VectorNd &QDot,
-                                          ConstraintSet &CS) {
+VectorXd NumericalLoopConstraints::calc_k(Model& m, const Math::VectorNd& Q,
+                                          const Math::VectorNd& QDot, ConstraintSet& CS) {
   // Code for computing k=-\dot(K)*\dot(q)
   for (unsigned int i = 0; i < CS.mLoopConstraintIndices.size(); i++) {
-
     const unsigned int c = CS.mLoopConstraintIndices[i];
     // Variables used for computations.
     Vector3d pos_p;
@@ -246,8 +229,7 @@ VectorXd NumericalLoopConstraints::calc_k(Model &m, const Math::VectorNd &Q,
     SpatialVector axis;
     // Express the constraint axis in the base frame.
     pos_p = CalcBodyToBaseCoordinates(m, Q, CS.body_p[c], CS.X_p[c].r, true);
-    rot_p = CalcBodyWorldOrientation(m, Q, CS.body_p[c], true).transpose() *
-            CS.X_p[c].E;
+    rot_p = CalcBodyWorldOrientation(m, Q, CS.body_p[c], true).transpose() * CS.X_p[c].E;
     axis = SpatialTransform(rot_p, pos_p).apply(CS.constraintAxis[c]);
 
     // Compute the spatial velocities of the two constrained bodies.
@@ -259,12 +241,10 @@ VectorXd NumericalLoopConstraints::calc_k(Model &m, const Math::VectorNd &Q,
 
     // Compute the velocity product accelerations. These correspond to the
     // accelerations that the bodies would have if q ddot were 0.
-    SpatialVector acc_p =
-        CalcPointAcceleration6D(m, Q, QDot, VectorNd::Zero(m.dof_count),
-                                CS.body_p[c], CS.X_p[c].r, true);
-    SpatialVector acc_s =
-        CalcPointAcceleration6D(m, Q, QDot, VectorNd::Zero(m.dof_count),
-                                CS.body_s[c], CS.X_s[c].r, true);
+    SpatialVector acc_p = CalcPointAcceleration6D(m, Q, QDot, VectorNd::Zero(m.dof_count),
+                                                  CS.body_p[c], CS.X_p[c].r, true);
+    SpatialVector acc_s = CalcPointAcceleration6D(m, Q, QDot, VectorNd::Zero(m.dof_count),
+                                                  CS.body_s[c], CS.X_s[c].r, true);
 
     // Problem here if one of the bodies is fixed...
     // Compute the value of gamma.
@@ -277,14 +257,12 @@ VectorXd NumericalLoopConstraints::calc_k(Model &m, const Math::VectorNd &Q,
 }
 
 void NumericalLoopConstraints::calc_selection_matrices(
-    const std::vector<string> &jointnames_spanningtree,
-    const std::vector<string> &jointnames_independent) {
+    const std::vector<string>& jointnames_spanningtree,
+    const std::vector<string>& jointnames_independent) {
   independent_joints_selection_matrix.setZero(jointnames_independent.size(),
                                               jointnames_spanningtree.size());
-  unsigned int n_row_dependent =
-      jointnames_spanningtree.size() - jointnames_independent.size();
-  dependent_joints_selection_matrix.setZero(n_row_dependent,
-                                            jointnames_spanningtree.size());
+  unsigned int n_row_dependent = jointnames_spanningtree.size() - jointnames_independent.size();
+  dependent_joints_selection_matrix.setZero(n_row_dependent, jointnames_spanningtree.size());
 
   std::vector<int> independent_joints_index(jointnames_independent.size());
   std::vector<string> dependent_joints;
@@ -317,10 +295,9 @@ void NumericalLoopConstraints::calc_selection_matrices(
 }
 
 void NumericalLoopConstraints::calc_permutationmatrix(
-    const std::vector<string> &jointnames_spanningtree,
-    const std::vector<string> &jointnames_active) {
-  permutation_matrix.setZero(jointnames_active.size(),
-                             jointnames_spanningtree.size());
+    const std::vector<string>& jointnames_spanningtree,
+    const std::vector<string>& jointnames_active) {
+  permutation_matrix.setZero(jointnames_active.size(), jointnames_spanningtree.size());
 
   for (unsigned int i = 0; i < jointnames_active.size(); i++) {
     for (unsigned int j = 0; j < jointnames_spanningtree.size(); j++) {
@@ -330,4 +307,4 @@ void NumericalLoopConstraints::calc_permutationmatrix(
   }
 }
 
-} // namespace NUMERICALLOOPCONSTRAINTS
+}  // namespace NUMERICALLOOPCONSTRAINTS

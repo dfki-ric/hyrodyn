@@ -1,14 +1,15 @@
 #ifndef HYRODYN_UTILS_H
 #define HYRODYN_UTILS_H
 
+#include <math.h>
+#include <stdio.h>
+#include <sys/stat.h>
+#include <yaml-cpp/yaml.h>
+
 #include <Eigen/Dense>
 #include <fstream>
 #include <iostream>
-#include <math.h>
-#include <stdio.h>
 #include <string>
-#include <sys/stat.h>
-#include <yaml-cpp/yaml.h>
 
 using namespace std;
 using Eigen::MatrixXd;
@@ -20,7 +21,7 @@ using namespace hyrodyn;
 
 namespace HyRoDyn_Utils {
 class HyRoDyn_Utils {
-protected:
+ protected:
   /// \brief boolean input is limits in independent joint space
   bool input_is_independent_joints;
   /// \brief boolean input is limits in active joint space
@@ -57,20 +58,18 @@ protected:
   std::vector<std::string> jointnames_input;
 
   /// \brief Robot model in HyRoDyn
-  RobotModel_HyRoDyn *robot_model;
+  RobotModel_HyRoDyn* robot_model;
   /// \brief Parses yaml file to extract the information about input joints and
   /// their limits
   void initFromYaml(string filepath);
   /// \brief Discretizes the input joint space of the robot
-  MatrixXd discretize_input_space(int num_steps, int num_input_joints,
-                                  VectorXd min, VectorXd max,
+  MatrixXd discretize_input_space(int num_steps, int num_input_joints, VectorXd min, VectorXd max,
                                   VectorXd resolution);
 
-public:
+ public:
   /// \brief Constructor for the HyRoDyn_Utils class
-  HyRoDyn_Utils(string filepath_urdf, string filepath_submechanisms,
-                string filepath_jointlimits,
-                int num_steps_per_joint = 5); // constructor
+  HyRoDyn_Utils(string filepath_urdf, string filepath_submechanisms, string filepath_jointlimits,
+                int num_steps_per_joint = 5);  // constructor
 
   /// \brief Generates the full configuration space (all the joints in the
   /// spanning tree) of the mechanism
@@ -80,8 +79,8 @@ public:
   /// \brief Generates the actuation forces/torques of the mechanism
   void log_actuatorforces_Tau();
   /// \brief Generates the independent joint space of the mechanism
-  void log_independentjointstate_y(); // forward model: from actuator space to
-                                      // independent joint space
+  void log_independentjointstate_y();  // forward model: from actuator space to
+                                       // independent joint space
 
   //! Generates the workspace of the mechanism in SE(3)
   /*!
@@ -93,7 +92,7 @@ public:
   /// \brief Checks if the directory exists. If not creates the directory at the
   /// specified path \param dir_path Path of the directory to be checked or
   /// created
-  void is_directory_existing(const char *dir_path);
+  void is_directory_existing(const char* dir_path);
 
   /*	void log_sysstate_qdot(const Math::VectorNd q, const Math::VectorNd
      qdot); void log_sysstate_qddot(const Math::VectorNd q, const Math::VectorNd
@@ -101,6 +100,6 @@ public:
   */
 };
 
-} // end namespace HyRoDyn_Utils
+}  // end namespace HyRoDyn_Utils
 
-#endif // HyRoDyn_Utils
+#endif  // HyRoDyn_Utils

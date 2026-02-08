@@ -1,16 +1,15 @@
 #ifndef _HYRODYN_RH5_ROBOT_MODEL_HYRODYN_HPP_
 #define _HYRODYN_RH5_ROBOT_MODEL_HYRODYN_HPP_
 
+#include <math.h>
+#include <rbdl/rbdl.h>
+#include <string.h>
+#include <yaml-cpp/yaml.h>
+
 #include <Eigen/SVD>
 #include <algorithm>
 #include <fstream>
 #include <iostream>
-#include <math.h>
-#include <string.h>
-
-#include <yaml-cpp/yaml.h>
-
-#include <rbdl/rbdl.h>
 
 #ifndef RBDL_BUILD_ADDON_URDFREADER
 #error "Error: RBDL addon URDFReader not enabled."
@@ -28,7 +27,7 @@ using namespace RRPR;
 
 namespace hyrodyn {
 class RobotModel_HyRoDyn {
-protected:
+ protected:
   /// \brief RBDL Model
   Model m;
   /// \brief Vector of submechanisms
@@ -39,9 +38,9 @@ protected:
   /// \brief Vector of independent joint position in the zero configuration
   VectorNd y_zero;
   /// \brief Explicit Loop Constraint Set
-  ExplicitLoopConstraints::ExplicitLoopConstraintSet *elcs;
+  ExplicitLoopConstraints::ExplicitLoopConstraintSet* elcs;
 
-public:
+ public:
   /// \brief inverse of condition number of the Jacobian mapping from
   /// independent joint space to task space
   double inv_cond1;
@@ -259,9 +258,8 @@ public:
   //! then create a RobotModel_HyRoDyn instance
   void load_smurf(string filepath_smurf);
   //! Parses  urdf and submechanisms file from a smurf file
-  static void load_filepathes_from_smurf(string filepath_smurf,
-                                         string &filepath_urdf,
-                                         string &filepath_submechanisms);
+  static void load_filepathes_from_smurf(string filepath_smurf, string& filepath_urdf,
+                                         string& filepath_submechanisms);
   //! Compute the full system state (Q, QDot, QDDot) of the robot from the
   //! independent joint state (y, yd, ydd)
   void calculate_system_state();
@@ -306,8 +304,7 @@ public:
     \param body_names Body names defined in the URDF file for which forward
     kinematics should be solved.
   */
-  void
-  calculate_forward_kinematics_multiple_bodies(std::vector<string> body_names);
+  void calculate_forward_kinematics_multiple_bodies(std::vector<string> body_names);
   //! Compute the adjoint transformation of a body on the robot in base
   //! coordinates
   /*!
@@ -329,8 +326,7 @@ public:
     \param body_name Body name defined in the URDF file for which inverse
     kinematics should be solved.
   */
-  void calculate_condition_number(string body_name,
-                                  bool for_point_Jacobian = false);
+  void calculate_condition_number(string body_name, bool for_point_Jacobian = false);
   //! Compute the inverse of condition number of the loop closure Jacobians (G,
   //! G*Gu.inverse) of the robot (inv_cond1, inv_cond2) from independent joint
   //! state (y)
@@ -375,16 +371,14 @@ public:
     \param body_name Body name defined in the URDF file for which Body Jacobian
     should be computed.
   */
-  void calculate_body_jacobian_actuation_space_including_floatingbase(
-      string body_name);
+  void calculate_body_jacobian_actuation_space_including_floatingbase(string body_name);
   //! Compute the Space Jacobian (Jsufb) of the robot from independent joint
   //! state (y) projected to actuation space including the floating base
   /*!
     \param body_name Body name defined in the URDF file for which Space Jacobian
     should be computed.
   */
-  void calculate_space_jacobian_actuation_space_including_floatingbase(
-      string body_name);
+  void calculate_space_jacobian_actuation_space_including_floatingbase(string body_name);
 
   //! Compute the Spatial Acceleration Bias term (Jdot*ydot) of a given body of
   //! the robot from independent joint state (y, yd)
@@ -418,6 +412,6 @@ public:
   double calculate_total_energy();
 };
 
-} // end namespace hyrodyn
+}  // end namespace hyrodyn
 
-#endif // _HYRODYN_RH5_ROBOT_MODEL_HYRODYN_HPP_
+#endif  // _HYRODYN_RH5_ROBOT_MODEL_HYRODYN_HPP_

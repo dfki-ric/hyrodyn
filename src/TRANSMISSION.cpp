@@ -11,20 +11,16 @@
 namespace TRANSMISSION {
 
 // Constructor
-transmission::transmission(string file_path,
-                           std::vector<string> jointnames_spanningtree,
+transmission::transmission(string file_path, std::vector<string> jointnames_spanningtree,
                            std::vector<string> jointnames_independent) {
-
   dof_spanningtree = jointnames_spanningtree.size();
   dof_independent = jointnames_independent.size();
 
-  const char *ext;
+  const char* ext;
   ext = strrchr(file_path.c_str(), '.');
-  if (!strcmp(ext, ".urdf") || !strcmp(ext, ".URDF") ||
-      !strcmp(ext, ".robot")) {
+  if (!strcmp(ext, ".urdf") || !strcmp(ext, ".URDF") || !strcmp(ext, ".robot")) {
     if (!Addons::URDFReadLoopClosureFunctionTransmission(
-            file_path.c_str(), G, offset, jointnames_independent,
-            jointnames_spanningtree)) {
+            file_path.c_str(), G, offset, jointnames_independent, jointnames_spanningtree)) {
       std::cerr << "Error loading urdf model" << std::endl;
       abort();
     }
@@ -44,7 +40,7 @@ transmission::transmission(string file_path,
   //	cout<<"Gdot matrix: \n"<<Gdot<<endl;
 }
 
-VectorXd transmission::calc_loopclosure_function(const Math::VectorNd &y) {
+VectorXd transmission::calc_loopclosure_function(const Math::VectorNd& y) {
   // This function calculates the loop closure function Gamma which is a vector
   // of size (n x 1).
 
@@ -55,26 +51,25 @@ VectorXd transmission::calc_loopclosure_function(const Math::VectorNd &y) {
   return Q;
 }
 
-MatrixXd transmission::calc_loopclosure_Jacobian(const Math::VectorNd &y) {
+MatrixXd transmission::calc_loopclosure_Jacobian(const Math::VectorNd& y) {
   // This function calculates the loop closure Jacobian matrix G which is a
   // matrix of size (n x m).
 
   return G;
 }
 
-MatrixXd transmission::calc_loopclosure_Jacobiand(const Math::VectorNd &y,
-                                                  const Math::VectorNd &ydot) {
+MatrixXd transmission::calc_loopclosure_Jacobiand(const Math::VectorNd& y,
+                                                  const Math::VectorNd& ydot) {
   // This function calculates the 1st order time derivative of loop closure
   // Jacobian Gdot which is a matrix of size (n x m).
 
   return Gdot;
 }
 
-VectorXd transmission::calc_loopclosure_g(const Math::VectorNd &y,
-                                          const Math::VectorNd &ydot) {
+VectorXd transmission::calc_loopclosure_g(const Math::VectorNd& y, const Math::VectorNd& ydot) {
   // This function calculates the loop closure bias acceleration g= Gdot*ydot
 
   return calc_loopclosure_Jacobiand(y, ydot) * ydot;
 }
 
-} // namespace TRANSMISSION
+}  // namespace TRANSMISSION

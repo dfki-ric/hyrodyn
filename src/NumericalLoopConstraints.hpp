@@ -2,19 +2,17 @@
 #define NUMERICALLOOPCONSTRAINTS_H
 
 // Author: Rohit Kumar
-#include <Eigen/Dense>
-#include <Eigen/QR>
-#include <iostream>
 #include <math.h>
+#include <rbdl/addons/urdfreader/urdfreader.h>
+#include <rbdl/rbdl.h>
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
 
+#include <Eigen/Dense>
+#include <Eigen/QR>
 #include <fstream>
-
-#include <rbdl/rbdl.h>
-
-#include <rbdl/addons/urdfreader/urdfreader.h>
+#include <iostream>
 
 #include "ExplicitLoopConstraints.hpp"
 
@@ -46,7 +44,6 @@ struct Constraint_dof {
 };
 /// \brief Structure of Loop closure constraints
 struct Loop_constraints {
-
   /// \brief Cut joint frame
   string jointname_cut;
   /// \brief Predecessor body frame
@@ -76,9 +73,8 @@ struct Loop_constraints {
   }
 };
 
-class NumericalLoopConstraints
-    : public ExplicitLoopConstraints::ExplicitLoopConstraintSet {
-private:
+class NumericalLoopConstraints : public ExplicitLoopConstraints::ExplicitLoopConstraintSet {
+ private:
   /// \brief Implicit constraint Jacobian matrix
   MatrixNd K;
   /// \brief Explicit constraint Jacobian matrix
@@ -120,7 +116,7 @@ private:
   /// \brief weighting coefficients for the different joint positions.
   VectorNd weights;
 
-public:
+ public:
   // Constructor
   /** \brief Constructor of the NumericalLoopConstraints class
    *
@@ -144,7 +140,7 @@ public:
    *
    * \param y vector of independent joint positions
    */
-  VectorXd calc_loopclosure_function(const Math::VectorNd &y);
+  VectorXd calc_loopclosure_function(const Math::VectorNd& y);
 
   /** \brief Returns the loop closure Jacobian (G) from independent joint
    * position (y)
@@ -154,7 +150,7 @@ public:
    *
    * \param y vector of independent joint positions
    */
-  MatrixXd calc_loopclosure_Jacobian(const Math::VectorNd &y);
+  MatrixXd calc_loopclosure_Jacobian(const Math::VectorNd& y);
 
   /** \brief Returns the loop closure bias acceleration (g) from independent
    * joint position and velocity (y, yd)
@@ -165,15 +161,14 @@ public:
    * \param y vector of independent joint positions
    * \param ydot vector of independent joint velocities
    */
-  VectorXd calc_loopclosure_g(const Math::VectorNd &y,
-                              const Math::VectorNd &ydot);
+  VectorXd calc_loopclosure_g(const Math::VectorNd& y, const Math::VectorNd& ydot);
 
   /** \brief Returns the loop closure Jacobian (G) from implicit constraint
    * Jacobian matrix (K)
    *
    * \param K Implicit constraint Jacobian matrix
    */
-  MatrixXd calc_G_from_K(MatrixNd &K);
+  MatrixXd calc_G_from_K(MatrixNd& K);
 
   /** \brief Returns the implicit loop closure acceleration numerically
    *
@@ -185,8 +180,7 @@ public:
    * \param Q  vector of the generalized joint positions
    * \param QDot  vector of the generalized joint velocities
    */
-  VectorXd calc_k(Model &m, const Math::VectorNd &Q, const Math::VectorNd &QDot,
-                  ConstraintSet &CS);
+  VectorXd calc_k(Model& m, const Math::VectorNd& Q, const Math::VectorNd& QDot, ConstraintSet& CS);
 
   /** \brief Returns the loop closure bias acceleration (g) from implicit
    * implicit loop closure acceleration(k) and implicit constraint Jacobian
@@ -195,7 +189,7 @@ public:
    * \param K implicit constraint Jacobian matrix
    * \param k implicit loop closure acceleration
    */
-  VectorXd calc_g_from_k(MatrixNd &K, VectorXd &k);
+  VectorXd calc_g_from_k(MatrixNd& K, VectorXd& k);
 
   /** \brief Returns the independent and dependent joints selection matrices
    *
@@ -213,6 +207,6 @@ public:
   void calc_permutationmatrix(const std::vector<string>& jointnames_spanningtree,
                               const std::vector<string>& jointnames_active);
 };
-} // namespace NUMERICALLOOPCONSTRAINTS
+}  // namespace NUMERICALLOOPCONSTRAINTS
 
-#endif // NumericalLoopConstraitnts
+#endif  // NumericalLoopConstraitnts

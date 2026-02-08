@@ -1,18 +1,16 @@
 #ifndef RRPR_H
 #define RRPR_H
 
-#include <Eigen/Dense>
-#include <iostream>
 #include <math.h>
+#include <rbdl/addons/urdfreader/urdfreader.h>
+#include <rbdl/rbdl.h>
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
 
+#include <Eigen/Dense>
 #include <fstream>
-
-#include <rbdl/rbdl.h>
-
-#include <rbdl/addons/urdfreader/urdfreader.h>
+#include <iostream>
 
 #include "ExplicitLoopConstraints.hpp"
 
@@ -63,8 +61,7 @@ namespace RRPR {
  *   jointnames_active: ["J3"] \n
  */
 class rrPr : public ExplicitLoopConstraints::ExplicitLoopConstraintSet {
-
-protected:
+ protected:
   /// \brief Length of the base link (refer mechanism's schematic)
   double l1;
   /// \brief Length of the crank link (refer mechanism's schematic)
@@ -74,7 +71,7 @@ protected:
   /// \brief Spanning tree joint position state at zero configuration
   VectorXd Q_zero;
 
-public:
+ public:
   // Constructor
   /** \brief Constructor of the rrPr mechanism class
    *
@@ -96,7 +93,7 @@ public:
    *
    * \param y vector of independent joint positions
    */
-  VectorXd calc_loopclosure_function(const Math::VectorNd &y);
+  VectorXd calc_loopclosure_function(const Math::VectorNd& y);
 
   /** \brief Returns the loop closure Jacobian (G) from independent joint
    * position (y)
@@ -106,7 +103,7 @@ public:
    *
    * \param y vector of independent joint positions
    */
-  MatrixXd calc_loopclosure_Jacobian(const Math::VectorNd &y);
+  MatrixXd calc_loopclosure_Jacobian(const Math::VectorNd& y);
 
   /** \brief Returns the loop closure Jacobian derivative (Gdot) from
    * independent joint position and velocity (y, yd)
@@ -117,8 +114,7 @@ public:
    * \param y vector of independent joint positions
    * \param ydot vector of independent joint velocities
    */
-  MatrixXd calc_loopclosure_Jacobiand(const Math::VectorNd &y,
-                                      const Math::VectorNd &ydot);
+  MatrixXd calc_loopclosure_Jacobiand(const Math::VectorNd& y, const Math::VectorNd& ydot);
 
   /** \brief Returns the loop closure bias acceleration (g) from independent
    * joint position and velocity (y, yd)
@@ -129,8 +125,7 @@ public:
    * \param y vector of independent joint positions
    * \param ydot vector of independent joint velocities
    */
-  VectorXd calc_loopclosure_g(const Math::VectorNd &y,
-                              const Math::VectorNd &ydot);
+  VectorXd calc_loopclosure_g(const Math::VectorNd& y, const Math::VectorNd& ydot);
 
   /** \brief Returns the actuator selection matrix of size (p x n)
    *
@@ -141,6 +136,6 @@ public:
                               std::vector<string> jointnames_active);
 };
 
-} // namespace RRPR
+}  // namespace RRPR
 
-#endif // Rsup
+#endif  // Rsup

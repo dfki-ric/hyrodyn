@@ -9,8 +9,7 @@
 #include "R3US2_ANKLE.hpp"
 
 namespace R3US2_ANKLE {
-Eigen::Matrix4d BuildTransMat(const Math::Matrix3d rot,
-                              const Math::Vector3d trans) {
+Eigen::Matrix4d BuildTransMat(const Math::Matrix3d rot, const Math::Vector3d trans) {
   Eigen::Matrix4d TransMat = Eigen::Matrix4d::Zero();
 
   TransMat.block(0, 0, 3, 3) = rot;
@@ -49,24 +48,20 @@ Eigen::Matrix4d invertTransMat(const Eigen::Matrix4d TransMat) {
 }
 
 // Constructor
-r3us2_ankle::r3us2_ankle(string file_path,
-                         std::vector<string> jointnames_spanningtree,
+r3us2_ankle::r3us2_ankle(string file_path, std::vector<string> jointnames_spanningtree,
                          std::vector<string> jointnames_independent) {
-
   // Model m;
 
-  const char *ext;
+  const char* ext;
   ext = strrchr(file_path.c_str(), '.');
-  if (!strcmp(ext, ".urdf") || !strcmp(ext, ".URDF") ||
-      !strcmp(ext, ".robot")) {
-    if (!Addons::URDFReadFromFileWithModularity(
-            file_path.c_str(), &m, jointnames_spanningtree, false)) {
+  if (!strcmp(ext, ".urdf") || !strcmp(ext, ".URDF") || !strcmp(ext, ".robot")) {
+    if (!Addons::URDFReadFromFileWithModularity(file_path.c_str(), &m, jointnames_spanningtree,
+                                                false)) {
       std::cerr << "Error loading urdf model" << std::endl;
       abort();
     }
   } else {
-    std::cerr << "Unknown file type: Accepted file types are .urdf or .lua"
-              << endl;
+    std::cerr << "Unknown file type: Accepted file types are .urdf or .lua" << endl;
     abort();
   }
 
@@ -101,59 +96,50 @@ r3us2_ankle::r3us2_ankle(string file_path,
 
   // calculate body coordinates from motor 1 to motor 3
   Vector3d motor_1, motor_2, motor_3;
-  Vector3d lever_1_roll, lever_2_roll, lever_3_roll, lever_4_roll, lever_5_roll,
-      lever_6_roll;
+  Vector3d lever_1_roll, lever_2_roll, lever_3_roll, lever_4_roll, lever_5_roll, lever_6_roll;
   Vector3d c1, c2, c3, c4, c5, c6;
 
   motor_1 = CalcBodyToBaseCoordinates(m, Q, 7, Vector3d(0., 0., 0.), false);
-  lever_1_roll =
-      CalcBodyToBaseCoordinates(m, Q, 8, Vector3d(0., 0., 0.), false);
+  lever_1_roll = CalcBodyToBaseCoordinates(m, Q, 8, Vector3d(0., 0., 0.), false);
   c1 = CalcBodyToBaseCoordinates(m, Q, 9, Vector3d(0., 0., 0.),
-                                 false); // lever 1 pitch
-  lever_2_roll =
-      CalcBodyToBaseCoordinates(m, Q, 10, Vector3d(0., 0., 0.), false);
+                                 false);  // lever 1 pitch
+  lever_2_roll = CalcBodyToBaseCoordinates(m, Q, 10, Vector3d(0., 0., 0.), false);
   c2 = CalcBodyToBaseCoordinates(m, Q, 11, Vector3d(0., 0., 0.),
-                                 false); // lever 2 pitch
+                                 false);  // lever 2 pitch
   motor_2 = CalcBodyToBaseCoordinates(m, Q, 12, Vector3d(0., 0., 0.), false);
-  lever_3_roll =
-      CalcBodyToBaseCoordinates(m, Q, 13, Vector3d(0., 0., 0.), false);
+  lever_3_roll = CalcBodyToBaseCoordinates(m, Q, 13, Vector3d(0., 0., 0.), false);
   c3 = CalcBodyToBaseCoordinates(m, Q, 14, Vector3d(0., 0., 0.),
-                                 false); // lever 3 pitch
-  lever_4_roll =
-      CalcBodyToBaseCoordinates(m, Q, 15, Vector3d(0., 0., 0.), false);
+                                 false);  // lever 3 pitch
+  lever_4_roll = CalcBodyToBaseCoordinates(m, Q, 15, Vector3d(0., 0., 0.), false);
   c4 = CalcBodyToBaseCoordinates(m, Q, 16, Vector3d(0., 0., 0.),
-                                 false); // lever 4 pitch
+                                 false);  // lever 4 pitch
   motor_3 = CalcBodyToBaseCoordinates(m, Q, 17, Vector3d(0., 0., 0.), false);
-  lever_5_roll =
-      CalcBodyToBaseCoordinates(m, Q, 18, Vector3d(0., 0., 0.), false);
+  lever_5_roll = CalcBodyToBaseCoordinates(m, Q, 18, Vector3d(0., 0., 0.), false);
   c5 = CalcBodyToBaseCoordinates(m, Q, 19, Vector3d(0., 0., 0.),
-                                 false); // lever 5 pitch
-  lever_6_roll =
-      CalcBodyToBaseCoordinates(m, Q, 20, Vector3d(0., 0., 0.), false);
+                                 false);  // lever 5 pitch
+  lever_6_roll = CalcBodyToBaseCoordinates(m, Q, 20, Vector3d(0., 0., 0.), false);
   c6 = CalcBodyToBaseCoordinates(m, Q, 21, Vector3d(0., 0., 0.),
-                                 false); // lever 6 pitch
+                                 false);  // lever 6 pitch
 
-  Vector3d Position_EE = CalcBodyToBaseCoordinates(
-      m, Q, 3, Vector3d(0., 0., 0.), false); // use body-ID 1, 2, or 3
+  Vector3d Position_EE =
+      CalcBodyToBaseCoordinates(m, Q, 3, Vector3d(0., 0., 0.), false);  // use body-ID 1, 2, or 3
   Matrix3d RotMat_EE = CalcBodyWorldOrientation(m, Q, 3.).transpose();
   cout << "endeff coord position :\n " << Position_EE << endl;
   cout << "endeff rotation :\n " << RotMat_EE << endl;
 
   // calculate transformation from the G frame to the E-frame (G_T_E)
   G_T_E_zero = BuildTransMat(RotMat_EE, Position_EE);
-  cout << "Global-endeff Transformation: \n"
-       << G_T_E_zero << endl; // at zero config
+  cout << "Global-endeff Transformation: \n" << G_T_E_zero << endl;  // at zero config
 
   // caluclate transformation from the G-frame to the taskspace-frame (G_T_T)
-  Vector3d Position_T = CalcBodyToBaseCoordinates(
-      m, Q, 6, Vector3d(0., 0., 0.), false); // use body-ID 4, 5, or 6
+  Vector3d Position_T =
+      CalcBodyToBaseCoordinates(m, Q, 6, Vector3d(0., 0., 0.), false);  // use body-ID 4, 5, or 6
   Matrix3d RotMat_T = CalcBodyWorldOrientation(m, Q, 6.).transpose();
   cout << "Task space coord position :\n " << Position_T << endl;
   cout << "Task space rotation :\n " << RotMat_T << endl;
 
   G_T_T_zero = BuildTransMat(RotMat_T, Position_T);
-  cout << "Global-taskspace-Transformation: \n"
-       << G_T_T_zero << endl; // at zero config
+  cout << "Global-taskspace-Transformation: \n" << G_T_T_zero << endl;  // at zero config
 
   // calculate radius d of the sphere around the ee points and radius r around
   // the crank points
@@ -183,16 +169,14 @@ r3us2_ankle::r3us2_ankle(string file_path,
 
   // Comment the line below in case you derived the analytical solutions in
   // relative coordinates.
-  Q_zero =
-      VectorNd::Zero(m.dof_count); // zero config. vector of the spanning tree
-  VectorNd y =
-      VectorNd::Zero(dof_active); // zero config. vector of the active joints
+  Q_zero = VectorNd::Zero(m.dof_count);     // zero config. vector of the spanning tree
+  VectorNd y = VectorNd::Zero(dof_active);  // zero config. vector of the active joints
   Q_zero = calc_loopclosure_function(y);
   cout << "Q_zero: " << Q_zero.transpose()
-       << endl; // prints zero config. transpose of the spanning tree
+       << endl;  // prints zero config. transpose of the spanning tree
 }
 
-VectorXd r3us2_ankle::calc_loopclosure_function(const Math::VectorNd &y) {
+VectorXd r3us2_ankle::calc_loopclosure_function(const Math::VectorNd& y) {
   // This function calculates the loop closure function Gamma which is a vector
   // of size (n x 1).
 
@@ -210,18 +194,15 @@ VectorXd r3us2_ankle::calc_loopclosure_function(const Math::VectorNd &y) {
   Eigen::Matrix4d EE_TransMat_new = Eigen::Matrix4d::Zero();
 
   double roll_in, pitch_in, yaw_in;
-  roll_in = y(0);  // roll
-  pitch_in = y(1); // pitch
-  yaw_in = y(2);   // yaw
+  roll_in = y(0);   // roll
+  pitch_in = y(1);  // pitch
+  yaw_in = y(2);    // yaw
 
-  RotMat_x_in << 1, 0, 0, 0, cos(roll_in), -sin(roll_in), 0, sin(roll_in),
-      cos(roll_in);
+  RotMat_x_in << 1, 0, 0, 0, cos(roll_in), -sin(roll_in), 0, sin(roll_in), cos(roll_in);
 
-  RotMat_y_in << cos(pitch_in), 0, sin(pitch_in), 0, 1, 0, -sin(pitch_in), 0,
-      cos(pitch_in);
+  RotMat_y_in << cos(pitch_in), 0, sin(pitch_in), 0, 1, 0, -sin(pitch_in), 0, cos(pitch_in);
 
-  RotMat_z_in << cos(yaw_in), -sin(yaw_in), 0, sin(yaw_in), cos(yaw_in), 0, 0,
-      0, 1;
+  RotMat_z_in << cos(yaw_in), -sin(yaw_in), 0, sin(yaw_in), cos(yaw_in), 0, 0, 0, 1;
 
   RotMat_in = RotMat_x_in * RotMat_y_in * RotMat_z_in;
   // cout<< "rotation matrix :\n"<< RotMat_in<< endl;
@@ -236,8 +217,7 @@ VectorXd r3us2_ankle::calc_loopclosure_function(const Math::VectorNd &y) {
   // Compute the transformation from the global frame to the task space-prime
   // frame (G_T_Tprime)
   RotMat_Tprime = CalcBodyWorldOrientation(m, Q, 6.).transpose();
-  Vector3d PosVec_Tprime =
-      CalcBodyToBaseCoordinates(m, Q, 6, Vector3d(0., 0., 0.), false);
+  Vector3d PosVec_Tprime = CalcBodyToBaseCoordinates(m, Q, 6, Vector3d(0., 0., 0.), false);
   // cout<<"Task space RotMat :\n"<<RotMat_Tprime<<endl;
 
   G_T_Tprime.block(0, 0, 3, 3) = RotMat_Tprime;
@@ -253,8 +233,7 @@ VectorXd r3us2_ankle::calc_loopclosure_function(const Math::VectorNd &y) {
 
   // compute transformation matrix from E frame to the Eprime frame (E_T_Eprime)
   Eigen::Matrix4d E_T_Eprime = invertTransMat(G_T_E_zero) *
-                               (G_T_Tprime)*invertTransMat(T_T_Tprime) *
-                               invertTransMat(Eprime_T_T);
+                               (G_T_Tprime)*invertTransMat(T_T_Tprime) * invertTransMat(Eprime_T_T);
   // cout<<"End eff transformation to end eff-prime:\n"<<E_T_Eprime<<endl;
 
   // compute joint angles q & end effector coord. position ee, from the E-frame
@@ -311,15 +290,15 @@ VectorXd r3us2_ankle::calc_loopclosure_function(const Math::VectorNd &y) {
   cout << "l5 value:" << l5 << endl;
   cout << "l6 value:" << l6 << endl;
 
-  Q(0) = ee(0); // ee_position_x
-  Q(1) = ee(1); // ee_position_y
-  Q(2) = ee(2); // ee_position_z
-  Q(3) = y(0);  // roll
-  Q(4) = y(1);  // pitch
-  Q(5) = y(2);  // yaw
-  Q(6) = q(0);  // motor 1
-  Q(11) = q(1); // motor 2
-  Q(16) = q(2); // motor 3
+  Q(0) = ee(0);  // ee_position_x
+  Q(1) = ee(1);  // ee_position_y
+  Q(2) = ee(2);  // ee_position_z
+  Q(3) = y(0);   // roll
+  Q(4) = y(1);   // pitch
+  Q(5) = y(2);   // yaw
+  Q(6) = q(0);   // motor 1
+  Q(11) = q(1);  // motor 2
+  Q(16) = q(2);  // motor 3
   // cout<<"q : "<<-q.transpose()<<endl;
 
   // calculate end effector orientation (fixed rotation matrices) of the ci
@@ -366,21 +345,21 @@ VectorXd r3us2_ankle::calc_loopclosure_function(const Math::VectorNd &y) {
   double pitch_u6 = acos(c6e6(0) / l6);
   // cout<<"pitch 6 "<<pitch_u6<<endl;
 
-  Q(7) = roll_u1;  // lever 1 roll
-  Q(8) = pitch_u1; // lever 1 pitch
+  Q(7) = roll_u1;   // lever 1 roll
+  Q(8) = pitch_u1;  // lever 1 pitch
 
-  Q(9) = roll_u2;   // lever 2 roll
-  Q(10) = pitch_u2; // lever 2 pitch
+  Q(9) = roll_u2;    // lever 2 roll
+  Q(10) = pitch_u2;  // lever 2 pitch
 
-  Q(12) = roll_u3;  // lever 3 roll
-  Q(13) = pitch_u3; // lever 3 pitch
-  Q(14) = roll_u4;  // lever 4 roll
-  Q(15) = pitch_u4; // lever 4 pitch
+  Q(12) = roll_u3;   // lever 3 roll
+  Q(13) = pitch_u3;  // lever 3 pitch
+  Q(14) = roll_u4;   // lever 4 roll
+  Q(15) = pitch_u4;  // lever 4 pitch
 
-  Q(17) = roll_u5;  // lever 5 roll
-  Q(18) = pitch_u5; // lever 5 pitch
-  Q(19) = roll_u6;  // lever 6 roll
-  Q(20) = pitch_u6; // lever 6 pitch
+  Q(17) = roll_u5;   // lever 5 roll
+  Q(18) = pitch_u5;  // lever 5 pitch
+  Q(19) = roll_u6;   // lever 6 roll
+  Q(20) = pitch_u6;  // lever 6 pitch
 
   // Comment the line below in case you derived the analytical solutions in
   // relative coordinates.
@@ -390,7 +369,7 @@ VectorXd r3us2_ankle::calc_loopclosure_function(const Math::VectorNd &y) {
   return Q;
 }
 
-MatrixXd r3us2_ankle::calc_loopclosure_Jacobian(const Math::VectorNd &y) {
+MatrixXd r3us2_ankle::calc_loopclosure_Jacobian(const Math::VectorNd& y) {
   // This function calculates the loop closure Jacobian matrix G which is a
   // matrix of size (n x m).
 
@@ -454,8 +433,8 @@ MatrixXd r3us2_ankle::calc_loopclosure_Jacobian(const Math::VectorNd &y) {
   return G;
 }
 
-MatrixXd r3us2_ankle::calc_loopclosure_Jacobiand(const Math::VectorNd &y,
-                                                 const Math::VectorNd &ydot) {
+MatrixXd r3us2_ankle::calc_loopclosure_Jacobiand(const Math::VectorNd& y,
+                                                 const Math::VectorNd& ydot) {
   // This function calculates the 1st order time derivative of loop closure
   // Jacobian Gdot which is a matrix of size (n x m).
 
@@ -507,8 +486,7 @@ MatrixXd r3us2_ankle::calc_loopclosure_Jacobiand(const Math::VectorNd &y,
   return Gdot;
 }
 
-VectorXd r3us2_ankle::calc_loopclosure_g(const Math::VectorNd &y,
-                                         const Math::VectorNd &ydot) {
+VectorXd r3us2_ankle::calc_loopclosure_g(const Math::VectorNd& y, const Math::VectorNd& ydot) {
   // This function calculates the loop closure bias acceleration g= Gdot*ydot
 
   return calc_loopclosure_Jacobiand(y, ydot) * ydot;
@@ -537,13 +515,13 @@ double r3us2_ankle::choose_soln(double x, double y) {
 Vector3d r3us2_ankle::IGM(MatrixXd G_T_E) {
   Vector3d q;
 
-  double qx, qy, qz; // Input joint angles
+  double qx, qy, qz;  // Input joint angles
   double qx_1, qy_1, qz_1, qx_2, qy_2,
-      qz_2;          // 2 solutions of Input joint angles
-  double Ex, Ey, Ez; // End effector cooridnates w.r.t G (global frame)
-  double sx, sy, sz; // dcm 1st column (unit vector along Ex axis)
-  double nx, ny, nz; // dcm 2nd column (unit vector along Ey axis)
-  double ax, ay, az; // dcm 3rd column (unit vector along Ez axis)
+      qz_2;           // 2 solutions of Input joint angles
+  double Ex, Ey, Ez;  // End effector cooridnates w.r.t G (global frame)
+  double sx, sy, sz;  // dcm 1st column (unit vector along Ex axis)
+  double nx, ny, nz;  // dcm 2nd column (unit vector along Ey axis)
+  double ax, ay, az;  // dcm 3rd column (unit vector along Ez axis)
 
   sx = G_T_E(0, 0);
   sy = G_T_E(1, 0);
@@ -559,42 +537,30 @@ Vector3d r3us2_ankle::IGM(MatrixXd G_T_E) {
   Ez = G_T_E(2, 3);
 
   // Equations of IGM
-  qx_1 =
-      2 * atan2(-r * (Ez - l) +
-                    sqrt(pow(r * Ey, 2) + pow(r * (Ez - l), 2) -
-                         pow(d * (l * nz - (Ex * nx + Ey * ny + Ez * nz)), 2)),
-                d * (l * nz - (Ex * nx + Ey * ny + Ez * nz)) - r * Ey);
-  qx_2 =
-      2 * atan2(-r * (Ez - l) -
-                    sqrt(pow(r * Ey, 2) + pow(r * (Ez - l), 2) -
-                         pow(d * (l * nz - (Ex * nx + Ey * ny + Ez * nz)), 2)),
-                d * (l * nz - (Ex * nx + Ey * ny + Ez * nz)) - r * Ey);
+  qx_1 = 2 * atan2(-r * (Ez - l) + sqrt(pow(r * Ey, 2) + pow(r * (Ez - l), 2) -
+                                        pow(d * (l * nz - (Ex * nx + Ey * ny + Ez * nz)), 2)),
+                   d * (l * nz - (Ex * nx + Ey * ny + Ez * nz)) - r * Ey);
+  qx_2 = 2 * atan2(-r * (Ez - l) - sqrt(pow(r * Ey, 2) + pow(r * (Ez - l), 2) -
+                                        pow(d * (l * nz - (Ex * nx + Ey * ny + Ez * nz)), 2)),
+                   d * (l * nz - (Ex * nx + Ey * ny + Ez * nz)) - r * Ey);
   qx_1 = wrap2pi(qx_1);
   qx_2 = wrap2pi(qx_2);
 
-  qy_1 =
-      2 * atan2(-r * (Ex - l) +
-                    sqrt(pow(r * Ez, 2) + pow(r * (Ex - l), 2) -
-                         pow(d * (l * ax - (Ex * ax + Ey * ay + Ez * az)), 2)),
-                d * (l * ax - (Ex * ax + Ey * ay + Ez * az)) - r * Ez);
-  qy_2 =
-      2 * atan2(-r * (Ex - l) -
-                    sqrt(pow(r * Ez, 2) + pow(r * (Ex - l), 2) -
-                         pow(d * (l * ax - (Ex * ax + Ey * ay + Ez * az)), 2)),
-                d * (l * ax - (Ex * ax + Ey * ay + Ez * az)) - r * Ez);
+  qy_1 = 2 * atan2(-r * (Ex - l) + sqrt(pow(r * Ez, 2) + pow(r * (Ex - l), 2) -
+                                        pow(d * (l * ax - (Ex * ax + Ey * ay + Ez * az)), 2)),
+                   d * (l * ax - (Ex * ax + Ey * ay + Ez * az)) - r * Ez);
+  qy_2 = 2 * atan2(-r * (Ex - l) - sqrt(pow(r * Ez, 2) + pow(r * (Ex - l), 2) -
+                                        pow(d * (l * ax - (Ex * ax + Ey * ay + Ez * az)), 2)),
+                   d * (l * ax - (Ex * ax + Ey * ay + Ez * az)) - r * Ez);
   qy_1 = wrap2pi(qy_1);
   qy_2 = wrap2pi(qy_2);
 
-  qz_1 =
-      2 * atan2(-r * (Ey - l) +
-                    sqrt(pow(r * Ex, 2) + pow(r * (Ey - l), 2) -
-                         pow(d * (l * sy - (Ex * sx + Ey * sy + Ez * sz)), 2)),
-                d * (l * sy - (Ex * sx + Ey * sy + Ez * sz)) - r * Ex);
-  qz_2 =
-      2 * atan2(-r * (Ey - l) -
-                    sqrt(pow(r * Ex, 2) + pow(r * (Ey - l), 2) -
-                         pow(d * (l * sy - (Ex * sx + Ey * sy + Ez * sz)), 2)),
-                d * (l * sy - (Ex * sx + Ey * sy + Ez * sz)) - r * Ex);
+  qz_1 = 2 * atan2(-r * (Ey - l) + sqrt(pow(r * Ex, 2) + pow(r * (Ey - l), 2) -
+                                        pow(d * (l * sy - (Ex * sx + Ey * sy + Ez * sz)), 2)),
+                   d * (l * sy - (Ex * sx + Ey * sy + Ez * sz)) - r * Ex);
+  qz_2 = 2 * atan2(-r * (Ey - l) - sqrt(pow(r * Ex, 2) + pow(r * (Ey - l), 2) -
+                                        pow(d * (l * sy - (Ex * sx + Ey * sy + Ez * sz)), 2)),
+                   d * (l * sy - (Ex * sx + Ey * sy + Ez * sz)) - r * Ex);
   qz_1 = wrap2pi(qz_1);
   qz_2 = wrap2pi(qz_2);
 
@@ -610,8 +576,7 @@ Vector3d r3us2_ankle::IGM(MatrixXd G_T_E) {
   return q;
 }
 
-void r3us2_ankle::calculate_crankpoints(Vector3d q, MatrixXd &c) {
-
+void r3us2_ankle::calculate_crankpoints(Vector3d q, MatrixXd& c) {
   double qx, qy, qz;
   qx = q(0);
   qy = q(1);
@@ -671,8 +636,7 @@ void r3us2_ankle::calculate_crankpoints(Vector3d q, MatrixXd &c) {
   c.col(5) = c6;
 }
 
-void r3us2_ankle::calculate_endeffectorpoints(MatrixXd G_T_E, MatrixXd &e) {
-
+void r3us2_ankle::calculate_endeffectorpoints(MatrixXd G_T_E, MatrixXd& e) {
   Vector3d s, n, a, E;
   Vector3d e1, e2, e3, e4, e5, e6;
 
@@ -713,21 +677,17 @@ void r3us2_ankle::calculate_endeffectorpoints(MatrixXd G_T_E, MatrixXd &e) {
   e.col(5) = e6;
 }
 
-void r3us2_ankle::calculate_rodlengths(MatrixXd c, MatrixXd e,
-                                       VectorXd &rod_lengths) {
-  for (unsigned int i = 0; i <= 5; i++)
-    rod_lengths(i) = (e.col(i) - c.col(i)).norm();
+void r3us2_ankle::calculate_rodlengths(MatrixXd c, MatrixXd e, VectorXd& rod_lengths) {
+  for (unsigned int i = 0; i <= 5; i++) rod_lengths(i) = (e.col(i) - c.col(i)).norm();
 }
 
 double r3us2_ankle::calculate_rodlengths_error(VectorXd rod_lengths) {
   double error = 0.0;
-  for (unsigned int i = 0; i <= 5; i++)
-    error = error + pow(rod_lengths(i) - l, 2);
+  for (unsigned int i = 0; i <= 5; i++) error = error + pow(rod_lengths(i) - l, 2);
   return error;
 }
 
-Vector3d r3us2_ankle::calculate_endeffector_position(MatrixXd G_T_E,
-                                                     MatrixXd c) {
+Vector3d r3us2_ankle::calculate_endeffector_position(MatrixXd G_T_E, MatrixXd c) {
   Vector3d s, n, a;
   Vector3d E;
 
@@ -759,8 +719,8 @@ Vector3d r3us2_ankle::calculate_endeffector_position(MatrixXd G_T_E,
   soln1 = sphere_intersection(fc1, fc2, fc3, r1, r2, r3, 0);
   soln2 = sphere_intersection(fc1, fc2, fc3, r1, r2, r3, 1);
 
-  if (soln1(0) > -d && soln1(0) < d && soln1(1) > -d && soln1(1) < d &&
-      soln1(2) > -d && soln1(2) < d) {
+  if (soln1(0) > -d && soln1(0) < d && soln1(1) > -d && soln1(1) < d && soln1(2) > -d &&
+      soln1(2) < d) {
     E(0) = soln1(0);
     E(1) = soln1(1);
     E(2) = soln1(2);
@@ -773,8 +733,7 @@ Vector3d r3us2_ankle::calculate_endeffector_position(MatrixXd G_T_E,
   return E;
 }
 
-void r3us2_ankle::solve_RIGM(MatrixXd G_T_E, Vector3d &q, Vector3d &E) {
-
+void r3us2_ankle::solve_RIGM(MatrixXd G_T_E, Vector3d& q, Vector3d& E) {
   // Vector3d q, E;
   MatrixXd c(3, 6), e(3, 6);
   VectorXd rod_lengths(6);
@@ -842,9 +801,8 @@ MatrixXd r3us2_ankle::RotMatrixFromAxisAngle(Vector3d axis, double angle) {
   return R;
 }
 
-Vector3d r3us2_ankle::sphere_intersection(Vector3d fc1, Vector3d fc2,
-                                          Vector3d fc3, double r1, double r2,
-                                          double r3, unsigned int pos) {
+Vector3d r3us2_ankle::sphere_intersection(Vector3d fc1, Vector3d fc2, Vector3d fc3, double r1,
+                                          double r2, double r3, unsigned int pos) {
   Vector3d result;
   result.setZero();
   double x1, x2, x3, y1, y2, y3, z1, z2, z3;
@@ -1356,8 +1314,7 @@ Vector3d r3us2_ankle::sphere_intersection(Vector3d fc1, Vector3d fc2,
          x2 * z3 * (r1 * r1) * x3) -
         x2 * z3 * (r2 * r2) * x3;
 
-    c = (((((((-2.0 * y2 * z3 * z2 * y3 - 2.0 * z2 * x3 * x2 * z3) +
-              z3 * z3 * (y2 * y2)) +
+    c = (((((((-2.0 * y2 * z3 * z2 * y3 - 2.0 * z2 * x3 * x2 * z3) + z3 * z3 * (y2 * y2)) +
              x3 * x3 * (z2 * z2)) +
             z3 * z3 * (x2 * x2)) +
            y2 * y2 * (x3 * x3)) +
@@ -1392,9 +1349,9 @@ Vector3d r3us2_ankle::sphere_intersection(Vector3d fc1, Vector3d fc2,
       z = za;
     }
 
-    a = (r1 * r1) * x2 - (r1 * r1) * x3 + (r2 * r2) * x3 - (r3 * r3) * x2 +
-        x2 * (x3 * x3) - (x2 * x2) * x3 + x2 * (y3 * y3) - x3 * (y2 * y2) +
-        x2 * (z3 * z3) - x3 * (z2 * z2) - x2 * z * z3 * 2.0 + x3 * z * z2 * 2.0;
+    a = (r1 * r1) * x2 - (r1 * r1) * x3 + (r2 * r2) * x3 - (r3 * r3) * x2 + x2 * (x3 * x3) -
+        (x2 * x2) * x3 + x2 * (y3 * y3) - x3 * (y2 * y2) + x2 * (z3 * z3) - x3 * (z2 * z2) -
+        x2 * z * z3 * 2.0 + x3 * z * z2 * 2.0;
     b = -2.0 * y2 * x3 + 2.0 * x2 * y3;
     // cout<<"a = "<<a<<" b = "<<b<<endl;
     if (b == 0) {
@@ -1411,10 +1368,7 @@ Vector3d r3us2_ankle::sphere_intersection(Vector3d fc1, Vector3d fc2,
       return result;
     }
 
-    x = 0.5 *
-        (r1 * r1 + x2 * x2 - 2 * y * y2 + y2 * y2 - 2 * z * z2 + z2 * z2 -
-         r2 * r2) /
-        x2;
+    x = 0.5 * (r1 * r1 + x2 * x2 - 2 * y * y2 + y2 * y2 - 2 * z * z2 + z2 * z2 - r2 * r2) / x2;
     // cout<<"x = "<<x<<" y = "<<y<<endl;
     //  convert result back to global
     result(0) = x1 + x;
@@ -1424,4 +1378,4 @@ Vector3d r3us2_ankle::sphere_intersection(Vector3d fc1, Vector3d fc2,
     // cout<<"Intersection point"<<result;
     return result;
 }
-} // namespace R3US2_ANKLE
+}  // namespace R3US2_ANKLE

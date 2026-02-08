@@ -1,16 +1,15 @@
 #ifndef SPRR2U1_H
 #define SPRR2U1_H
 
-#include <Eigen/Dense>
-#include <iostream>
 #include <math.h>
+#include <rbdl/rbdl.h>
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
 
+#include <Eigen/Dense>
 #include <fstream>
-
-#include <rbdl/rbdl.h>
+#include <iostream>
 
 #ifndef RBDL_BUILD_ADDON_URDFREADER
 #error "Error: RBDL addon URDFReader not enabled."
@@ -31,7 +30,7 @@ namespace SPRR2U1 {
  * following schematic: \image html 2SPRR+1U_geometry.png
  */
 class sPrr2u1 : public ExplicitLoopConstraints::ExplicitLoopConstraintSet {
-public:
+ public:
   /// \brief RBDL Model of the 2SPRR+1U mechanism
   Model m;
 
@@ -135,7 +134,7 @@ public:
    *
    * \param y vector of independent joint positions
    */
-  VectorXd calc_loopclosure_function(const Math::VectorNd &y);
+  VectorXd calc_loopclosure_function(const Math::VectorNd& y);
 
   /** \brief Returns the loop closure Jacobian (G) from independent joint
    * position (y)
@@ -145,7 +144,7 @@ public:
    *
    * \param y vector of independent joint positions
    */
-  MatrixXd calc_loopclosure_Jacobian(const Math::VectorNd &y);
+  MatrixXd calc_loopclosure_Jacobian(const Math::VectorNd& y);
 
   /** \brief Returns the loop closure Jacobian derivative (Gdot) from
    * independent joint position and velocity (y, yd)
@@ -156,8 +155,7 @@ public:
    * \param y vector of independent joint positions
    * \param ydot vector of independent joint velocities
    */
-  MatrixXd calc_loopclosure_Jacobiand(const Math::VectorNd &y,
-                                      const Math::VectorNd &ydot);
+  MatrixXd calc_loopclosure_Jacobiand(const Math::VectorNd& y, const Math::VectorNd& ydot);
 
   /** \brief Returns the loop closure bias acceleration (g) from independent
    * joint position and velocity (y, yd)
@@ -168,8 +166,7 @@ public:
    * \param y vector of independent joint positions
    * \param ydot vector of independent joint velocities
    */
-  VectorXd calc_loopclosure_g(const Math::VectorNd &y,
-                              const Math::VectorNd &ydot);
+  VectorXd calc_loopclosure_g(const Math::VectorNd& y, const Math::VectorNd& ydot);
 
   /** \brief Returns the loop closure Jacobian of UP leg from independent joint
    * position y,vector of i_ee, r. vector of f_ee, s and rotation of RotMat_s
@@ -185,9 +182,9 @@ public:
    * point in base frame \param RotMat_s Rotation matrix of the frame attached
    * at shank attachment point in the base frame
    */
-  MatrixXd compute_loopclosure_Jacobian_UP_leg(
-      const Math::VectorNd y, const Vector3d i_ee, const double r,
-      const Vector3d f_ee, const Vector3d s, const Matrix3d RotMat_s);
+  MatrixXd compute_loopclosure_Jacobian_UP_leg(const Math::VectorNd y, const Vector3d i_ee,
+                                               const double r, const Vector3d f_ee,
+                                               const Vector3d s, const Matrix3d RotMat_s);
 
   /** \brief Returns the loop closure Jacobian derivative of UP leg from
    * independent joint position y, independent joint velocity yd, vector of
@@ -205,10 +202,10 @@ public:
    * point in base frame \param RotMat_s Rotation matrix of the frame attached
    * at shank attachment point in the base frame
    */
-  MatrixXd compute_loopclosure_Jacobiandot_UP_leg(
-      const Math::VectorNd y, const Math::VectorNd yd, const Vector3d i_ee,
-      const double r, const Vector3d f_ee, const Vector3d s,
-      const Matrix3d RotMat_s);
+  MatrixXd compute_loopclosure_Jacobiandot_UP_leg(const Math::VectorNd y, const Math::VectorNd yd,
+                                                  const Vector3d i_ee, const double r,
+                                                  const Vector3d f_ee, const Vector3d s,
+                                                  const Matrix3d RotMat_s);
 
   // Geometric Models
 
@@ -220,8 +217,7 @@ public:
    *
    * \param u vector of active joint positions
    */
-  VectorXd calc_geometricmodel_forward(const Math::VectorNd u,
-                                       unsigned int max_iterations = 20,
+  VectorXd calc_geometricmodel_forward(const Math::VectorNd u, unsigned int max_iterations = 20,
                                        double step_tol = 1.0e-8);
 
   /** \brief Returns the active joint positions (u) from indepedent joint
@@ -253,10 +249,9 @@ public:
    *
    * \param y vector of independent joint positions
    */
-  Matrix2d compute_kinematic_Jacobiandot(const Math::VectorNd y,
-                                         const Math::VectorNd yd);
+  Matrix2d compute_kinematic_Jacobiandot(const Math::VectorNd y, const Math::VectorNd yd);
 };
 
-} // end namespace SPRR2U1
+}  // end namespace SPRR2U1
 
-#endif // SPRR2U1
+#endif  // SPRR2U1

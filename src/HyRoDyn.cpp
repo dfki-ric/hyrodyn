@@ -14,16 +14,16 @@ double wrap2pi(double x) {
   return wrapx;
 }
 
-void calc_sysstate_q(Model &model, ExplicitLoopConstraintSet &elcs,
-                     const Math::VectorNd &y, Math::VectorNd &q) {
+void calc_sysstate_q(Model& model, ExplicitLoopConstraintSet& elcs, const Math::VectorNd& y,
+                     Math::VectorNd& q) {
   // This function calculates the position state of spanning tree in generalized
   // coordinates depending on the state of active joint positions
 
   q = elcs.calc_loopclosure_function(y);
 }
 
-void calc_actuatorstate_u(Model &model, ExplicitLoopConstraintSet &elcs,
-                          const Math::VectorNd &y, Math::VectorNd &u) {
+void calc_actuatorstate_u(Model& model, ExplicitLoopConstraintSet& elcs, const Math::VectorNd& y,
+                          Math::VectorNd& u) {
   // This function calculates the position state of active joints depending on
   // the state of independent joint positions
 
@@ -32,16 +32,16 @@ void calc_actuatorstate_u(Model &model, ExplicitLoopConstraintSet &elcs,
   u = elcs.get_permutation_matrix() * q;
 }
 
-void calc_independentjointstate_y(Model &model, ExplicitLoopConstraintSet &elcs,
-                                  const Math::VectorNd &u, Math::VectorNd &y) {
+void calc_independentjointstate_y(Model& model, ExplicitLoopConstraintSet& elcs,
+                                  const Math::VectorNd& u, Math::VectorNd& y) {
   // This function calculates the position state of independent joints depending
   // on the state of active joint positions. This is kind of forward geometric
   // model in joint space.
 
   if (elcs.get_dof_independent() != elcs.get_dof_independent_robot()) {
     cerr << "Independent dof defined in urdf: " << elcs.get_dof_independent()
-         << ", Independent dof belonging to the robot: "
-         << elcs.get_dof_independent_robot() << endl;
+         << ", Independent dof belonging to the robot: " << elcs.get_dof_independent_robot()
+         << endl;
     cerr << "This function is not supported for floating base robots! Please "
             "note that in these cases actuator state does not define "
             "independent joint state as the system is underactuated."
@@ -74,7 +74,8 @@ void calc_independentjointstate_y(Model &model, ExplicitLoopConstraintSet &elcs,
 
     // cout<<"error_norm:"<<du.norm()<<endl;
 
-    if (du.norm() < step_tol) break;
+    if (du.norm() < step_tol)
+      break;
 
     G = elcs.calc_loopclosure_Jacobian(y_i);
 
@@ -96,9 +97,8 @@ void calc_independentjointstate_y(Model &model, ExplicitLoopConstraintSet &elcs,
   y = y_i;
 }
 
-void calc_sysstate_qdot(Model &model, ExplicitLoopConstraintSet &elcs,
-                        const Math::VectorNd &y, const Math::VectorNd &yd,
-                        Math::VectorNd &qd) {
+void calc_sysstate_qdot(Model& model, ExplicitLoopConstraintSet& elcs, const Math::VectorNd& y,
+                        const Math::VectorNd& yd, Math::VectorNd& qd) {
   // This function calculates the velocity state of spanning tree in generalized
   // coordinates depending on the state of active joint positions
 
@@ -108,9 +108,8 @@ void calc_sysstate_qdot(Model &model, ExplicitLoopConstraintSet &elcs,
   qd = G * yd;
 }
 
-void calc_actuatorstate_udot(Model &model, ExplicitLoopConstraintSet &elcs,
-                             const Math::VectorNd &y, const Math::VectorNd &yd,
-                             Math::VectorNd &ud) {
+void calc_actuatorstate_udot(Model& model, ExplicitLoopConstraintSet& elcs, const Math::VectorNd& y,
+                             const Math::VectorNd& yd, Math::VectorNd& ud) {
   // This function calculates the velocity state of active joints depending on
   // the state of independent joints
 
@@ -120,18 +119,16 @@ void calc_actuatorstate_udot(Model &model, ExplicitLoopConstraintSet &elcs,
   ud = elcs.get_permutation_matrix() * G * yd;
 }
 
-void calc_independentjointstate_ydot(Model &model,
-                                     ExplicitLoopConstraintSet &elcs,
-                                     const Math::VectorNd &u,
-                                     const Math::VectorNd &ud,
-                                     Math::VectorNd &y, Math::VectorNd &yd) {
+void calc_independentjointstate_ydot(Model& model, ExplicitLoopConstraintSet& elcs,
+                                     const Math::VectorNd& u, const Math::VectorNd& ud,
+                                     Math::VectorNd& y, Math::VectorNd& yd) {
   // This function calculates the velocity state of independent joints depending
   // on the state of velocity in active joints
 
   if (elcs.get_dof_independent() != elcs.get_dof_independent_robot()) {
     cerr << "Independent dof defined in urdf: " << elcs.get_dof_independent()
-         << ", Independent dof belonging to the robot: "
-         << elcs.get_dof_independent_robot() << endl;
+         << ", Independent dof belonging to the robot: " << elcs.get_dof_independent_robot()
+         << endl;
     cerr << "This function is not supported for floating base robots! Please "
             "note that in these cases actuator state does not define "
             "independent joint state as the system is underactuated."
@@ -156,9 +153,8 @@ void calc_independentjointstate_ydot(Model &model,
   yd = (Gu).colPivHouseholderQr().solve(ud);  //	yd = Gu_inv*ud
 }
 
-void calc_sysstate_qddot(Model &model, ExplicitLoopConstraintSet &elcs,
-                         const Math::VectorNd &y, const Math::VectorNd &yd,
-                         const Math::VectorNd &ydd, Math::VectorNd &qdd) {
+void calc_sysstate_qddot(Model& model, ExplicitLoopConstraintSet& elcs, const Math::VectorNd& y,
+                         const Math::VectorNd& yd, const Math::VectorNd& ydd, Math::VectorNd& qdd) {
   // This function calculates the acceleration state of spanning tree in
   // generalized coordinates depending on the state of active joint positions
 
@@ -175,9 +171,9 @@ void calc_sysstate_qddot(Model &model, ExplicitLoopConstraintSet &elcs,
   qdd = G * ydd + g;
 }
 
-void calc_actuatorstate_uddot(Model &model, ExplicitLoopConstraintSet &elcs,
-                              const Math::VectorNd &y, const Math::VectorNd &yd,
-                              const Math::VectorNd &ydd, Math::VectorNd &udd) {
+void calc_actuatorstate_uddot(Model& model, ExplicitLoopConstraintSet& elcs,
+                              const Math::VectorNd& y, const Math::VectorNd& yd,
+                              const Math::VectorNd& ydd, Math::VectorNd& udd) {
   // This function calculates the acceleration state of active joints depending
   // on the state of independent joints
 
@@ -192,17 +188,17 @@ void calc_actuatorstate_uddot(Model &model, ExplicitLoopConstraintSet &elcs,
   udd = elcs.get_permutation_matrix() * (G * ydd + g);
 }
 
-void calc_independentjointstate_yddot(
-    Model &model, ExplicitLoopConstraintSet &elcs, const Math::VectorNd &u,
-    const Math::VectorNd &ud, const Math::VectorNd &udd, Math::VectorNd &y,
-    Math::VectorNd &yd, Math::VectorNd &ydd) {
+void calc_independentjointstate_yddot(Model& model, ExplicitLoopConstraintSet& elcs,
+                                      const Math::VectorNd& u, const Math::VectorNd& ud,
+                                      const Math::VectorNd& udd, Math::VectorNd& y,
+                                      Math::VectorNd& yd, Math::VectorNd& ydd) {
   // This function calculates the acceleration state of independent joints
   // depending on the state of acceleration in active joints
 
   if (elcs.get_dof_independent() != elcs.get_dof_independent_robot()) {
     cerr << "Independent dof defined in urdf: " << elcs.get_dof_independent()
-         << ", Independent dof belonging to the robot: "
-         << elcs.get_dof_independent_robot() << endl;
+         << ", Independent dof belonging to the robot: " << elcs.get_dof_independent_robot()
+         << endl;
     cerr << "This function is not supported for floating base robots! Please "
             "note that in these cases actuator state does not define "
             "independent joint state as the system is underactuated."
@@ -233,13 +229,13 @@ void calc_independentjointstate_yddot(
   VectorNd g(elcs.get_dof_spanningtree());
   g = elcs.calc_loopclosure_g(y, yd);
 
-  ydd =
-      (Gu).colPivHouseholderQr().solve(udd - elcs.get_permutation_matrix() * g);
+  ydd = (Gu).colPivHouseholderQr().solve(udd - elcs.get_permutation_matrix() * g);
 }
 
-std::vector<Math::VectorNd> calc_geometricmodel_forward(
-    Model &model, ExplicitLoopConstraintSet &elcs, const Math::VectorNd &y,
-    const std::vector<string> body_names) {
+std::vector<Math::VectorNd> calc_geometricmodel_forward(Model& model,
+                                                        ExplicitLoopConstraintSet& elcs,
+                                                        const Math::VectorNd& y,
+                                                        const std::vector<string> body_names) {
   // This function calculates the pose (position + orientation) of an input
   // bodies depending on the state of independent joint positions
 
@@ -281,8 +277,8 @@ std::vector<Math::VectorNd> calc_geometricmodel_forward(
       poses.push_back(pose);
 
     } else {
-      cerr << "calc_geometricmodel_forward: Body Name = " << body_name
-           << " provided is not valid." << endl;
+      cerr << "calc_geometricmodel_forward: Body Name = " << body_name << " provided is not valid."
+           << endl;
       abort();
     }
   }
@@ -290,10 +286,8 @@ std::vector<Math::VectorNd> calc_geometricmodel_forward(
   return poses;
 }
 
-Math::VectorNd calc_geometricmodel_forward(Model &model,
-                                           ExplicitLoopConstraintSet &elcs,
-                                           const Math::VectorNd &y,
-                                           const char *body_name) {
+Math::VectorNd calc_geometricmodel_forward(Model& model, ExplicitLoopConstraintSet& elcs,
+                                           const Math::VectorNd& y, const char* body_name) {
   // This function calculates the pose (position + orientation) of an input body
   // depending on the state of independent joint positions
 
@@ -325,15 +319,14 @@ Math::VectorNd calc_geometricmodel_forward(Model &model,
 
     for (int i = 3; i < 7; i++) pose(i) = orientation(i - 3);
   } else {
-    cerr << "calc_geometricmodel_forward: Body Name provided is not valid."
-         << endl;
+    cerr << "calc_geometricmodel_forward: Body Name provided is not valid." << endl;
     abort();
   }
   return pose;
 }
 
-void calc_com_jacobian_full(Model &model, const Math::VectorNd &q,
-                            Math::MatrixNd &Jcom, Math::Vector3d *com) {
+void calc_com_jacobian_full(Model& model, const Math::VectorNd& q, Math::MatrixNd& Jcom,
+                            Math::Vector3d* com) {
   // This function computes the full COM Jacobian of size (3xn) and optionally
   // the com position in base coordinates NOTE: this function should ideally
   // belong to RBDL and should be moved there!
@@ -345,7 +338,7 @@ void calc_com_jacobian_full(Model &model, const Math::VectorNd &q,
        i++) {  // iterate over the moving bodies except base link (numbered 0 in
                // the graph)
 
-    const Body &body = model.mBodies.at(i);
+    const Body& body = model.mBodies.at(i);
 
     Math::MatrixNd com_jac_body_i;
 
@@ -358,38 +351,34 @@ void calc_com_jacobian_full(Model &model, const Math::VectorNd &q,
     total_mass = total_mass + body.mMass;
 
     if (com)
-      *com = *com + body.mMass * CalcBodyToBaseCoordinates(model, q, i,
-                                                           body.mCenterOfMass);
+      *com = *com + body.mMass * CalcBodyToBaseCoordinates(model, q, i, body.mCenterOfMass);
   }
 
-  if (com) *com = *com / total_mass;
+  if (com)
+    *com = *com / total_mass;
 
   Jcom = (1 / total_mass) * Jcom;
 }
 
-Vector3d CalcAngularVelocityfromMatrix(const Matrix3d &RotMat) {
+Vector3d CalcAngularVelocityfromMatrix(const Matrix3d& RotMat) {
   double tol = 1e-12;
 
-  Vector3d l =
-      Vector3d(RotMat(2, 1) - RotMat(1, 2), RotMat(0, 2) - RotMat(2, 0),
-               RotMat(1, 0) - RotMat(0, 1));
+  Vector3d l = Vector3d(RotMat(2, 1) - RotMat(1, 2), RotMat(0, 2) - RotMat(2, 0),
+                        RotMat(1, 0) - RotMat(0, 1));
   if (l.norm() > tol) {
     double preFactor = atan2(l.norm(), (RotMat.trace() - 1.0)) / l.norm();
     return preFactor * l;
-  } else if ((RotMat(0, 0) > 0 && RotMat(1, 1) > 0 && RotMat(2, 2) > 0) ||
-             l.norm() < tol) {
+  } else if ((RotMat(0, 0) > 0 && RotMat(1, 1) > 0 && RotMat(2, 2) > 0) || l.norm() < tol) {
     return Vector3dZero;
   } else {
     double PI = atan(1) * 4.0;
-    return Vector3d(PI / 2 * (RotMat(0, 0) + 1.0),
-                    PI / 2 * (RotMat(1, 1) + 1.0),
+    return Vector3d(PI / 2 * (RotMat(0, 0) + 1.0), PI / 2 * (RotMat(1, 1) + 1.0),
                     PI / 2 * (RotMat(2, 2) + 1.0));
   }
 }
 
-bool IK_CS(Model &model, ExplicitLoopConstraintSet &elcs,
-           const Math::VectorNd &Yinit, InverseKinematicsConstraintSet &CS,
-           Math::VectorNd &Yres) {
+bool IK_CS(Model& model, ExplicitLoopConstraintSet& elcs, const Math::VectorNd& Yinit,
+           InverseKinematicsConstraintSet& CS, Math::VectorNd& Yres) {
   //  assert (Qinit.size() == model.q_size);
   //  assert (Qres.size() == Qinit.size());
 
@@ -407,22 +396,19 @@ bool IK_CS(Model &model, ExplicitLoopConstraintSet &elcs,
 
     for (unsigned int k = 0; k < CS.body_ids.size(); k++) {
       CS.G = MatrixNd::Zero(6, model.qdot_size);
-      CalcPointJacobian6D(model, Qres, CS.body_ids[k], CS.body_points[k], CS.G,
-                          false);
-      Vector3d point_base = CalcBodyToBaseCoordinates(
-          model, Qres, CS.body_ids[k], CS.body_points[k], false);
+      CalcPointJacobian6D(model, Qres, CS.body_ids[k], CS.body_points[k], CS.G, false);
+      Vector3d point_base =
+          CalcBodyToBaseCoordinates(model, Qres, CS.body_ids[k], CS.body_points[k], false);
       Matrix3d R = CalcBodyWorldOrientation(model, Qres, CS.body_ids[k], false);
       Vector3d angular_velocity =
-          R.transpose() * CalcAngularVelocityfromMatrix(
-                              R * CS.target_orientations[k].transpose());
+          R.transpose() * CalcAngularVelocityfromMatrix(R * CS.target_orientations[k].transpose());
       // For COM IK
       Vector3d com;
       MatrixNd Jcom;
       calc_com_jacobian_full(model, Qres, Jcom, &com);
 
       // assign offsets and Jacobians
-      if (CS.constraint_type[k] ==
-          InverseKinematicsConstraintSet::ConstraintTypeFull) {
+      if (CS.constraint_type[k] == InverseKinematicsConstraintSet::ConstraintTypeFull) {
         for (unsigned int i = 0; i < 3; i++) {
           unsigned int row = CS.constraint_row_index[k] + i;
           CS.e[row + 3] = CS.target_positions[k][i] - point_base[i];
@@ -441,8 +427,7 @@ bool IK_CS(Model &model, ExplicitLoopConstraintSet &elcs,
             CS.J(row, j) = CS.G(i, j);
           }
         }
-      } else if (CS.constraint_type[k] ==
-                 InverseKinematicsConstraintSet::ConstraintTypePosition) {
+      } else if (CS.constraint_type[k] == InverseKinematicsConstraintSet::ConstraintTypePosition) {
         for (unsigned int i = 0; i < 3; i++) {
           unsigned int row = CS.constraint_row_index[k] + i;
           CS.e[row] = CS.target_positions[k][i] - point_base[i];
@@ -450,8 +435,7 @@ bool IK_CS(Model &model, ExplicitLoopConstraintSet &elcs,
             CS.J(row, j) = CS.G(i + 3, j);
           }
         }
-      } else if (CS.constraint_type[k] ==
-                 InverseKinematicsConstraintSet::ConstraintTypeCOM) {
+      } else if (CS.constraint_type[k] == InverseKinematicsConstraintSet::ConstraintTypeCOM) {
         for (unsigned int i = 0; i < 3; i++) {
           unsigned int row = CS.constraint_row_index[k] + i;
           CS.e[row] = CS.target_positions[k][i] - com[i];
@@ -470,10 +454,8 @@ bool IK_CS(Model &model, ExplicitLoopConstraintSet &elcs,
 
     // abort if we are getting "close"
     if (CS.error_norm < CS.step_tol) {
-      cout << "Reached target close enough after " << CS.num_steps << " steps"
-           << std::endl;
-      LOG << "Reached target close enough after " << CS.num_steps << " steps"
-          << std::endl;
+      cout << "Reached target close enough after " << CS.num_steps << " steps" << std::endl;
+      LOG << "Reached target close enough after " << CS.num_steps << " steps" << std::endl;
       return true;
     }
 
@@ -496,15 +478,12 @@ bool IK_CS(Model &model, ExplicitLoopConstraintSet &elcs,
     }
 
     MatrixNd A = temp.transpose() * temp + Wn;
-    VectorNd delta_theta =
-        A.colPivHouseholderQr().solve(temp.transpose() * CS.e);
+    VectorNd delta_theta = A.colPivHouseholderQr().solve(temp.transpose() * CS.e);
 
     Yres = Yres + delta_theta;
     if (delta_theta.norm() < CS.step_tol) {
-      cout << "reached convergence after " << CS.num_steps << " steps"
-           << std::endl;
-      LOG << "reached convergence after " << CS.num_steps << " steps"
-          << std::endl;
+      cout << "reached convergence after " << CS.num_steps << " steps" << std::endl;
+      LOG << "reached convergence after " << CS.num_steps << " steps" << std::endl;
       return true;
     }
   }
@@ -512,11 +491,10 @@ bool IK_CS(Model &model, ExplicitLoopConstraintSet &elcs,
   return false;
 }
 
-void calc_geometricmodel_inverse(Model &model, ExplicitLoopConstraintSet &elcs,
-                                 const std::vector<Math::VectorNd> &pose,
-                                 const std::vector<string> body_name,
-                                 Math::VectorNd &y, Vector3d com_input,
-                                 double error_tolerance) {
+void calc_geometricmodel_inverse(Model& model, ExplicitLoopConstraintSet& elcs,
+                                 const std::vector<Math::VectorNd>& pose,
+                                 const std::vector<string> body_name, Math::VectorNd& y,
+                                 Vector3d com_input, double error_tolerance) {
   // This function calculates the state of independent joint positions depending
   // on the pose (position + orientation) of an input body
 
@@ -536,24 +514,20 @@ void calc_geometricmodel_inverse(Model &model, ExplicitLoopConstraintSet &elcs,
   for (unsigned int i = 0; i < 3; i++) base_point_position(i) = 0.0;
 
   for (unsigned int i = 0; i < pose.size(); i++) {
-    VectorNd pose_element =
-        pose[i];  // extract the element from the pose vector
+    VectorNd pose_element = pose[i];  // extract the element from the pose vector
 
     Vector3d position;
-    Vector4d orientation_quat(pose_element(3), pose_element(4), pose_element(5),
-                              pose_element(6));
+    Vector4d orientation_quat(pose_element(3), pose_element(4), pose_element(5), pose_element(6));
 
     for (unsigned int i = 0; i < 3; i++) position(i) = pose_element(i);
 
-    Matrix3d G_R_E = Quaternion(pose_element(3), pose_element(4),
-                                pose_element(5), pose_element(6))
-                         .toMatrix();
+    Matrix3d G_R_E =
+        Quaternion(pose_element(3), pose_element(4), pose_element(5), pose_element(6)).toMatrix();
 
     unsigned int body_id = model.GetBodyId(body_name[i].c_str());
 
     if (!model.IsBodyId(body_id)) {
-      cerr << "calc_geometricmodel_inverse: Body Name provided is not valid."
-           << endl;
+      cerr << "calc_geometricmodel_inverse: Body Name provided is not valid." << endl;
       abort();
     }
 
@@ -572,8 +546,8 @@ void calc_geometricmodel_inverse(Model &model, ExplicitLoopConstraintSet &elcs,
     // cout<<"IGM input for body name:"<<body_name[i]<<" X =
     // "<<position.transpose()<<" q = "<<q.fromMatrix (G_R_E).transpose<<endl;
 
-    cout << "IGM input for body name:" << body_name[i]
-         << " X = " << pose_element.transpose() << endl;
+    cout << "IGM input for body name:" << body_name[i] << " X = " << pose_element.transpose()
+         << endl;
   }
   // Add COM constraint
   if (!com_input.isZero()) {
@@ -588,8 +562,7 @@ void calc_geometricmodel_inverse(Model &model, ExplicitLoopConstraintSet &elcs,
 
   if (IK_CS(model, elcs, YInit, cs, Yres)) {
     cout << "IGM: Solved" << endl;
-    for (int i = 0; i < elcs.get_dof_independent(); i++)
-      Yres(i) = wrap2pi(Yres(i));
+    for (int i = 0; i < elcs.get_dof_independent(); i++) Yres(i) = wrap2pi(Yres(i));
     y = Yres;  // store the new IK result
   } else {
     cout << "IGM: Could not find a solution. Last independent joint state will "
@@ -597,14 +570,14 @@ void calc_geometricmodel_inverse(Model &model, ExplicitLoopConstraintSet &elcs,
          << endl;
   }
 
-  std::cout << "IGM Output Yres (indepdendent_dof): " << Yres.transpose()
-            << std::endl;
+  std::cout << "IGM Output Yres (indepdendent_dof): " << Yres.transpose() << std::endl;
 }
 
-VectorNd calc_constrained_dynamicmodel_inverse(
-    Model &model, ExplicitLoopConstraintSet &elcs, const Math::VectorNd &y,
-    const Math::VectorNd &yd, const Math::SpatialVector &xdd,
-    const Math::SpatialVector &f_ext, const string body_name) {
+VectorNd calc_constrained_dynamicmodel_inverse(Model& model, ExplicitLoopConstraintSet& elcs,
+                                               const Math::VectorNd& y, const Math::VectorNd& yd,
+                                               const Math::SpatialVector& xdd,
+                                               const Math::SpatialVector& f_ext,
+                                               const string body_name) {
   unsigned int body_id = model.GetBodyId(body_name.c_str());
 
   if (!model.IsBodyId(body_id)) {
@@ -633,8 +606,7 @@ VectorNd calc_constrained_dynamicmodel_inverse(
 
   MatrixXd G(elcs.get_dof_spanningtree(), elcs.get_dof_independent());
   G = elcs.calc_loopclosure_Jacobian(y);
-  Gu = elcs.get_permutation_matrix() * G *
-       elcs.get_permutation_matrix2().transpose();
+  Gu = elcs.get_permutation_matrix() * G * elcs.get_permutation_matrix2().transpose();
 
   // VectorXd g(elcs.get_dof_spanningtree());
   // g = elcs.calc_loopclosure_Jacobiand(y, yd) * yd;
@@ -649,50 +621,40 @@ VectorNd calc_constrained_dynamicmodel_inverse(
 
   MatrixXd H_y;  // mass matrix
   H_y.setZero(elcs.get_dof_independent(), elcs.get_dof_independent());
-  H_y = G.transpose() * H *
-        G;  // compute the mass matrix projected in the independent joint space
+  H_y = G.transpose() * H * G;  // compute the mass matrix projected in the independent joint space
 
   VectorXd C_y = VectorXd::Zero(elcs.get_dof_independent());
-  C_y = G.transpose() *
-        (C + H * g);  // compute the bias forces in independent joint space
+  C_y = G.transpose() * (C + H * g);  // compute the bias forces in independent joint space
 
   MatrixXd point_Jacobian;
   Math::Vector3d point_position;
   point_position.setZero();
   point_Jacobian.setZero(6, model.dof_count);
-  CalcPointJacobian6D(
-      model, q, body_id, point_position,
-      point_Jacobian);  // compute point jacobian 6D for this point (6 x n) in
-                        // base coordinate system
+  CalcPointJacobian6D(model, q, body_id, point_position,
+                      point_Jacobian);  // compute point jacobian 6D for this point (6 x n) in
+                                        // base coordinate system
 
-  MatrixXd
-      Jacobian_y;  // jacobian in independent joint space, J(y): ydot -> Xdot
+  MatrixXd Jacobian_y;  // jacobian in independent joint space, J(y): ydot -> Xdot
   Jacobian_y.setZero(6, elcs.get_dof_independent());  // size is (6 x m)
   Jacobian_y = point_Jacobian * G;
 
-  unsigned int floating_base_dof =
-      elcs.get_dof_independent() - elcs.get_dof_independent_robot();
+  unsigned int floating_base_dof = elcs.get_dof_independent() - elcs.get_dof_independent_robot();
   MatrixXd selection_matrix;
-  selection_matrix.setZero(elcs.get_dof_independent(),
-                           elcs.get_dof_independent());
-  selection_matrix.block(floating_base_dof, floating_base_dof,
-                         elcs.get_dof_independent_robot(),
+  selection_matrix.setZero(elcs.get_dof_independent(), elcs.get_dof_independent());
+  selection_matrix.block(floating_base_dof, floating_base_dof, elcs.get_dof_independent_robot(),
                          elcs.get_dof_independent_robot()) =
-      MatrixXd::Identity(elcs.get_dof_independent_robot(),
-                         elcs.get_dof_independent_robot());
+      MatrixXd::Identity(elcs.get_dof_independent_robot(), elcs.get_dof_independent_robot());
 
   MatrixXd Z;
   Z.setZero(elcs.get_dof_independent() + 6, 2 * elcs.get_dof_independent());
   Z.block(0, 0, elcs.get_dof_independent(), elcs.get_dof_independent()) = H_y;
-  Z.block(elcs.get_dof_independent(), 0, 6, elcs.get_dof_independent()) =
-      Jacobian_y;
-  Z.block(0, elcs.get_dof_independent(), elcs.get_dof_independent(),
-          elcs.get_dof_independent()) = selection_matrix;
+  Z.block(elcs.get_dof_independent(), 0, 6, elcs.get_dof_independent()) = Jacobian_y;
+  Z.block(0, elcs.get_dof_independent(), elcs.get_dof_independent(), elcs.get_dof_independent()) =
+      selection_matrix;
   cout << "Z: " << endl << Z << endl;
 
   SpatialVector Jacobiandot_y_dot_yd =
-      Jacobian_y * g + CalcPointAcceleration6D(model, q, qd,
-                                               VectorXd::Zero(model.dof_count),
+      Jacobian_y * g + CalcPointAcceleration6D(model, q, qd, VectorXd::Zero(model.dof_count),
                                                body_id, point_position);
 
   VectorXd f = VectorXd::Zero(6 + elcs.get_dof_independent());
@@ -703,31 +665,27 @@ VectorNd calc_constrained_dynamicmodel_inverse(
 
   // Solve the constrained inverse dynamics
   VectorXd qdd_Tau_y_vector =
-      (Z.transpose() * Z +
-       regularizer * MatrixXd::Identity(2 * elcs.get_dof_independent(),
-                                        2 * elcs.get_dof_independent()))
+      (Z.transpose() * Z + regularizer * MatrixXd::Identity(2 * elcs.get_dof_independent(),
+                                                            2 * elcs.get_dof_independent()))
           .colPivHouseholderQr()
           .solve(Z.transpose() * f);
   cout << "qdd_Tau_y_vector: " << qdd_Tau_y_vector.transpose() << endl;
 
   // Extract the generalized forces
-  VectorXd Tau_independentjointspace =
-      qdd_Tau_y_vector.tail(elcs.get_dof_independent());
-  cout << "Tau_independentjointspace: " << Tau_independentjointspace.transpose()
-       << endl;
+  VectorXd Tau_independentjointspace = qdd_Tau_y_vector.tail(elcs.get_dof_independent());
+  cout << "Tau_independentjointspace: " << Tau_independentjointspace.transpose() << endl;
 
   // Convert the generalized forces into actuator forces
-  VectorXd Tau_actuated =
-      (Gu.transpose())
-          .colPivHouseholderQr()
-          .solve(elcs.get_permutation_matrix2() * Tau_independentjointspace);
+  VectorXd Tau_actuated = (Gu.transpose())
+                              .colPivHouseholderQr()
+                              .solve(elcs.get_permutation_matrix2() * Tau_independentjointspace);
   cout << "Tau_actuated: " << Tau_actuated.transpose() << endl;
 
   return Tau_actuated;
 }
 
-void calc_mass_interia_matrix(Model &model, ExplicitLoopConstraintSet &elcs,
-                              const Math::VectorNd &y, Math::MatrixNd &H) {
+void calc_mass_interia_matrix(Model& model, ExplicitLoopConstraintSet& elcs,
+                              const Math::VectorNd& y, Math::MatrixNd& H) {
   // NOTE: Be careful that MatrixXd variables like H matrix are set to zero
   // before used.
   MatrixXd H_q;  // mass-interia matrix in spanning tree space
@@ -743,14 +701,11 @@ void calc_mass_interia_matrix(Model &model, ExplicitLoopConstraintSet &elcs,
   CompositeRigidBodyAlgorithm(model, q, H_q);
 
   H.setZero(elcs.get_dof_independent(), elcs.get_dof_independent());
-  H = G.transpose() * H_q *
-      G;  // compute the mass matrix projected in the independent joint space
+  H = G.transpose() * H_q * G;  // compute the mass matrix projected in the independent joint space
 }
 
-void calc_mass_interia_matrix_actuation_space(Model &model,
-                                              ExplicitLoopConstraintSet &elcs,
-                                              const Math::VectorNd &y,
-                                              Math::MatrixNd &Hu) {
+void calc_mass_interia_matrix_actuation_space(Model& model, ExplicitLoopConstraintSet& elcs,
+                                              const Math::VectorNd& y, Math::MatrixNd& Hu) {
   // Compute the full system state from y
   VectorXd q(model.dof_count);
   calc_sysstate_q(model, elcs, y, q);
@@ -762,8 +717,7 @@ void calc_mass_interia_matrix_actuation_space(Model &model,
   // Compute the actuator jocobian Gu
   MatrixXd Gu;
   Gu.setZero(elcs.get_dof_active(), elcs.get_dof_active());
-  Gu = elcs.get_permutation_matrix() * G *
-       elcs.get_permutation_matrix2().transpose();
+  Gu = elcs.get_permutation_matrix() * G * elcs.get_permutation_matrix2().transpose();
 
   // Compute the mass-inertia matrix with CRBA in O(nd) time
   MatrixXd H_q;  // mass-interia matrix in spanning tree space
@@ -777,8 +731,7 @@ void calc_mass_interia_matrix_actuation_space(Model &model,
 }
 
 void calc_mass_interia_matrix_actuation_space_including_floating_base(
-    Model &model, ExplicitLoopConstraintSet &elcs, const Math::VectorNd &y,
-    Math::MatrixNd &Hufb) {
+    Model& model, ExplicitLoopConstraintSet& elcs, const Math::VectorNd& y, Math::MatrixNd& Hufb) {
   // Compute the full system state from y
   VectorXd q(model.dof_count);
   calc_sysstate_q(model, elcs, y, q);
@@ -790,8 +743,7 @@ void calc_mass_interia_matrix_actuation_space_including_floating_base(
   // Compute the actuator jocobian Gu
   MatrixXd Gu;
   Gu.setZero(elcs.get_dof_active(), elcs.get_dof_active());
-  Gu = elcs.get_permutation_matrix() * G *
-       elcs.get_permutation_matrix2().transpose();
+  Gu = elcs.get_permutation_matrix() * G * elcs.get_permutation_matrix2().transpose();
 
   // Compute the mass-inertia matrix with CRBA in O(nd) time
   MatrixXd H_q;  // mass-interia matrix in spanning tree space
@@ -806,34 +758,25 @@ void calc_mass_interia_matrix_actuation_space_including_floating_base(
                elcs.get_dof_floatingbase() + elcs.get_dof_active());
   // top left block
   Hufb.topLeftCorner(elcs.get_dof_floatingbase(), elcs.get_dof_floatingbase()) =
-      Hy.topLeftCorner(elcs.get_dof_floatingbase(),
-                       elcs.get_dof_floatingbase());
+      Hy.topLeftCorner(elcs.get_dof_floatingbase(), elcs.get_dof_floatingbase());
   // top right block
-  Hufb.topRightCorner(elcs.get_dof_floatingbase(),
-                      elcs.get_dof_independent_robot()) =
-      Hy.topRightCorner(elcs.get_dof_floatingbase(),
-                        elcs.get_dof_independent_robot()) *
+  Hufb.topRightCorner(elcs.get_dof_floatingbase(), elcs.get_dof_independent_robot()) =
+      Hy.topRightCorner(elcs.get_dof_floatingbase(), elcs.get_dof_independent_robot()) *
       Gu.inverse();
   // bottom left block
-  Hufb.bottomLeftCorner(elcs.get_dof_independent_robot(),
-                        elcs.get_dof_floatingbase()) =
+  Hufb.bottomLeftCorner(elcs.get_dof_independent_robot(), elcs.get_dof_floatingbase()) =
       Gu.inverse().transpose() *
-      Hy.bottomLeftCorner(elcs.get_dof_independent_robot(),
-                          elcs.get_dof_floatingbase());
+      Hy.bottomLeftCorner(elcs.get_dof_independent_robot(), elcs.get_dof_floatingbase());
   // bottom right block
-  Hufb.bottomRightCorner(elcs.get_dof_independent_robot(),
-                         elcs.get_dof_independent_robot()) =
+  Hufb.bottomRightCorner(elcs.get_dof_independent_robot(), elcs.get_dof_independent_robot()) =
       Gu.inverse().transpose() *
-      Hy.bottomRightCorner(elcs.get_dof_independent_robot(),
-                           elcs.get_dof_independent_robot()) *
+      Hy.bottomRightCorner(elcs.get_dof_independent_robot(), elcs.get_dof_independent_robot()) *
       Gu.inverse();
 }
 
-SpatialVector calc_kinematicmodel_forward(Model &model,
-                                          ExplicitLoopConstraintSet &elcs,
-                                          const Math::VectorNd &y,
-                                          const Math::VectorNd &yd,
-                                          const char *body_name) {
+SpatialVector calc_kinematicmodel_forward(Model& model, ExplicitLoopConstraintSet& elcs,
+                                          const Math::VectorNd& y, const Math::VectorNd& yd,
+                                          const char* body_name) {
   // This function calculates the twist (angular + linear velocity) of an input
   // body depending on the state of independent joint positions and velocities
 
@@ -859,15 +802,16 @@ SpatialVector calc_kinematicmodel_forward(Model &model,
 
     return twist;
   } else {
-    cerr << "calc_kinematicmodel_forward: Body Name provided is not valid."
-         << endl;
+    cerr << "calc_kinematicmodel_forward: Body Name provided is not valid." << endl;
     abort();
   }
 }
 
-std::vector<SpatialVector> calc_kinematicmodel_forward(
-    Model &model, ExplicitLoopConstraintSet &elcs, const Math::VectorNd &y,
-    const Math::VectorNd &yd, std::vector<string> body_names) {
+std::vector<SpatialVector> calc_kinematicmodel_forward(Model& model,
+                                                       ExplicitLoopConstraintSet& elcs,
+                                                       const Math::VectorNd& y,
+                                                       const Math::VectorNd& yd,
+                                                       std::vector<string> body_names) {
   // This function calculates the twists (angular + linear velocity) of multiple
   // input bodies depending on the state of independent joint positions and
   // velocities
@@ -892,12 +836,11 @@ std::vector<SpatialVector> calc_kinematicmodel_forward(
     unsigned int body_id = model.GetBodyId(body_name.c_str());
     if (model.IsBodyId(body_id)) {
       // calculate twist and push it to the twists vector
-      twists.push_back(
-          CalcPointVelocity6D(model, q, qd, body_id, point_position));
+      twists.push_back(CalcPointVelocity6D(model, q, qd, body_id, point_position));
 
     } else {
-      cerr << "calc_kinematicmodel_forward: Body Name = " << body_name
-           << " provided is not valid." << endl;
+      cerr << "calc_kinematicmodel_forward: Body Name = " << body_name << " provided is not valid."
+           << endl;
       abort();
     }
   }
@@ -905,10 +848,11 @@ std::vector<SpatialVector> calc_kinematicmodel_forward(
   return twists;
 }
 
-SpatialVector calc_secondorder_kinematicmodel_forward(
-    Model &model, ExplicitLoopConstraintSet &elcs, const Math::VectorNd &y,
-    const Math::VectorNd &yd, const Math::VectorNd &ydd,
-    const char *body_name) {
+SpatialVector calc_secondorder_kinematicmodel_forward(Model& model, ExplicitLoopConstraintSet& elcs,
+                                                      const Math::VectorNd& y,
+                                                      const Math::VectorNd& yd,
+                                                      const Math::VectorNd& ydd,
+                                                      const char* body_name) {
   // This function calculates the spatial acceleration (angular + linear
   // acceleration) of an input body depending on the state of independent joint
   // positions, velocities and acceleration
@@ -940,8 +884,7 @@ SpatialVector calc_secondorder_kinematicmodel_forward(
 
     // calculate twist derivative in space coordinates (hybrid representation of
     // twist)
-    spatial_acceleration =
-        CalcPointAcceleration6D(model, q, qd, qdd, body_id, point_position);
+    spatial_acceleration = CalcPointAcceleration6D(model, q, qd, qdd, body_id, point_position);
 
     return spatial_acceleration;
   } else {
@@ -953,9 +896,8 @@ SpatialVector calc_secondorder_kinematicmodel_forward(
 }
 
 std::vector<SpatialVector> calc_secondorder_kinematicmodel_forward(
-    Model &model, ExplicitLoopConstraintSet &elcs, const Math::VectorNd &y,
-    const Math::VectorNd &yd, const Math::VectorNd &ydd,
-    std::vector<string> body_names) {
+    Model& model, ExplicitLoopConstraintSet& elcs, const Math::VectorNd& y,
+    const Math::VectorNd& yd, const Math::VectorNd& ydd, std::vector<string> body_names) {
   // This function calculates the spatial accelerations (angular + linear
   // acceleration) of multiple input bodies depending on the state of
   // independent joint positions, velocities and acceleration
@@ -990,28 +932,26 @@ std::vector<SpatialVector> calc_secondorder_kinematicmodel_forward(
       spatial_accelerations.push_back(
           CalcPointAcceleration6D(model, q, qd, qdd, body_id, point_position));
     } else {
-      cerr << "calc_secondorder_kinematicmodel_forward: Body Name = "
-           << body_name << " provided is not valid." << endl;
+      cerr << "calc_secondorder_kinematicmodel_forward: Body Name = " << body_name
+           << " provided is not valid." << endl;
       abort();
     }
   }
   return spatial_accelerations;
 }
 
-void calc_actuator_jacobian(Model &model, ExplicitLoopConstraintSet &elcs,
-                            const Math::VectorNd &y, Math::MatrixNd &Gu) {
+void calc_actuator_jacobian(Model& model, ExplicitLoopConstraintSet& elcs, const Math::VectorNd& y,
+                            Math::MatrixNd& Gu) {
   Gu.setZero(elcs.get_dof_active(), elcs.get_dof_active());
 
   MatrixXd G(elcs.get_dof_spanningtree(), elcs.get_dof_independent());
   G = elcs.calc_loopclosure_Jacobian(y);
 
-  Gu = elcs.get_permutation_matrix() * G *
-       elcs.get_permutation_matrix2().transpose();
+  Gu = elcs.get_permutation_matrix() * G * elcs.get_permutation_matrix2().transpose();
 }
 
-void calc_spatial_jacobian(Model &model, ExplicitLoopConstraintSet &elcs,
-                           const Math::VectorNd &y, Math::MatrixNd &J,
-                           const char *body_name) {
+void calc_spatial_jacobian(Model& model, ExplicitLoopConstraintSet& elcs, const Math::VectorNd& y,
+                           Math::MatrixNd& J, const char* body_name) {
   // This function computes the spatial Jacobian (6 x n) of a body depending on
   // the state of position of independent joints.
   J.setZero(6, elcs.get_dof_spanningtree());
@@ -1032,9 +972,9 @@ void calc_spatial_jacobian(Model &model, ExplicitLoopConstraintSet &elcs,
   }
 }
 
-void calc_spatial_jacobian_independent_joint_space(
-    Model &model, ExplicitLoopConstraintSet &elcs, const Math::VectorNd &y,
-    Math::MatrixNd &J, const char *body_name) {
+void calc_spatial_jacobian_independent_joint_space(Model& model, ExplicitLoopConstraintSet& elcs,
+                                                   const Math::VectorNd& y, Math::MatrixNd& J,
+                                                   const char* body_name) {
   // This function computes the spatial Jacobian (6 x m) of a body depending on
   // the state of position of independent joints projected to independent joint
   // space.
@@ -1042,34 +982,32 @@ void calc_spatial_jacobian_independent_joint_space(
   MatrixXd J_full = MatrixXd::Zero(6, elcs.get_dof_spanningtree());
   // compute the full spatial Jacobian
   calc_spatial_jacobian(model, elcs, y, J_full, body_name);
-  MatrixXd G =
-      MatrixXd::Zero(elcs.get_dof_spanningtree(), elcs.get_dof_independent());
+  MatrixXd G = MatrixXd::Zero(elcs.get_dof_spanningtree(), elcs.get_dof_independent());
   G = elcs.calc_loopclosure_Jacobian(y);  // compute the loop closure jacobian
-  J = J_full * G;  // projection in independent joint space
+  J = J_full * G;                         // projection in independent joint space
 }
 
-void calc_spatial_jacobian_actuation_space(Model &model,
-                                           ExplicitLoopConstraintSet &elcs,
-                                           const Math::VectorNd &y,
-                                           Math::MatrixNd &J,
-                                           const char *body_name) {
+void calc_spatial_jacobian_actuation_space(Model& model, ExplicitLoopConstraintSet& elcs,
+                                           const Math::VectorNd& y, Math::MatrixNd& J,
+                                           const char* body_name) {
   // This function computes the spatial Jacobian (6 x p) of a body depending on
   // the state of position of independent joints projected to actuation space.
   J.setZero(6, elcs.get_dof_active());
   MatrixXd J_full = MatrixXd::Zero(6, elcs.get_dof_spanningtree());
   // compute the full spatial Jacobian
   calc_spatial_jacobian(model, elcs, y, J_full, body_name);
-  MatrixXd G =
-      MatrixXd::Zero(elcs.get_dof_spanningtree(), elcs.get_dof_independent());
+  MatrixXd G = MatrixXd::Zero(elcs.get_dof_spanningtree(), elcs.get_dof_independent());
   G = elcs.calc_loopclosure_Jacobian(y);  // compute the loop closure jacobian
   MatrixXd Gu = MatrixXd::Zero(elcs.get_dof_active(), elcs.get_dof_active());
   calc_actuator_jacobian(model, elcs, y, Gu);  // actuator jacobian
   J = J_full * G * (Gu.inverse());             // projection in actuation space
 }
 
-void calc_spatial_jacobian_actuation_space_including_floating_base(
-    Model &model, ExplicitLoopConstraintSet &elcs, const Math::VectorNd &y,
-    Math::MatrixNd &J, const char *body_name) {
+void calc_spatial_jacobian_actuation_space_including_floating_base(Model& model,
+                                                                   ExplicitLoopConstraintSet& elcs,
+                                                                   const Math::VectorNd& y,
+                                                                   Math::MatrixNd& J,
+                                                                   const char* body_name) {
   // This function computes the spatial Jacobian (6 x floating_dof+p) of a body
   // depending on the state of position of independent joints projected to
   // actuation space (but includes floating base joints).
@@ -1086,9 +1024,8 @@ void calc_spatial_jacobian_actuation_space_including_floating_base(
           (Gu.inverse());  // assumes independent dof of robot equals active dof
 }
 
-void calc_body_jacobian(Model &model, ExplicitLoopConstraintSet &elcs,
-                        const Math::VectorNd &y, Math::MatrixNd &J,
-                        const char *body_name) {
+void calc_body_jacobian(Model& model, ExplicitLoopConstraintSet& elcs, const Math::VectorNd& y,
+                        Math::MatrixNd& J, const char* body_name) {
   // This function computes the body Jacobian (6 x n) of a body depending on the
   // state of position of independent joints.
   J.setZero(6, elcs.get_dof_spanningtree());
@@ -1104,11 +1041,9 @@ void calc_body_jacobian(Model &model, ExplicitLoopConstraintSet &elcs,
   }
 }
 
-void calc_body_jacobian_independent_joint_space(Model &model,
-                                                ExplicitLoopConstraintSet &elcs,
-                                                const Math::VectorNd &y,
-                                                Math::MatrixNd &J,
-                                                const char *body_name) {
+void calc_body_jacobian_independent_joint_space(Model& model, ExplicitLoopConstraintSet& elcs,
+                                                const Math::VectorNd& y, Math::MatrixNd& J,
+                                                const char* body_name) {
   // This function computes the body Jacobian (6 x m) of a body depending on the
   // state of position of independent joints projected to independent joint
   // space.
@@ -1116,34 +1051,32 @@ void calc_body_jacobian_independent_joint_space(Model &model,
   MatrixXd J_full = MatrixXd::Zero(6, elcs.get_dof_spanningtree());
   // compute the full spatial Jacobian
   calc_body_jacobian(model, elcs, y, J_full, body_name);
-  MatrixXd G =
-      MatrixXd::Zero(elcs.get_dof_spanningtree(), elcs.get_dof_independent());
+  MatrixXd G = MatrixXd::Zero(elcs.get_dof_spanningtree(), elcs.get_dof_independent());
   G = elcs.calc_loopclosure_Jacobian(y);  // compute the loop closure jacobian
-  J = J_full * G;  // projection in independent joint space
+  J = J_full * G;                         // projection in independent joint space
 }
 
-void calc_body_jacobian_actuation_space(Model &model,
-                                        ExplicitLoopConstraintSet &elcs,
-                                        const Math::VectorNd &y,
-                                        Math::MatrixNd &J,
-                                        const char *body_name) {
+void calc_body_jacobian_actuation_space(Model& model, ExplicitLoopConstraintSet& elcs,
+                                        const Math::VectorNd& y, Math::MatrixNd& J,
+                                        const char* body_name) {
   // This function computes the body Jacobian (6 x p) of a body depending on the
   // state of position of independent joints projected to actuation space.
   J.setZero(6, elcs.get_dof_independent());
   MatrixXd J_full = MatrixXd::Zero(6, elcs.get_dof_spanningtree());
   // compute the full spatial Jacobian
   calc_body_jacobian(model, elcs, y, J_full, body_name);
-  MatrixXd G =
-      MatrixXd::Zero(elcs.get_dof_spanningtree(), elcs.get_dof_independent());
+  MatrixXd G = MatrixXd::Zero(elcs.get_dof_spanningtree(), elcs.get_dof_independent());
   G = elcs.calc_loopclosure_Jacobian(y);  // compute the loop closure jacobian
   MatrixXd Gu = MatrixXd::Zero(elcs.get_dof_active(), elcs.get_dof_active());
   calc_actuator_jacobian(model, elcs, y, Gu);  // actuator jacobian
   J = J_full * G * (Gu.inverse());             // projection in actuation space
 }
 
-void calc_body_jacobian_actuation_space_including_floating_base(
-    Model &model, ExplicitLoopConstraintSet &elcs, const Math::VectorNd &y,
-    Math::MatrixNd &J, const char *body_name) {
+void calc_body_jacobian_actuation_space_including_floating_base(Model& model,
+                                                                ExplicitLoopConstraintSet& elcs,
+                                                                const Math::VectorNd& y,
+                                                                Math::MatrixNd& J,
+                                                                const char* body_name) {
   // This function computes the body Jacobian (6 x floating_dof+p) of a body
   // depending on the state of position of independent joints projected to
   // actuation space.
@@ -1160,9 +1093,8 @@ void calc_body_jacobian_actuation_space_including_floating_base(
           (Gu.inverse());  // assumes independent dof of robot equals active dof
 }
 
-void calc_point_jacobian(Model &model, ExplicitLoopConstraintSet &elcs,
-                         const Math::VectorNd &y, Math::MatrixNd &J,
-                         const char *body_name) {
+void calc_point_jacobian(Model& model, ExplicitLoopConstraintSet& elcs, const Math::VectorNd& y,
+                         Math::MatrixNd& J, const char* body_name) {
   // This function computes the point Jacobian (3 x n) of a body depending on
   // the state of position of independent joints.
 
@@ -1183,8 +1115,8 @@ void calc_point_jacobian(Model &model, ExplicitLoopConstraintSet &elcs,
   }
 }
 
-void calc_com_jacobian(Model &model, ExplicitLoopConstraintSet &elcs,
-                       const Math::VectorNd &y, Math::MatrixNd &Jcom) {
+void calc_com_jacobian(Model& model, ExplicitLoopConstraintSet& elcs, const Math::VectorNd& y,
+                       Math::MatrixNd& Jcom) {
   Jcom.setZero(3, elcs.get_dof_independent());
 
   Math::VectorNd q(model.dof_count);
@@ -1203,16 +1135,14 @@ void calc_com_jacobian(Model &model, ExplicitLoopConstraintSet &elcs,
   Jcom = J * G;  // projection in independent joint space
 }
 
-Math::SpatialTransform calc_adjoint_transformation(
-    Model &model, ExplicitLoopConstraintSet &elcs, const Math::VectorNd &y,
-    const char *body_name) {
+Math::SpatialTransform calc_adjoint_transformation(Model& model, ExplicitLoopConstraintSet& elcs,
+                                                   const Math::VectorNd& y, const char* body_name) {
   // This function computes the adjoint transformation (6 x 6) of a body in base
   // coordinates depending on the state of position of independent joints.
 
   unsigned int body_id = model.GetBodyId(body_name);
   if (!model.IsBodyId(body_id)) {
-    cerr << "calc_adjoint_transformation: Body Name provided is not valid."
-         << endl;
+    cerr << "calc_adjoint_transformation: Body Name provided is not valid." << endl;
     abort();
   }
   Math::VectorNd q(model.dof_count);
@@ -1222,23 +1152,21 @@ Math::SpatialTransform calc_adjoint_transformation(
 
   Matrix3d rot_mat;
   rot_mat.setIdentity(3, 3);
-  rot_mat = CalcBodyWorldOrientation(
-      model, q,
-      body_id);  // NOTE: Rot matrix in rbdl is transposed! i.e. it represents
-                 // the rotation of a body in body coordinates
+  rot_mat =
+      CalcBodyWorldOrientation(model, q,
+                               body_id);  // NOTE: Rot matrix in rbdl is transposed! i.e. it
+                                          // represents the rotation of a body in body coordinates
 
-  Math::SpatialTransform adjoint_transformation(
-      rot_mat.transpose(), Vector3d::Zero());  // adjoint transformation of the
-                                               // body in base coordinates
+  Math::SpatialTransform adjoint_transformation(rot_mat.transpose(),
+                                                Vector3d::Zero());  // adjoint transformation of the
+                                                                    // body in base coordinates
 
   return adjoint_transformation;
 }
 
-VectorNd calc_dynamicmodel_inverse(Model &model,
-                                   ExplicitLoopConstraintSet &elcs,
-                                   const Math::VectorNd &y,
-                                   const Math::VectorNd &yd,
-                                   const Math::VectorNd &ydd) {
+VectorNd calc_dynamicmodel_inverse(Model& model, ExplicitLoopConstraintSet& elcs,
+                                   const Math::VectorNd& y, const Math::VectorNd& yd,
+                                   const Math::VectorNd& ydd) {
   // This function calculates the actuator forces (or torques) depending on
   // the state of independent joint positions, velocities and accelerations
 
@@ -1282,13 +1210,11 @@ Tau_spanningtree; Tau_actuated =
     // Solving equation: Gu^T * Tau_actuator = Q2 * G^T * Tau_spanningtree
     // To solve a system of equations, Ax = b, its better to use x =
     // A.colPivHouseholderQr().solve(b) instead of computing an explicit inverse
-    Gu = elcs.get_permutation_matrix() * G *
-         elcs.get_permutation_matrix2().transpose();
+    Gu = elcs.get_permutation_matrix() * G * elcs.get_permutation_matrix2().transpose();
 
     Tau_actuated = (Gu.transpose())
                        .colPivHouseholderQr()
-                       .solve(elcs.get_permutation_matrix2() * G.transpose() *
-                              Tau_spanningtree);
+                       .solve(elcs.get_permutation_matrix2() * G.transpose() * Tau_spanningtree);
 
     return Tau_actuated;
 
@@ -1296,15 +1222,17 @@ Tau_spanningtree; Tau_actuated =
     cerr << "Model and analytical constraint sets are not consistent in "
             "dof_spanningtree size."
          << endl;
-    cerr << "Dof count: " << model.dof_count
-         << "\nSpanning tree: " << elcs.get_dof_spanningtree() << endl;
+    cerr << "Dof count: " << model.dof_count << "\nSpanning tree: " << elcs.get_dof_spanningtree()
+         << endl;
     abort();
   }
 }
 
-VectorNd calc_dynamicmodel_inverse_including_floatingbase(
-    Model &model, ExplicitLoopConstraintSet &elcs, const Math::VectorNd &y,
-    const Math::VectorNd &yd, const Math::VectorNd &ydd) {
+VectorNd calc_dynamicmodel_inverse_including_floatingbase(Model& model,
+                                                          ExplicitLoopConstraintSet& elcs,
+                                                          const Math::VectorNd& y,
+                                                          const Math::VectorNd& yd,
+                                                          const Math::VectorNd& ydd) {
   // This function calculates the actuator forces (or torques) depending on
   // the state of independent joint positions, velocities and accelerations
 
@@ -1338,16 +1266,14 @@ VectorNd calc_dynamicmodel_inverse_including_floatingbase(
     // Solving equation: Gu^T * Tau_actuator = Q2 * G^T * Tau_spanningtree
     // To solve a system of equations, Ax = b, its better to use x =
     // A.colPivHouseholderQr().solve(b) instead of computing an explicit inverse
-    Gu = elcs.get_permutation_matrix() * G *
-         elcs.get_permutation_matrix2().transpose();
+    Gu = elcs.get_permutation_matrix() * G * elcs.get_permutation_matrix2().transpose();
 
     Tau_actuated.head(elcs.get_dof_floatingbase()) =
         Tau_spanningtree.head(elcs.get_dof_floatingbase());
     Tau_actuated.tail(elcs.get_dof_active()) =
         (Gu.transpose())
             .colPivHouseholderQr()
-            .solve(elcs.get_permutation_matrix2() * G.transpose() *
-                   Tau_spanningtree);
+            .solve(elcs.get_permutation_matrix2() * G.transpose() * Tau_spanningtree);
 
     return Tau_actuated;
 
@@ -1359,9 +1285,11 @@ VectorNd calc_dynamicmodel_inverse_including_floatingbase(
   }
 }
 
-VectorNd calc_dynamicmodel_inverse_independentjointspace(
-    Model &model, ExplicitLoopConstraintSet &elcs, const Math::VectorNd &y,
-    const Math::VectorNd &yd, const Math::VectorNd &ydd) {
+VectorNd calc_dynamicmodel_inverse_independentjointspace(Model& model,
+                                                         ExplicitLoopConstraintSet& elcs,
+                                                         const Math::VectorNd& y,
+                                                         const Math::VectorNd& yd,
+                                                         const Math::VectorNd& ydd) {
   // This function calculates the actuator forces (or torques) depending on
   // the state of active joint positions, velocities and accelerations
 
@@ -1405,15 +1333,13 @@ VectorNd calc_dynamicmodel_inverse_independentjointspace(
   }
 }
 
-VectorNd calc_dynamicmodel_forward(Model &model,
-                                   ExplicitLoopConstraintSet &elcs,
-                                   const Math::VectorNd &y,
-                                   const Math::VectorNd &yd,
-                                   const VectorXd &Tau_actuated) {
+VectorNd calc_dynamicmodel_forward(Model& model, ExplicitLoopConstraintSet& elcs,
+                                   const Math::VectorNd& y, const Math::VectorNd& yd,
+                                   const VectorXd& Tau_actuated) {
   if (elcs.get_dof_independent() != elcs.get_dof_independent_robot()) {
     cerr << "Independent dof defined in urdf: " << elcs.get_dof_independent()
-         << ", Independent dof belonging to the robot: "
-         << elcs.get_dof_independent_robot() << endl;
+         << ", Independent dof belonging to the robot: " << elcs.get_dof_independent_robot()
+         << endl;
     cerr << "This function is not supported for floating base robots! Please "
             "note that in these cases actuator state does not define "
             "independent joint state as the system is underactuated."
@@ -1535,13 +1461,11 @@ VectorNd calc_dynamicmodel_forward(Model &model,
   }
 }
 
-void calc_com_properties(Model &model, ExplicitLoopConstraintSet &elcs,
-                         const Math::VectorNd &y, const Math::VectorNd &yd,
-                         const Math::VectorNd *ydd, double &mass,
-                         Math::Vector3d &com, Math::Vector3d *com_velocity,
-                         Math::Vector3d *com_acceleration,
-                         Math::Vector3d *angular_momentum,
-                         Math::Vector3d *change_of_angular_momentum) {
+void calc_com_properties(Model& model, ExplicitLoopConstraintSet& elcs, const Math::VectorNd& y,
+                         const Math::VectorNd& yd, const Math::VectorNd* ydd, double& mass,
+                         Math::Vector3d& com, Math::Vector3d* com_velocity,
+                         Math::Vector3d* com_acceleration, Math::Vector3d* angular_momentum,
+                         Math::Vector3d* change_of_angular_momentum) {
   // calculate positions(q)
   Math::VectorNd q(model.dof_count);
   calc_sysstate_q(model, elcs, y, q);
@@ -1552,20 +1476,17 @@ void calc_com_properties(Model &model, ExplicitLoopConstraintSet &elcs,
 
   // calculate accelerations(qdd)
   Math::VectorNd qdd(model.dof_count);
-  if (ydd != NULL &&
-      (change_of_angular_momentum != NULL || com_acceleration != NULL))
+  if (ydd != NULL && (change_of_angular_momentum != NULL || com_acceleration != NULL))
     calc_sysstate_qddot(model, elcs, y, yd, *ydd, qdd);
 
-  if (com_velocity && com_acceleration && angular_momentum &&
-      change_of_angular_momentum)
-    CalcCenterOfMass(model, q, qd, &qdd, mass, com, com_velocity,
-                     com_acceleration, angular_momentum,
+  if (com_velocity && com_acceleration && angular_momentum && change_of_angular_momentum)
+    CalcCenterOfMass(model, q, qd, &qdd, mass, com, com_velocity, com_acceleration,
+                     angular_momentum,
                      change_of_angular_momentum);  // compute everything
   else if (com_velocity && com_acceleration && angular_momentum)
-    CalcCenterOfMass(
-        model, q, qd, &qdd, mass, com, com_velocity, com_acceleration,
-        angular_momentum);  // calculate mass, com, linear velocity,
-                            // linear acceleration, angular momentum
+    CalcCenterOfMass(model, q, qd, &qdd, mass, com, com_velocity, com_acceleration,
+                     angular_momentum);  // calculate mass, com, linear velocity,
+                                         // linear acceleration, angular momentum
   else if (com_velocity && com_acceleration)
     CalcCenterOfMass(model, q, qd, &qdd, mass, com, com_velocity,
                      com_acceleration);  // calculate mass, com, linear
@@ -1578,17 +1499,14 @@ void calc_com_properties(Model &model, ExplicitLoopConstraintSet &elcs,
     CalcCenterOfMass(model, q, qd, NULL, mass, com,
                      com_velocity);  // calculate mass, com, linear velocity
   else
-    CalcCenterOfMass(
-        model, q, qd, NULL, mass,
-        com);  // calculate total mass and center of mass of the system only
+    CalcCenterOfMass(model, q, qd, NULL, mass,
+                     com);  // calculate total mass and center of mass of the system only
 }
 
-void calc_zero_moment_point(Model &model, ExplicitLoopConstraintSet &elcs,
-                            const Math::VectorNd &y, const Math::VectorNd &yd,
-                            const Math::VectorNd &ydd,
-                            const Math::Vector3d &surface_normal,
-                            const Math::Vector3d &surface_point,
-                            Math::Vector3d *zmp) {
+void calc_zero_moment_point(Model& model, ExplicitLoopConstraintSet& elcs, const Math::VectorNd& y,
+                            const Math::VectorNd& yd, const Math::VectorNd& ydd,
+                            const Math::Vector3d& surface_normal,
+                            const Math::Vector3d& surface_point, Math::Vector3d* zmp) {
   // calculate positions(q)
   Math::VectorNd q(model.dof_count);
   calc_sysstate_q(model, elcs, y, q);
@@ -1605,28 +1523,23 @@ void calc_zero_moment_point(Model &model, ExplicitLoopConstraintSet &elcs,
   CalcZeroMomentPoint(model, q, qd, qdd, zmp, surface_normal, surface_point);
   // cout<<"ZMP: "<<*zmp<<endl;
 }
-VectorNd calc_staticmodel_inverse(Model &model, ExplicitLoopConstraintSet &elcs,
-                                  const Math::VectorNd &y,
-                                  const std::vector<string> wrench_points,
+VectorNd calc_staticmodel_inverse(Model& model, ExplicitLoopConstraintSet& elcs,
+                                  const Math::VectorNd& y, const std::vector<string> wrench_points,
                                   const std::vector<Math::SpatialVector> f_ext,
                                   const std::vector<bool> wrench_resolution,
                                   const std::vector<bool> wrench_interaction) {
-  if (wrench_points.size() != f_ext.size() ||
-      wrench_resolution.size() != f_ext.size() ||
+  if (wrench_points.size() != f_ext.size() || wrench_resolution.size() != f_ext.size() ||
       wrench_points.size() != wrench_resolution.size() ||
       wrench_points.size() != wrench_interaction.size()) {
-    cerr << "wrench_points size: " << wrench_points.size()
-         << ", f_ext size: " << f_ext.size()
+    cerr << "wrench_points size: " << wrench_points.size() << ", f_ext size: " << f_ext.size()
          << ", wrench_resolution size: " << wrench_resolution.size()
          << ", wrench_interaction size: " << wrench_interaction.size() << endl;
     cerr << "Size mismatch!" << endl;
     abort();
   } else {
     VectorNd Tau_actuated_ext(VectorNd::Zero(elcs.get_dof_active()));
-    VectorNd wrench_independentjointspace(
-        VectorNd::Zero(elcs.get_dof_independent()));
-    VectorNd wrench_independentjointspace_robot(
-        VectorNd::Zero(elcs.get_dof_independent_robot()));
+    VectorNd wrench_independentjointspace(VectorNd::Zero(elcs.get_dof_independent()));
+    VectorNd wrench_independentjointspace_robot(VectorNd::Zero(elcs.get_dof_independent_robot()));
     MatrixXd wrench_point_Jacobian;
     Math::Vector3d point_position;
     point_position.setZero();
@@ -1638,49 +1551,40 @@ VectorNd calc_staticmodel_inverse(Model &model, ExplicitLoopConstraintSet &elcs,
     MatrixXd G(elcs.get_dof_spanningtree(), elcs.get_dof_active());
     G = elcs.calc_loopclosure_Jacobian(y);  // compute loop closure jacobian
     Gu = elcs.get_permutation_matrix() * G *
-         elcs.get_permutation_matrix2()
-             .transpose();  // compute actuator jacobian
+         elcs.get_permutation_matrix2().transpose();  // compute actuator jacobian
 
     for (unsigned int i = 0; i < wrench_points.size(); i++) {
       unsigned int body_id = model.GetBodyId(
-          wrench_points[i]
-              .c_str());  // find body_id of the force application points
+          wrench_points[i].c_str());  // find body_id of the force application points
 
       if (model.IsBodyId(body_id)) {
-        wrench_point_Jacobian.setZero(
-            6, model.dof_count);  // set this matrix every time to zero
+        wrench_point_Jacobian.setZero(6, model.dof_count);  // set this matrix every time to zero
         if (wrench_resolution[i])
-          CalcBodySpatialJacobian(
-              model, q, body_id,
-              wrench_point_Jacobian);  // compute jacobian (6 x n) in body
-                                       // coordinate system
+          CalcBodySpatialJacobian(model, q, body_id,
+                                  wrench_point_Jacobian);  // compute jacobian (6 x n) in body
+                                                           // coordinate system
         else
-          CalcPointJacobian6D(
-              model, q, body_id, point_position,
-              wrench_point_Jacobian);  // compute point jacobian 6D for this
-                                       // point (6 x n) in base coordinate
-                                       // system
+          CalcPointJacobian6D(model, q, body_id, point_position,
+                              wrench_point_Jacobian);  // compute point jacobian 6D for this
+                                                       // point (6 x n) in base coordinate
+                                                       // system
 
-        wrench_independentjointspace =
-            (wrench_point_Jacobian * G).transpose() * f_ext[i];
+        wrench_independentjointspace = (wrench_point_Jacobian * G).transpose() * f_ext[i];
 
         wrench_independentjointspace_robot =
             elcs.get_permutation_matrix2() * wrench_independentjointspace;
         if (wrench_interaction[i])
           Tau_actuated_ext =
-              Tau_actuated_ext - (Gu.transpose())
-                                     .colPivHouseholderQr()
-                                     .solve(wrench_independentjointspace_robot);
+              Tau_actuated_ext -
+              (Gu.transpose()).colPivHouseholderQr().solve(wrench_independentjointspace_robot);
         else
           Tau_actuated_ext =
-              Tau_actuated_ext + (Gu.transpose())
-                                     .colPivHouseholderQr()
-                                     .solve(wrench_independentjointspace_robot);
+              Tau_actuated_ext +
+              (Gu.transpose()).colPivHouseholderQr().solve(wrench_independentjointspace_robot);
         // std::cout << "i = "<< i << " Tau actuated external for system: " <<
         // Tau_actuated_ext.transpose() << std::endl;
       } else {
-        cerr << "calc_staticmodel_inverse: Body Name provided is not valid."
-             << endl;
+        cerr << "calc_staticmodel_inverse: Body Name provided is not valid." << endl;
         abort();
       }
     }
@@ -1689,21 +1593,20 @@ VectorNd calc_staticmodel_inverse(Model &model, ExplicitLoopConstraintSet &elcs,
   }
 }
 
-SpatialVector calc_staticmodel_forward(
-    Model &model, ExplicitLoopConstraintSet &elcs, const Math::VectorNd &y,
-    const Math::VectorNd &Tau_actuated_measured, const string FTsensor_link,
-    const bool wrench_resolution) {
+SpatialVector calc_staticmodel_forward(Model& model, ExplicitLoopConstraintSet& elcs,
+                                       const Math::VectorNd& y,
+                                       const Math::VectorNd& Tau_actuated_measured,
+                                       const string FTsensor_link, const bool wrench_resolution) {
   if (elcs.get_dof_independent() != elcs.get_dof_independent_robot()) {
     cerr << "Independent dof defined in urdf: " << elcs.get_dof_independent()
-         << ", Independent dof belonging to the robot: "
-         << elcs.get_dof_independent_robot() << endl;
+         << ", Independent dof belonging to the robot: " << elcs.get_dof_independent_robot()
+         << endl;
     cerr << "This function is not supported for floating base robots!" << endl;
     abort();
   }
 
   if (elcs.get_dof_independent_robot() != 6) {
-    cerr << "Independent dof belonging to the robot: "
-         << elcs.get_dof_independent_robot() << endl;
+    cerr << "Independent dof belonging to the robot: " << elcs.get_dof_independent_robot() << endl;
     cerr << "This function is not supported for robots with mobility less than "
             "or greater than 6! Please note that in these cases the measured "
             "actuator forces do not define 6 dof wrench vector."
@@ -1713,8 +1616,7 @@ SpatialVector calc_staticmodel_forward(
 
   SpatialVector wrench;
 
-  VectorNd actforce_independentjointspace_robot(
-      VectorNd::Zero(elcs.get_dof_independent_robot()));
+  VectorNd actforce_independentjointspace_robot(VectorNd::Zero(elcs.get_dof_independent_robot()));
 
   MatrixXd wrench_point_Jacobian;  // (6 x n) Jacobian matrix
   Math::Vector3d point_position;
@@ -1732,24 +1634,20 @@ SpatialVector calc_staticmodel_forward(
   Gu = elcs.get_permutation_matrix() * G *
        elcs.get_permutation_matrix2().transpose();  // compute actuator jacobian
   actforce_independentjointspace_robot =
-      Gu.transpose() *
-      Tau_actuated_measured;  // force in independent joint space
+      Gu.transpose() * Tau_actuated_measured;  // force in independent joint space
 
-  unsigned int body_id = model.GetBodyId(
-      FTsensor_link.c_str());  // find body_id of the force application points
+  unsigned int body_id =
+      model.GetBodyId(FTsensor_link.c_str());  // find body_id of the force application points
   if (model.IsBodyId(body_id)) {
-    wrench_point_Jacobian.setZero(
-        6, model.dof_count);  // set this matrix every time to zero
+    wrench_point_Jacobian.setZero(6, model.dof_count);  // set this matrix every time to zero
     if (wrench_resolution)
-      CalcBodySpatialJacobian(
-          model, q, body_id,
-          wrench_point_Jacobian);  // compute jacobian (6 x n) in body
-                                   // coordinate system
+      CalcBodySpatialJacobian(model, q, body_id,
+                              wrench_point_Jacobian);  // compute jacobian (6 x n) in body
+                                                       // coordinate system
     else
-      CalcPointJacobian6D(
-          model, q, body_id, point_position,
-          wrench_point_Jacobian);  // compute point jacobian 6D for this point
-                                   // (6 x n) in base coordinate system
+      CalcPointJacobian6D(model, q, body_id, point_position,
+                          wrench_point_Jacobian);  // compute point jacobian 6D for this point
+                                                   // (6 x n) in base coordinate system
 
     // wrench_point_Jacobian*G is square and invertible only for 6 dof robots.
     wrench = ((wrench_point_Jacobian * G).transpose())
@@ -1757,28 +1655,25 @@ SpatialVector calc_staticmodel_forward(
                  .solve(actforce_independentjointspace_robot);
     return wrench;
   } else {
-    cerr << "calc_staticmodel_forward: Body Name provided is not valid."
-         << endl;
+    cerr << "calc_staticmodel_forward: Body Name provided is not valid." << endl;
     abort();
   }
 }
 
-double calc_kinetic_energy(RigidBodyDynamics::Model &model, Eigen::VectorXd q,
+double calc_kinetic_energy(RigidBodyDynamics::Model& model, Eigen::VectorXd q,
                            Eigen::VectorXd qdot) {
   // Compute mass matrix
   // Eigen::MatrixXd M = Eigen::MatrixXd::Zero(model.dof_count,
   // model.dof_count); RigidBodyDynamics::CompositeRigidBodyAlgorithm(model, q,
   // M, true);
 
-  double kin_energy =
-      RigidBodyDynamics::Utils::CalcKineticEnergy(model, q, qdot, true);
+  double kin_energy = RigidBodyDynamics::Utils::CalcKineticEnergy(model, q, qdot, true);
   // Kinetic energy = 0.5 * qdot^T * M * qdot
   // return 0.5 * qdot.transpose() * M * qdot;
   return kin_energy;
 }
 
-double calc_potential_energy(RigidBodyDynamics::Model &model,
-                             Eigen::VectorXd q) {
+double calc_potential_energy(RigidBodyDynamics::Model& model, Eigen::VectorXd q) {
   double V = RigidBodyDynamics::Utils::CalcPotentialEnergy(model, q, true);
   // Eigen::Vector3d g = model.gravity; // typically [0, 0, -9.81]
 
@@ -1792,8 +1687,7 @@ double calc_potential_energy(RigidBodyDynamics::Model &model,
   return V;
 }
 
-double calc_total_energy(RigidBodyDynamics::Model &model, Eigen::VectorXd q,
-                         Eigen::VectorXd qdot) {
+double calc_total_energy(RigidBodyDynamics::Model& model, Eigen::VectorXd q, Eigen::VectorXd qdot) {
   return calc_kinetic_energy(model, q, qdot) + calc_potential_energy(model, q);
 }
 

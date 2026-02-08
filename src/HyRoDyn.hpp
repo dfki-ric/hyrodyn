@@ -1,12 +1,12 @@
 #ifndef HYRODYN_H
 #define HYRODYN_H
 
-#include <Eigen/Dense>
-#include <iostream>
 #include <math.h>
+#include <rbdl/rbdl.h>
 #include <stdio.h>
 
-#include <rbdl/rbdl.h>
+#include <Eigen/Dense>
+#include <iostream>
 
 #include "ExplicitLoopConstraints.hpp"
 
@@ -32,8 +32,8 @@ namespace HyRoDyn {
  * \param y vector of independent joint positions
  * \param q vector of spanning tree positions (output)
  */
-void calc_sysstate_q(Model &model, ExplicitLoopConstraintSet &elcs,
-                     const Math::VectorNd &y, Math::VectorNd &q);
+void calc_sysstate_q(Model& model, ExplicitLoopConstraintSet& elcs, const Math::VectorNd& y,
+                     Math::VectorNd& q);
 
 /** \brief Calculate system state at velocity (qdot) level from independent
  * joint position (y) and velocity (yd)
@@ -47,9 +47,8 @@ void calc_sysstate_q(Model &model, ExplicitLoopConstraintSet &elcs,
  * \param yd vector of independent joint velocities
  * \param qd vector of spanning tree velocities (output)
  */
-void calc_sysstate_qdot(Model &model, ExplicitLoopConstraintSet &elcs,
-                        const Math::VectorNd &y, const Math::VectorNd &yd,
-                        Math::VectorNd &qd);
+void calc_sysstate_qdot(Model& model, ExplicitLoopConstraintSet& elcs, const Math::VectorNd& y,
+                        const Math::VectorNd& yd, Math::VectorNd& qd);
 
 /** \brief Calculate system state at acceleration (qddot) level from independent
  * joint position (y), velocity (yd) and acceleration (ydd)
@@ -65,9 +64,8 @@ void calc_sysstate_qdot(Model &model, ExplicitLoopConstraintSet &elcs,
  * \param ydd vector of independent joint accelerations
  * \param qdd vector of spanning tree accelerations (output)
  */
-void calc_sysstate_qddot(Model &model, ExplicitLoopConstraintSet &elcs,
-                         const Math::VectorNd &y, const Math::VectorNd &yd,
-                         const Math::VectorNd &ydd, Math::VectorNd &qdd);
+void calc_sysstate_qddot(Model& model, ExplicitLoopConstraintSet& elcs, const Math::VectorNd& y,
+                         const Math::VectorNd& yd, const Math::VectorNd& ydd, Math::VectorNd& qdd);
 
 /** \brief Calculate actuator state at position (u) level from independent joint
  * position (y)
@@ -80,8 +78,8 @@ void calc_sysstate_qddot(Model &model, ExplicitLoopConstraintSet &elcs,
  * \param q vector of spanning tree positions
  * \param u vector of actuator positions (output)
  */
-void calc_actuatorstate_u(Model &model, ExplicitLoopConstraintSet &elcs,
-                          const Math::VectorNd &y, Math::VectorNd &u);
+void calc_actuatorstate_u(Model& model, ExplicitLoopConstraintSet& elcs, const Math::VectorNd& y,
+                          Math::VectorNd& u);
 
 /** \brief Calculate actuator state at velocity (udot) level from independent
  * joint position (y) and velocity (yd)
@@ -95,9 +93,8 @@ void calc_actuatorstate_u(Model &model, ExplicitLoopConstraintSet &elcs,
  * \param qd vector of spanning tree velocities
  * \param ud vector of actuator velocities (output)
  */
-void calc_actuatorstate_udot(Model &model, ExplicitLoopConstraintSet &elcs,
-                             const Math::VectorNd &y, const Math::VectorNd &yd,
-                             Math::VectorNd &ud);
+void calc_actuatorstate_udot(Model& model, ExplicitLoopConstraintSet& elcs, const Math::VectorNd& y,
+                             const Math::VectorNd& yd, Math::VectorNd& ud);
 
 /** \brief Calculate actuator state at acceleration (uddot) level from
  * independent joint position (y), velocity (yd) and acceleration (ydd)
@@ -112,9 +109,9 @@ void calc_actuatorstate_udot(Model &model, ExplicitLoopConstraintSet &elcs,
  * \param qdd vector of spanning tree accelerations
  * \param udd vector of actuator accelerations (output)
  */
-void calc_actuatorstate_uddot(Model &model, ExplicitLoopConstraintSet &elcs,
-                              const Math::VectorNd &y, const Math::VectorNd &yd,
-                              const Math::VectorNd &ydd, Math::VectorNd &udd);
+void calc_actuatorstate_uddot(Model& model, ExplicitLoopConstraintSet& elcs,
+                              const Math::VectorNd& y, const Math::VectorNd& yd,
+                              const Math::VectorNd& ydd, Math::VectorNd& udd);
 
 /** \brief Calculate independent joint state at position (y) level from actuator
  * position (u)
@@ -127,8 +124,8 @@ void calc_actuatorstate_uddot(Model &model, ExplicitLoopConstraintSet &elcs,
  * \param u vector of actuator positions
  * \param y vector of independent joint positions (output)
  */
-void calc_independentjointstate_y(Model &model, ExplicitLoopConstraintSet &elcs,
-                                  const Math::VectorNd &u, Math::VectorNd &y);
+void calc_independentjointstate_y(Model& model, ExplicitLoopConstraintSet& elcs,
+                                  const Math::VectorNd& u, Math::VectorNd& y);
 
 /** \brief Calculate independent joint state at velocity (ydot) level from
  * actuator position (u) and velocity (ud)
@@ -143,11 +140,9 @@ void calc_independentjointstate_y(Model &model, ExplicitLoopConstraintSet &elcs,
  * \param y vector of independent joint position (additional output, used for
  * initial guess) \param yd vector of independent joint velocities (output)
  */
-void calc_independentjointstate_ydot(Model &model,
-                                     ExplicitLoopConstraintSet &elcs,
-                                     const Math::VectorNd &u,
-                                     const Math::VectorNd &ud,
-                                     Math::VectorNd &y, Math::VectorNd &yd);
+void calc_independentjointstate_ydot(Model& model, ExplicitLoopConstraintSet& elcs,
+                                     const Math::VectorNd& u, const Math::VectorNd& ud,
+                                     Math::VectorNd& y, Math::VectorNd& yd);
 
 /** \brief Calculate independent joint state at acceleration (yddot) level from
  * actuator position (u), velocity (ud) and acceleration (udd)
@@ -165,10 +160,10 @@ void calc_independentjointstate_ydot(Model &model,
  * for warm start) \param yd vector of independent joint velocity (additional
  * output) \param ydd vector of independent joint accelerations (main output)
  */
-void calc_independentjointstate_yddot(
-    Model &model, ExplicitLoopConstraintSet &elcs, const Math::VectorNd &u,
-    const Math::VectorNd &ud, const Math::VectorNd &udd, Math::VectorNd &y,
-    Math::VectorNd &yd, Math::VectorNd &ydd);
+void calc_independentjointstate_yddot(Model& model, ExplicitLoopConstraintSet& elcs,
+                                      const Math::VectorNd& u, const Math::VectorNd& ud,
+                                      const Math::VectorNd& udd, Math::VectorNd& y,
+                                      Math::VectorNd& yd, Math::VectorNd& ydd);
 
 /** \brief Returns the poses of n bodies (n being the size of body_names vector)
  * from input indepedent joint position (y) by solving the Forward Geometric
@@ -183,10 +178,10 @@ void calc_independentjointstate_yddot(
  * \param body_names vector of Body frames (Link names) for which Forward
  * Geometric Model should be calculated
  */
-std::vector<Math::VectorNd>
-calc_geometricmodel_forward(Model &model, ExplicitLoopConstraintSet &elcs,
-                            const Math::VectorNd &y,
-                            const std::vector<string> body_names);
+std::vector<Math::VectorNd> calc_geometricmodel_forward(Model& model,
+                                                        ExplicitLoopConstraintSet& elcs,
+                                                        const Math::VectorNd& y,
+                                                        const std::vector<string> body_names);
 
 /** \brief Returns the pose of a body from input indepedent joint position (y)
  * by solving the Forward Geometric Model
@@ -200,10 +195,8 @@ calc_geometricmodel_forward(Model &model, ExplicitLoopConstraintSet &elcs,
  * \param body_name Body frame (Link name) for which Forward Geometric Model
  * should be calculated \param X pose of body_name
  */
-Math::VectorNd calc_geometricmodel_forward(Model &model,
-                                           ExplicitLoopConstraintSet &elcs,
-                                           const Math::VectorNd &y,
-                                           const char *body_name);
+Math::VectorNd calc_geometricmodel_forward(Model& model, ExplicitLoopConstraintSet& elcs,
+                                           const Math::VectorNd& y, const char* body_name);
 
 /** \brief Calculates the Inverse Geometric Model
  *
@@ -223,10 +216,9 @@ Math::VectorNd calc_geometricmodel_forward(Model &model,
  * otherwise not. Make sure it is set to zero if you call this function for the
  * first time.
  */
-void calc_geometricmodel_inverse(Model &model, ExplicitLoopConstraintSet &elcs,
-                                 const std::vector<Math::VectorNd> &pose,
-                                 const std::vector<string> body_name,
-                                 Math::VectorNd &y,
+void calc_geometricmodel_inverse(Model& model, ExplicitLoopConstraintSet& elcs,
+                                 const std::vector<Math::VectorNd>& pose,
+                                 const std::vector<string> body_name, Math::VectorNd& y,
                                  Vector3d com_input = Vector3d::Zero(),
                                  double error_tolerance = 1e-8);
 
@@ -246,11 +238,9 @@ void calc_geometricmodel_inverse(Model &model, ExplicitLoopConstraintSet &elcs,
  * \param body_name Body frame (Link name) for which Forward Kinematics should
  * be calculated
  */
-SpatialVector calc_kinematicmodel_forward(Model &model,
-                                          ExplicitLoopConstraintSet &elcs,
-                                          const Math::VectorNd &y,
-                                          const Math::VectorNd &yd,
-                                          const char *body_name);
+SpatialVector calc_kinematicmodel_forward(Model& model, ExplicitLoopConstraintSet& elcs,
+                                          const Math::VectorNd& y, const Math::VectorNd& yd,
+                                          const char* body_name);
 
 /** \brief Returns the vector of twists of multiple bodies (each twist being a
  * 6-D vector for which the first three elements are the angular velocity and
@@ -269,10 +259,11 @@ SpatialVector calc_kinematicmodel_forward(Model &model,
  * \param body_names vector of Body frames (Link names) for which Forward
  * Geometric Model should be calculated
  */
-std::vector<SpatialVector>
-calc_kinematicmodel_forward(Model &model, ExplicitLoopConstraintSet &elcs,
-                            const Math::VectorNd &y, const Math::VectorNd &yd,
-                            std::vector<string> body_names);
+std::vector<SpatialVector> calc_kinematicmodel_forward(Model& model,
+                                                       ExplicitLoopConstraintSet& elcs,
+                                                       const Math::VectorNd& y,
+                                                       const Math::VectorNd& yd,
+                                                       std::vector<string> body_names);
 
 /** \brief Returns the spatial acceleration (time derivative of twist) of a body
  * (6-D vector for which the first three elements are the angular acceleration
@@ -294,9 +285,11 @@ calc_kinematicmodel_forward(Model &model, ExplicitLoopConstraintSet &elcs,
  * \param body_name Body frame (Link name) for which Forward Kinematics should
  * be calculated
  */
-SpatialVector calc_secondorder_kinematicmodel_forward(
-    Model &model, ExplicitLoopConstraintSet &elcs, const Math::VectorNd &y,
-    const Math::VectorNd &yd, const Math::VectorNd &ydd, const char *body_name);
+SpatialVector calc_secondorder_kinematicmodel_forward(Model& model, ExplicitLoopConstraintSet& elcs,
+                                                      const Math::VectorNd& y,
+                                                      const Math::VectorNd& yd,
+                                                      const Math::VectorNd& ydd,
+                                                      const char* body_name);
 
 /** \brief Returns the vector of spatial accelerations (time derivative of
  * twist) of multiple bodies (each spatial acceleration being a 6-D vector for
@@ -320,9 +313,8 @@ SpatialVector calc_secondorder_kinematicmodel_forward(
  * Kinematics should be calculated
  */
 std::vector<SpatialVector> calc_secondorder_kinematicmodel_forward(
-    Model &model, ExplicitLoopConstraintSet &elcs, const Math::VectorNd &y,
-    const Math::VectorNd &yd, const Math::VectorNd &ydd,
-    std::vector<string> body_names);
+    Model& model, ExplicitLoopConstraintSet& elcs, const Math::VectorNd& y,
+    const Math::VectorNd& yd, const Math::VectorNd& ydd, std::vector<string> body_names);
 
 /** \brief Calculate full spatial Jacobian of size (6xn)
  *
@@ -339,9 +331,8 @@ std::vector<SpatialVector> calc_secondorder_kinematicmodel_forward(
  * \param body_name Body frame (Link name) for which Jacobian should be
  * calculated
  */
-void calc_spatial_jacobian(Model &model, ExplicitLoopConstraintSet &elcs,
-                           const Math::VectorNd &y, Math::MatrixNd &J,
-                           const char *body_name);
+void calc_spatial_jacobian(Model& model, ExplicitLoopConstraintSet& elcs, const Math::VectorNd& y,
+                           Math::MatrixNd& J, const char* body_name);
 
 /** \brief Calculate full body Jacobian of size (6xn)
  *
@@ -356,9 +347,8 @@ void calc_spatial_jacobian(Model &model, ExplicitLoopConstraintSet &elcs,
  * \param body_name Body frame (Link name) for which Jacobian should be
  * calculated
  */
-void calc_body_jacobian(Model &model, ExplicitLoopConstraintSet &elcs,
-                        const Math::VectorNd &y, Math::MatrixNd &J,
-                        const char *body_name);
+void calc_body_jacobian(Model& model, ExplicitLoopConstraintSet& elcs, const Math::VectorNd& y,
+                        Math::MatrixNd& J, const char* body_name);
 
 /** \brief Calculate spatial Jacobian of size (6xm) projected to independent
  * joint space
@@ -376,9 +366,9 @@ void calc_body_jacobian(Model &model, ExplicitLoopConstraintSet &elcs,
  * \param body_name Body frame (Link name) for which Jacobian should be
  * calculated
  */
-void calc_spatial_jacobian_independent_joint_space(
-    Model &model, ExplicitLoopConstraintSet &elcs, const Math::VectorNd &y,
-    Math::MatrixNd &J, const char *body_name);
+void calc_spatial_jacobian_independent_joint_space(Model& model, ExplicitLoopConstraintSet& elcs,
+                                                   const Math::VectorNd& y, Math::MatrixNd& J,
+                                                   const char* body_name);
 
 /** \brief Calculate body Jacobian of size (6xn) projected to independent joint
  * space
@@ -394,11 +384,9 @@ void calc_spatial_jacobian_independent_joint_space(
  * \param body_name Body frame (Link name) for which Jacobian should be
  * calculated
  */
-void calc_body_jacobian_independent_joint_space(Model &model,
-                                                ExplicitLoopConstraintSet &elcs,
-                                                const Math::VectorNd &y,
-                                                Math::MatrixNd &J,
-                                                const char *body_name);
+void calc_body_jacobian_independent_joint_space(Model& model, ExplicitLoopConstraintSet& elcs,
+                                                const Math::VectorNd& y, Math::MatrixNd& J,
+                                                const char* body_name);
 
 /** \brief Calculate spatial Jacobian of size (6xp) projected to actuation space
  *
@@ -415,11 +403,9 @@ void calc_body_jacobian_independent_joint_space(Model &model,
  * \param body_name Body frame (Link name) for which Jacobian should be
  * calculated
  */
-void calc_spatial_jacobian_actuation_space(Model &model,
-                                           ExplicitLoopConstraintSet &elcs,
-                                           const Math::VectorNd &y,
-                                           Math::MatrixNd &J,
-                                           const char *body_name);
+void calc_spatial_jacobian_actuation_space(Model& model, ExplicitLoopConstraintSet& elcs,
+                                           const Math::VectorNd& y, Math::MatrixNd& J,
+                                           const char* body_name);
 
 /** \brief Calculate body Jacobian of size (6xp) projected to actuation space
  *
@@ -434,11 +420,9 @@ void calc_spatial_jacobian_actuation_space(Model &model,
  * \param body_name Body frame (Link name) for which Jacobian should be
  * calculated
  */
-void calc_body_jacobian_actuation_space(Model &model,
-                                        ExplicitLoopConstraintSet &elcs,
-                                        const Math::VectorNd &y,
-                                        Math::MatrixNd &J,
-                                        const char *body_name);
+void calc_body_jacobian_actuation_space(Model& model, ExplicitLoopConstraintSet& elcs,
+                                        const Math::VectorNd& y, Math::MatrixNd& J,
+                                        const char* body_name);
 
 /** \brief Calculate spatial Jacobian of size (6 x (6+p)) projected to actuation
  * space including the 6 DOF floating base joint
@@ -460,9 +444,11 @@ void calc_body_jacobian_actuation_space(Model &model,
  * body control or optimal control formulations where you take care of finding
  * consistent contact wrenches that take care of the underactuation.
  */
-void calc_spatial_jacobian_actuation_space_including_floating_base(
-    Model &model, ExplicitLoopConstraintSet &elcs, const Math::VectorNd &y,
-    Math::MatrixNd &J, const char *body_name);
+void calc_spatial_jacobian_actuation_space_including_floating_base(Model& model,
+                                                                   ExplicitLoopConstraintSet& elcs,
+                                                                   const Math::VectorNd& y,
+                                                                   Math::MatrixNd& J,
+                                                                   const char* body_name);
 
 /** \brief Calculate body Jacobian of size (6 x (6+p)) projected to actuation
  * space including the 6 DOF floating base joint
@@ -482,9 +468,11 @@ void calc_spatial_jacobian_actuation_space_including_floating_base(
  * body control or optimal control formulations where you take care of finding
  * consistent contact wrenches that take care of the underactuation.
  */
-void calc_body_jacobian_actuation_space_including_floating_base(
-    Model &model, ExplicitLoopConstraintSet &elcs, const Math::VectorNd &y,
-    Math::MatrixNd &J, const char *body_name);
+void calc_body_jacobian_actuation_space_including_floating_base(Model& model,
+                                                                ExplicitLoopConstraintSet& elcs,
+                                                                const Math::VectorNd& y,
+                                                                Math::MatrixNd& J,
+                                                                const char* body_name);
 
 /** \brief Calculate point Jacobian of size (3xm)
  *
@@ -499,9 +487,8 @@ void calc_body_jacobian_actuation_space_including_floating_base(
  * \param body_name Body frame (Link name) for which Jacobian should be
  * calculated
  */
-void calc_point_jacobian(Model &model, ExplicitLoopConstraintSet &elcs,
-                         const Math::VectorNd &y, Math::MatrixNd &J,
-                         const char *body_name);
+void calc_point_jacobian(Model& model, ExplicitLoopConstraintSet& elcs, const Math::VectorNd& y,
+                         Math::MatrixNd& J, const char* body_name);
 
 /** \brief Calculate center of mass Jacobian
  *
@@ -514,8 +501,8 @@ void calc_point_jacobian(Model &model, ExplicitLoopConstraintSet &elcs,
  * \param y vector of independent joint positions
  * \param Jcom Center of Mass Jacobian matrix (output)
  */
-void calc_com_jacobian(Model &model, ExplicitLoopConstraintSet &elcs,
-                       const Math::VectorNd &y, Math::MatrixNd &Jcom);
+void calc_com_jacobian(Model& model, ExplicitLoopConstraintSet& elcs, const Math::VectorNd& y,
+                       Math::MatrixNd& Jcom);
 
 /** \brief Returns the (special) adjoint transformation of a body from input
  * indepedent joint position (y) in base coordinates
@@ -549,9 +536,8 @@ void calc_com_jacobian(Model &model, ExplicitLoopConstraintSet &elcs,
  * body_name Body frame (Link name) for which Forward Geometric Model should be
  * calculated
  */
-Math::SpatialTransform
-calc_adjoint_transformation(Model &model, ExplicitLoopConstraintSet &elcs,
-                            const Math::VectorNd &y, const char *body_name);
+Math::SpatialTransform calc_adjoint_transformation(Model& model, ExplicitLoopConstraintSet& elcs,
+                                                   const Math::VectorNd& y, const char* body_name);
 
 /** \brief Calculate actuator Jacobian of size (pxm) which maps robot's
  * independent joint velocities to actuator velocities
@@ -564,8 +550,8 @@ calc_adjoint_transformation(Model &model, ExplicitLoopConstraintSet &elcs,
  * \param y vector of independent joint positions
  * \param Gu actuator Jacobian matrix (output)
  */
-void calc_actuator_jacobian(Model &model, ExplicitLoopConstraintSet &elcs,
-                            const Math::VectorNd &y, Math::MatrixNd &Gu);
+void calc_actuator_jacobian(Model& model, ExplicitLoopConstraintSet& elcs, const Math::VectorNd& y,
+                            Math::MatrixNd& Gu);
 
 /** \brief Returns the independent joint accelerations (ydd) from the input
  * actuator force (Tau_actuated) to a robot and its state (y, yd) by solving the
@@ -585,11 +571,9 @@ void calc_actuator_jacobian(Model &model, ExplicitLoopConstraintSet &elcs,
  * independent joint positions \param yd vector of independent joint velocities
  * \param Tau_actuated the actuated torque
  */
-VectorNd calc_dynamicmodel_forward(Model &model,
-                                   ExplicitLoopConstraintSet &elcs,
-                                   const Math::VectorNd &y,
-                                   const Math::VectorNd &yd,
-                                   const VectorXd &Tau_actuated);
+VectorNd calc_dynamicmodel_forward(Model& model, ExplicitLoopConstraintSet& elcs,
+                                   const Math::VectorNd& y, const Math::VectorNd& yd,
+                                   const VectorXd& Tau_actuated);
 
 /** \brief Compute the mass-interia matrix (m x m) of the robot projected in
  * independent joint space
@@ -604,8 +588,8 @@ VectorNd calc_dynamicmodel_forward(Model &model,
  * \param H mass-interia matrix of the robot projected in independent joint
  * space (output)
  */
-void calc_mass_interia_matrix(Model &model, ExplicitLoopConstraintSet &elcs,
-                              const Math::VectorNd &y, Math::MatrixNd &H);
+void calc_mass_interia_matrix(Model& model, ExplicitLoopConstraintSet& elcs,
+                              const Math::VectorNd& y, Math::MatrixNd& H);
 
 /** \brief Compute the mass-interia matrix (p x p) of the robot projected in
  * actuation space
@@ -619,10 +603,8 @@ void calc_mass_interia_matrix(Model &model, ExplicitLoopConstraintSet &elcs,
  * Constraints Set \param y vector of independent joint positions \param Hu
  * mass-interia matrix of the robot projected in actuation space (output)
  */
-void calc_mass_interia_matrix_actuation_space(Model &model,
-                                              ExplicitLoopConstraintSet &elcs,
-                                              const Math::VectorNd &y,
-                                              Math::MatrixNd &Hu);
+void calc_mass_interia_matrix_actuation_space(Model& model, ExplicitLoopConstraintSet& elcs,
+                                              const Math::VectorNd& y, Math::MatrixNd& Hu);
 
 /** \brief Compute the mass-interia matrix (p+floating_dof x p+floating_dof) of
  * the robot projected in actuation space including the floating base
@@ -643,8 +625,7 @@ void calc_mass_interia_matrix_actuation_space(Model &model,
  * underactuation.
  */
 void calc_mass_interia_matrix_actuation_space_including_floating_base(
-    Model &model, ExplicitLoopConstraintSet &elcs, const Math::VectorNd &y,
-    Math::MatrixNd &Hufb);
+    Model& model, ExplicitLoopConstraintSet& elcs, const Math::VectorNd& y, Math::MatrixNd& Hufb);
 
 /** \brief Returns the actuator forces from the input motion (y, yd, ydd) to a
  * robot by solving the inverse dynamic model
@@ -663,11 +644,9 @@ void calc_mass_interia_matrix_actuation_space_including_floating_base(
  * positions \param yd vector of independent joint velocities \param ydd vector
  * of independent joint accelerations
  */
-VectorNd calc_dynamicmodel_inverse(Model &model,
-                                   ExplicitLoopConstraintSet &elcs,
-                                   const Math::VectorNd &y,
-                                   const Math::VectorNd &yd,
-                                   const Math::VectorNd &ydd);
+VectorNd calc_dynamicmodel_inverse(Model& model, ExplicitLoopConstraintSet& elcs,
+                                   const Math::VectorNd& y, const Math::VectorNd& yd,
+                                   const Math::VectorNd& ydd);
 
 /** \brief Returns the actuator forces from the input motion (y, yd, ydd) to a
  * robot by solving the inverse dynamic model including the floating base
@@ -690,9 +669,11 @@ VectorNd calc_dynamicmodel_inverse(Model &model,
  * body control or optimal control formulations where you take care of finding
  * consistent contact wrenches that take care of the underactuation.
  */
-VectorNd calc_dynamicmodel_inverse_including_floatingbase(
-    Model &model, ExplicitLoopConstraintSet &elcs, const Math::VectorNd &y,
-    const Math::VectorNd &yd, const Math::VectorNd &ydd);
+VectorNd calc_dynamicmodel_inverse_including_floatingbase(Model& model,
+                                                          ExplicitLoopConstraintSet& elcs,
+                                                          const Math::VectorNd& y,
+                                                          const Math::VectorNd& yd,
+                                                          const Math::VectorNd& ydd);
 
 /** \brief Returns the generalized forces(indepedent joint space forces/torques)
  * from the input motion (y, yd, ydd) to a robot by solving the inverse dynamic
@@ -710,9 +691,11 @@ VectorNd calc_dynamicmodel_inverse_including_floatingbase(
  * \param yd vector of independent joint velocities
  * \param ydd vector of independent joint accelerations
  */
-VectorNd calc_dynamicmodel_inverse_independentjointspace(
-    Model &model, ExplicitLoopConstraintSet &elcs, const Math::VectorNd &y,
-    const Math::VectorNd &yd, const Math::VectorNd &ydd);
+VectorNd calc_dynamicmodel_inverse_independentjointspace(Model& model,
+                                                         ExplicitLoopConstraintSet& elcs,
+                                                         const Math::VectorNd& y,
+                                                         const Math::VectorNd& yd,
+                                                         const Math::VectorNd& ydd);
 
 /** \brief Returns the actuator forces from the input motion (y, yd) in
  * independent joint space and operational space (xdd) to a robot by solving the
@@ -732,10 +715,11 @@ VectorNd calc_dynamicmodel_inverse_independentjointspace(
  * positions \param yd vector of independent joint velocities \param xdd vector
  * of spatial(task space) accelerations
  */
-VectorNd calc_constrained_dynamicmodel_inverse(
-    Model &model, ExplicitLoopConstraintSet &elcs, const Math::VectorNd &y,
-    const Math::VectorNd &yd, const Math::SpatialVector &xdd,
-    const Math::SpatialVector &f_ext, const string body_name);
+VectorNd calc_constrained_dynamicmodel_inverse(Model& model, ExplicitLoopConstraintSet& elcs,
+                                               const Math::VectorNd& y, const Math::VectorNd& yd,
+                                               const Math::SpatialVector& xdd,
+                                               const Math::SpatialVector& f_ext,
+                                               const string body_name);
 
 /** \brief Returns the actuator forces from the wrenches applied on a robot by
  * solving the inverse static model
@@ -752,9 +736,8 @@ VectorNd calc_constrained_dynamicmodel_inverse(
  * base frame \param wrench_interaction vector of wrench interaction (of type
  * boolean), true = resistive and false = assistive
  */
-VectorNd calc_staticmodel_inverse(Model &model, ExplicitLoopConstraintSet &elcs,
-                                  const Math::VectorNd &y,
-                                  const std::vector<string> FTsensor_links,
+VectorNd calc_staticmodel_inverse(Model& model, ExplicitLoopConstraintSet& elcs,
+                                  const Math::VectorNd& y, const std::vector<string> FTsensor_links,
                                   const std::vector<Math::SpatialVector> f_ext,
                                   const std::vector<bool> wrench_resolution,
                                   const std::vector<bool> wrench_interaction);
@@ -774,12 +757,10 @@ VectorNd calc_staticmodel_inverse(Model &model, ExplicitLoopConstraintSet &elcs,
  * resolved in base frame \n NOTE: This function works only for 6-dof robots.
  * Otherwise the problem is not well-posed.
  */
-SpatialVector calc_staticmodel_forward(Model &model,
-                                       ExplicitLoopConstraintSet &elcs,
-                                       const Math::VectorNd &y,
-                                       const Math::VectorNd &Tau_actuated_ext,
-                                       const string FTsensor_link,
-                                       const bool wrench_resolution);
+SpatialVector calc_staticmodel_forward(Model& model, ExplicitLoopConstraintSet& elcs,
+                                       const Math::VectorNd& y,
+                                       const Math::VectorNd& Tau_actuated_ext,
+                                       const string FTsensor_link, const bool wrench_resolution);
 
 /** \brief Compute mass, center of mass, its linear velocity and acceleration,
  * Angular momentum and its derivative etc. from independent joint state (y, yd,
@@ -798,14 +779,12 @@ SpatialVector calc_staticmodel_forward(Model &model,
  * momentum vector(defaults to NULL) (output) \param change_of_angular_momentum
  * 3d angular momentum derivative vector(defaults to NULL) (output)
  */
-void calc_com_properties(Model &model, ExplicitLoopConstraintSet &elcs,
-                         const Math::VectorNd &y, const Math::VectorNd &yd,
-                         const Math::VectorNd *ydd, double &mass,
-                         Math::Vector3d &com,
-                         Math::Vector3d *com_velocity = NULL,
-                         Math::Vector3d *com_acceleration = NULL,
-                         Math::Vector3d *angular_momentum = NULL,
-                         Math::Vector3d *change_of_angular_momentum = NULL);
+void calc_com_properties(Model& model, ExplicitLoopConstraintSet& elcs, const Math::VectorNd& y,
+                         const Math::VectorNd& yd, const Math::VectorNd* ydd, double& mass,
+                         Math::Vector3d& com, Math::Vector3d* com_velocity = NULL,
+                         Math::Vector3d* com_acceleration = NULL,
+                         Math::Vector3d* angular_momentum = NULL,
+                         Math::Vector3d* change_of_angular_momentum = NULL);
 
 /** \brief Compute the Zero Moment Point (ZMP) from independent joint state (y,
  * yd, ydd) and contact surface plane definition (surface_point, surface_normal)
@@ -820,12 +799,10 @@ void calc_com_properties(Model &model, ExplicitLoopConstraintSet &elcs,
  * \param zmp position vector of the zero moment point projected on the contact
  * surface plane in base coordinates (output)
  */
-void calc_zero_moment_point(Model &model, ExplicitLoopConstraintSet &elcs,
-                            const Math::VectorNd &y, const Math::VectorNd &yd,
-                            const Math::VectorNd &ydd,
-                            const Math::Vector3d &surface_normal,
-                            const Math::Vector3d &surface_point,
-                            Math::Vector3d *zmp);
+void calc_zero_moment_point(Model& model, ExplicitLoopConstraintSet& elcs, const Math::VectorNd& y,
+                            const Math::VectorNd& yd, const Math::VectorNd& ydd,
+                            const Math::Vector3d& surface_normal,
+                            const Math::Vector3d& surface_point, Math::Vector3d* zmp);
 
 /**
  * @brief Calculates kinetic energy of the system
@@ -835,7 +812,7 @@ void calc_zero_moment_point(Model &model, ExplicitLoopConstraintSet &elcs,
  * @param qdot        Joint velocities (tree coords)
  * @return scalar kinetic energy
  */
-double calc_kinetic_energy(RigidBodyDynamics::Model &model, Eigen::VectorXd q,
+double calc_kinetic_energy(RigidBodyDynamics::Model& model, Eigen::VectorXd q,
                            Eigen::VectorXd qdot);
 
 /**
@@ -844,15 +821,13 @@ double calc_kinetic_energy(RigidBodyDynamics::Model &model, Eigen::VectorXd q,
  * @param q           Joint positions (tree coords)
  * @return scalar potential energy
  */
-double calc_potential_energy(RigidBodyDynamics::Model &model,
-                             Eigen::VectorXd q);
+double calc_potential_energy(RigidBodyDynamics::Model& model, Eigen::VectorXd q);
 
 /**
  * @brief Calculates total system energy (kinetic + potential)
  */
-double calc_total_energy(RigidBodyDynamics::Model &model, Eigen::VectorXd q,
-                         Eigen::VectorXd qdot);
+double calc_total_energy(RigidBodyDynamics::Model& model, Eigen::VectorXd q, Eigen::VectorXd qdot);
 
-} // namespace HyRoDyn
+}  // namespace HyRoDyn
 
-#endif // HYRODYN
+#endif  // HYRODYN

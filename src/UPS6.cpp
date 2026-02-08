@@ -2,8 +2,7 @@
 
 namespace UPS6 {
 
-Eigen::Matrix4d BuildTransMat(const Math::Matrix3d rot,
-                              const Math::Vector3d trans) {
+Eigen::Matrix4d BuildTransMat(const Math::Matrix3d rot, const Math::Vector3d trans) {
   Eigen::Matrix4d TransMat = Eigen::Matrix4d::Zero();
 
   TransMat.block(0, 0, 3, 3) = rot;
@@ -44,17 +43,15 @@ Eigen::Matrix4d invertTransMat(const Eigen::Matrix4d TransMat) {
 // Constructor
 uPs6::uPs6(string file_path, std::vector<string> jointnames_spanningtree,
            std::vector<string> jointnames_active) {
-
   // model parsing (remains unchanged)
   // Model m;
 
-  const char *ext;
+  const char* ext;
   ext = strrchr(file_path.c_str(), '.');
-  if (!strcmp(ext, ".urdf") || !strcmp(ext, ".URDF") ||
-      !strcmp(ext, ".robot")) {
+  if (!strcmp(ext, ".urdf") || !strcmp(ext, ".URDF") || !strcmp(ext, ".robot")) {
     cout << "Input file is URDF." << endl;
-    if (!Addons::URDFReadFromFileWithModularity(
-            file_path.c_str(), &m, jointnames_spanningtree, false)) {
+    if (!Addons::URDFReadFromFileWithModularity(file_path.c_str(), &m, jointnames_spanningtree,
+                                                false)) {
       std::cerr << "Error loading robot model from urdf" << std::endl;
       abort();
     }
@@ -64,8 +61,7 @@ uPs6::uPs6(string file_path, std::vector<string> jointnames_spanningtree,
 
   cout << "Model DoF overview:" << Utils::GetModelDOFOverview(m) << endl;
   cout << "Model Hierarchy overview:" << Utils::GetModelHierarchy(m) << endl;
-  cout << "Named Body Origins overview:"
-       << Utils::GetNamedBodyOriginsOverview(m) << endl;
+  cout << "Named Body Origins overview:" << Utils::GetNamedBodyOriginsOverview(m) << endl;
 
   VectorNd Q(VectorNd::Zero(m.dof_count));
   UpdateKinematicsCustom(m, &Q, NULL, NULL);
@@ -80,12 +76,12 @@ uPs6::uPs6(string file_path, std::vector<string> jointnames_spanningtree,
   e6_ee = CalcBodyToBaseCoordinates(m, Q, 24., Vector3d(0., 0., 0.), false);
 
   //	Vector3d endeff_pos = CalcBodyToBaseCoordinates (m, Q,
-  //m.GetBodyId("hexapod_ee_link"), Vector3d (0., 0., 0.), false);  	// 19
+  // m.GetBodyId("hexapod_ee_link"), Vector3d (0., 0., 0.), false);  	// 19
   //--> 24 	Eigen::Matrix3d endeff_rot = CalcBodyWorldOrientation(m, Q,
-  //m.GetBodyId("hexapod_ee_link"));
+  // m.GetBodyId("hexapod_ee_link"));
   // End effector link will be body number 6.
-  Vector3d endeff_pos = CalcBodyToBaseCoordinates(
-      m, Q, 6., Vector3d(0., 0., 0.), false); // 19 --> 24
+  Vector3d endeff_pos =
+      CalcBodyToBaseCoordinates(m, Q, 6., Vector3d(0., 0., 0.), false);  // 19 --> 24
   Eigen::Matrix3d endeff_rot = CalcBodyWorldOrientation(m, Q, 6.);
   cout << "endeff coord: " << endeff_pos << endl;
   cout << "endeff rotation: " << endeff_rot << endl;
@@ -125,26 +121,24 @@ uPs6::uPs6(string file_path, std::vector<string> jointnames_spanningtree,
 
   double x_zero, y_zero, z_zero;
   double roll_zero, pitch_zero, yaw_zero;
-  x_zero = TransMat_ee(0, 3); // x
-  y_zero = TransMat_ee(1, 3); // y
-  z_zero = TransMat_ee(2, 3); // z
-  roll_zero = 0;              // roll
-  pitch_zero = 0;             // pitch
-  yaw_zero = 0;               // yaw
+  x_zero = TransMat_ee(0, 3);  // x
+  y_zero = TransMat_ee(1, 3);  // y
+  z_zero = TransMat_ee(2, 3);  // z
+  roll_zero = 0;               // roll
+  pitch_zero = 0;              // pitch
+  yaw_zero = 0;                // yaw
 
   Matrix3d RotMat_x_zero, RotMat_y_zero, RotMat_z_zero,
-      RotMat_zero; // zero position rotation matrix
+      RotMat_zero;  // zero position rotation matrix
 
   TransMat_zero.setZero();
 
-  RotMat_x_zero << 1, 0, 0, 0, cos(roll_zero), -sin(roll_zero), 0,
-      sin(roll_zero), cos(roll_zero);
+  RotMat_x_zero << 1, 0, 0, 0, cos(roll_zero), -sin(roll_zero), 0, sin(roll_zero), cos(roll_zero);
 
-  RotMat_y_zero << cos(pitch_zero), 0, sin(pitch_zero), 0, 1, 0,
-      -sin(pitch_zero), 0, cos(pitch_zero);
+  RotMat_y_zero << cos(pitch_zero), 0, sin(pitch_zero), 0, 1, 0, -sin(pitch_zero), 0,
+      cos(pitch_zero);
 
-  RotMat_z_zero << cos(yaw_zero), -sin(yaw_zero), 0, sin(yaw_zero),
-      cos(yaw_zero), 0, 0, 0, 1;
+  RotMat_z_zero << cos(yaw_zero), -sin(yaw_zero), 0, sin(yaw_zero), cos(yaw_zero), 0, 0, 0, 1;
 
   RotMat_zero = RotMat_x_zero * RotMat_y_zero * RotMat_z_zero;
   // cout<<"RotMat: "<<RotMat<<endl;
@@ -169,7 +163,7 @@ uPs6::uPs6(string file_path, std::vector<string> jointnames_spanningtree,
 }
 
 // calc_loopclosure_function(VectorNd y (6x1))
-VectorXd uPs6::calc_loopclosure_function(const Math::VectorNd &y) {
+VectorXd uPs6::calc_loopclosure_function(const Math::VectorNd& y) {
   // This function calculates the loop closure functions gamma
   // for the mechanism
   //
@@ -181,21 +175,18 @@ VectorXd uPs6::calc_loopclosure_function(const Math::VectorNd &y) {
 
   double ex, ey, ez;
   double roll_in, pitch_in, yaw_in;
-  ex = y(0);       // x
-  ey = y(1);       // y
-  ez = y(2);       // z
-  roll_in = y(3);  // roll
-  pitch_in = y(4); // pitch
-  yaw_in = y(5);   // yaw
+  ex = y(0);        // x
+  ey = y(1);        // y
+  ez = y(2);        // z
+  roll_in = y(3);   // roll
+  pitch_in = y(4);  // pitch
+  yaw_in = y(5);    // yaw
 
-  RotMat_x_in << 1, 0, 0, 0, cos(roll_in), -sin(roll_in), 0, sin(roll_in),
-      cos(roll_in);
+  RotMat_x_in << 1, 0, 0, 0, cos(roll_in), -sin(roll_in), 0, sin(roll_in), cos(roll_in);
 
-  RotMat_y_in << cos(pitch_in), 0, sin(pitch_in), 0, 1, 0, -sin(pitch_in), 0,
-      cos(pitch_in);
+  RotMat_y_in << cos(pitch_in), 0, sin(pitch_in), 0, 1, 0, -sin(pitch_in), 0, cos(pitch_in);
 
-  RotMat_z_in << cos(yaw_in), -sin(yaw_in), 0, sin(yaw_in), cos(yaw_in), 0, 0,
-      0, 1;
+  RotMat_z_in << cos(yaw_in), -sin(yaw_in), 0, sin(yaw_in), cos(yaw_in), 0, 0, 0, 1;
 
   RotMat_in = RotMat_x_in * RotMat_y_in * RotMat_z_in;
 
@@ -206,7 +197,7 @@ VectorXd uPs6::calc_loopclosure_function(const Math::VectorNd &y) {
   TransMat_in(3, 3) = 1;
 
   Eigen::Matrix4d TransMat_abs;
-  TransMat_abs = TransMat_zero * TransMat_in; // TransMat_zero from constructor
+  TransMat_abs = TransMat_zero * TransMat_in;  // TransMat_zero from constructor
 
   // build 4x1 vectors out of 3x1 vectors
   Vector4d v(0, 0, 0, 1);
@@ -278,51 +269,51 @@ VectorXd uPs6::calc_loopclosure_function(const Math::VectorNd &y) {
   double roll_u6 = atan2(-b6e6(1), b6e6(2));
   double pitch_u6 = asin(b6e6(0) / l6);
 
-  Q(0) = ex;       // roll
-  Q(1) = ey;       // pitch
-  Q(2) = ez;       // yaw
-  Q(3) = roll_in;  // roll
-  Q(4) = pitch_in; // pitch
-  Q(5) = yaw_in;   // yaw
+  Q(0) = ex;        // roll
+  Q(1) = ey;        // pitch
+  Q(2) = ez;        // yaw
+  Q(3) = roll_in;   // roll
+  Q(4) = pitch_in;  // pitch
+  Q(5) = yaw_in;    // yaw
   // leg 1
-  Q(6) = roll_u1;  // roll
-  Q(7) = pitch_u1; // pitch
-  Q(8) = l1;       // prismatic
+  Q(6) = roll_u1;   // roll
+  Q(7) = pitch_u1;  // pitch
+  Q(8) = l1;        // prismatic
   // cout<<"roll_u1 "<<roll_u1<<" pitch_u1 "<<pitch_u1<<" l1 "<<l1<<endl;
   //  leg 2
-  Q(9) = roll_u2;   // roll
-  Q(10) = pitch_u2; // pitch
-  Q(11) = l2;       // prismatic
+  Q(9) = roll_u2;    // roll
+  Q(10) = pitch_u2;  // pitch
+  Q(11) = l2;        // prismatic
   // cout<<"roll_u2 "<<roll_u2<<" pitch_u2 "<<pitch_u2<<" l1 "<<l2<<endl;
   //  leg 3
-  Q(12) = roll_u3;  // roll
-  Q(13) = pitch_u3; // pitch
-  Q(14) = l3;       // prismatic
+  Q(12) = roll_u3;   // roll
+  Q(13) = pitch_u3;  // pitch
+  Q(14) = l3;        // prismatic
   // cout<<"roll_u3 "<<roll_u3<<" pitch_u3 "<<pitch_u3<<" l3 "<<l3<<endl;
   //  leg 4
-  Q(15) = roll_u4;  // roll
-  Q(16) = pitch_u4; // pitch
-  Q(17) = l4;       // prismatic
+  Q(15) = roll_u4;   // roll
+  Q(16) = pitch_u4;  // pitch
+  Q(17) = l4;        // prismatic
   // cout<<"roll_u4 "<<roll_u4<<" pitch_u4 "<<pitch_u4<<" l4 "<<l4<<endl;
   //  leg 5
-  Q(18) = roll_u5;  // roll
-  Q(19) = pitch_u5; // pitch
-  Q(20) = l5;       // prismatic
+  Q(18) = roll_u5;   // roll
+  Q(19) = pitch_u5;  // pitch
+  Q(20) = l5;        // prismatic
   // cout<<"roll_u5 "<<roll_u5<<" pitch_u5 "<<pitch_u5<<" l5 "<<l5<<endl;
   //  leg 6
-  Q(21) = roll_u6;  // roll
-  Q(22) = pitch_u6; // pitch
-  Q(23) = l6;       // prismatic
+  Q(21) = roll_u6;   // roll
+  Q(22) = pitch_u6;  // pitch
+  Q(23) = l6;        // prismatic
   // cout<<"roll_u6 "<<roll_u6<<" pitch_u6 "<<pitch_u6<<" l6 "<<l6<<endl;
 
-  Q = Q - Q_zero; // wrt to zero position of assembly
+  Q = Q - Q_zero;  // wrt to zero position of assembly
 
   // cout<<"Q wrt zero position: "<<Q.transpose()<<endl;
 
   return Q;
 }
 
-MatrixXd uPs6::calc_loopclosure_Jacobian(const Math::VectorNd &y) {
+MatrixXd uPs6::calc_loopclosure_Jacobian(const Math::VectorNd& y) {
   // This function calculates the loop closure Jacobian G
   // for the mechanism
 
@@ -361,8 +352,7 @@ MatrixXd uPs6::calc_loopclosure_Jacobian(const Math::VectorNd &y) {
   return G;
 }
 
-MatrixXd uPs6::calc_loopclosure_Jacobiand(const Math::VectorNd &y,
-                                          const Math::VectorNd &ydot) {
+MatrixXd uPs6::calc_loopclosure_Jacobiand(const Math::VectorNd& y, const Math::VectorNd& ydot) {
   // This function calculates the loop closure Jacobiand Gdot
   // for the mechanism
   //
@@ -403,8 +393,7 @@ MatrixXd uPs6::calc_loopclosure_Jacobiand(const Math::VectorNd &y,
   return Gdot;
 }
 
-VectorXd uPs6::calc_loopclosure_g(const Math::VectorNd &y,
-                                  const Math::VectorNd &ydot) {
+VectorXd uPs6::calc_loopclosure_g(const Math::VectorNd& y, const Math::VectorNd& ydot) {
   // This function calculates the loop closure bias acceleration g= Gdot*ydot
   // for the mechanism
   //
@@ -415,10 +404,9 @@ VectorXd uPs6::calc_loopclosure_g(const Math::VectorNd &y,
   return calc_loopclosure_Jacobiand(y, ydot) * ydot;
 }
 // compute_loopclosure_Jacobian_UPS6(endeffector coordinates y(6 x 1))
-MatrixXd uPs6::compute_loopclosure_Jacobian_UPS6(
-    const Math::VectorNd y, const Math::Vector3d b, const Math::Vector3d e_ee,
-    const Math::Matrix3d RotMat_b) {
-
+MatrixXd uPs6::compute_loopclosure_Jacobian_UPS6(const Math::VectorNd y, const Math::Vector3d b,
+                                                 const Math::Vector3d e_ee,
+                                                 const Math::Matrix3d RotMat_b) {
   MatrixXd J;
   J.setZero(3, 6);
 
@@ -426,9 +414,9 @@ MatrixXd uPs6::compute_loopclosure_Jacobian_UPS6(
   Eigen::Matrix4d TransMat_in = Eigen::Matrix4d::Zero();
 
   double roll, pitch, yaw;
-  roll = y(3);  // roll
-  pitch = y(4); // pitch
-  yaw = y(5);   // yaw
+  roll = y(3);   // roll
+  pitch = y(4);  // pitch
+  yaw = y(5);    // yaw
 
   RotMat_x_in << 1, 0, 0, 0, cos(roll), -sin(roll), 0, sin(roll), cos(roll);
 
@@ -441,7 +429,7 @@ MatrixXd uPs6::compute_loopclosure_Jacobian_UPS6(
   TransMat_in = BuildTransMat(RotMat_in, Vector3d(y(0), y(1), y(2)));
 
   Eigen::Matrix4d TransMat_abs;
-  TransMat_abs = TransMat_zero * TransMat_in; // TransMat_zero from constructor
+  TransMat_abs = TransMat_zero * TransMat_in;  // TransMat_zero from constructor
 
   // build 4x1 vectors out of 3x1 vectors
   Vector4d e_f;
@@ -468,7 +456,7 @@ MatrixXd uPs6::compute_loopclosure_Jacobian_UPS6(
   // end for
 
   double sx, sy, sz, nx, ny, nz, ax, ay,
-      az; // elements of rotation matrix to the s frame
+      az;  // elements of rotation matrix to the s frame
   // fixed params(rotation matrix transformation to universal joint frame)
   sx = RotMat_b(0, 0);
   sy = RotMat_b(1, 0);
@@ -483,9 +471,9 @@ MatrixXd uPs6::compute_loopclosure_Jacobian_UPS6(
   az = RotMat_b(2, 2);
 
   double ex, ey, ez;
-  ex = e_ee(0); // x
-  ey = e_ee(1); // y
-  ez = e_ee(2); // z
+  ex = e_ee(0);  // x
+  ey = e_ee(1);  // y
+  ez = e_ee(2);  // z
 
   // inputs to the code below: ex, ey, ez, roll, pitch, yaw, roll_u, pitch_u, l
   double t2 = 1.0 / l;
@@ -579,8 +567,7 @@ MatrixXd uPs6::compute_loopclosure_Jacobian_UPS6(
   J(1, 0) = sx * t2 * t3 + sy * t2 * t6 * t48 - sz * t2 * t5 * t48;
   J(1, 1) = nx * t2 * t3 + ny * t2 * t6 * t48 - nz * t2 * t5 * t48;
   J(1, 2) = ax * t2 * t3 + ay * t2 * t6 * t48 - az * t2 * t5 * t48;
-  J(1, 3) =
-      t2 * t3 * (t70 - nx * t21) - t2 * t5 * t48 * t51 + t2 * t6 * t48 * t72;
+  J(1, 3) = t2 * t3 * (t70 - nx * t21) - t2 * t5 * t48 * t51 + t2 * t6 * t48 * t72;
   J(1, 4) = t2 * t3 * t75 + t2 * t6 * t48 * t58 - t2 * t5 * t48 * t61;
   J(1, 5) = t2 * t3 * t80 + t2 * t6 * t48 * t66 - t2 * t5 * t48 * t69;
   J(2, 0) = sx * t48 - sy * t3 * t6 + sz * t3 * t5;
@@ -593,9 +580,11 @@ MatrixXd uPs6::compute_loopclosure_Jacobian_UPS6(
   return J;
 }
 
-MatrixXd uPs6::compute_loopclosure_Jacobiandot_UPS6(
-    const Math::VectorNd y, const Math::VectorNd ydot, const Math::Vector3d b,
-    const Math::Vector3d e_ee, const Math::Matrix3d RotMat_b) {
+MatrixXd uPs6::compute_loopclosure_Jacobiandot_UPS6(const Math::VectorNd y,
+                                                    const Math::VectorNd ydot,
+                                                    const Math::Vector3d b,
+                                                    const Math::Vector3d e_ee,
+                                                    const Math::Matrix3d RotMat_b) {
   MatrixXd J;
   J.setZero(3, dof_active);
 
@@ -603,14 +592,14 @@ MatrixXd uPs6::compute_loopclosure_Jacobiandot_UPS6(
   Eigen::Matrix4d TransMat_in = Eigen::Matrix4d::Zero();
 
   double roll, pitch, yaw;
-  roll = y(3);  // roll
-  pitch = y(4); // pitch
-  yaw = y(5);   // yaw
+  roll = y(3);   // roll
+  pitch = y(4);  // pitch
+  yaw = y(5);    // yaw
 
   double roll_dot, pitch_dot, yaw_dot;
-  roll_dot = ydot(3);  // roll
-  pitch_dot = ydot(4); // pitch
-  yaw_dot = ydot(5);   // yaw
+  roll_dot = ydot(3);   // roll
+  pitch_dot = ydot(4);  // pitch
+  yaw_dot = ydot(5);    // yaw
 
   RotMat_x_in << 1, 0, 0, 0, cos(roll), -sin(roll), 0, sin(roll), cos(roll);
 
@@ -623,7 +612,7 @@ MatrixXd uPs6::compute_loopclosure_Jacobiandot_UPS6(
   TransMat_in = BuildTransMat(RotMat_in, Vector3d(y(0), y(1), y(2)));
 
   Eigen::Matrix4d TransMat_abs;
-  TransMat_abs = TransMat_zero * TransMat_in; // TransMat_zero from constructor
+  TransMat_abs = TransMat_zero * TransMat_in;  // TransMat_zero from constructor
 
   // build 4x1 vectors out of 3x1 vectors
   Vector4d e_f;
@@ -656,7 +645,7 @@ MatrixXd uPs6::compute_loopclosure_Jacobiandot_UPS6(
   double l_dot = qlegdot(2);
 
   double sx, sy, sz, nx, ny, nz, ax, ay,
-      az; // elements of rotation matrix to the s frame
+      az;  // elements of rotation matrix to the s frame
   // fixed params(rotation matrix transformation to universal joint frame)
   sx = RotMat_b(0, 0);
   sy = RotMat_b(1, 0);
@@ -671,9 +660,9 @@ MatrixXd uPs6::compute_loopclosure_Jacobiandot_UPS6(
   az = RotMat_b(2, 2);
 
   double ex, ey, ez;
-  ex = e_ee(0); // x
-  ey = e_ee(1); // y
-  ez = e_ee(2); // z
+  ex = e_ee(0);  // x
+  ey = e_ee(1);  // y
+  ez = e_ee(2);  // z
 
   // cout << "Rotation Matrix input: " << endl << RotMat_in << endl;
   // cout << "Translation Vector input: " << endl << ex << endl << ey << endl <<
@@ -862,84 +851,69 @@ MatrixXd uPs6::compute_loopclosure_Jacobiandot_UPS6(
   double t179 = sx * t107;
   double t180 = ax * t109;
   double t182 = t162 + t163 - ny * t112;
-  J(0, 0) = t3 * t6 * (roll_u_dot * sy * t5 - roll_u_dot * sz * t4) +
-            l_dot * t3 * t9 * t10 - pitch_u_dot * t6 * t9 * t11 * t12;
-  J(0, 1) = t3 * t6 * (ny * roll_u_dot * t5 - nz * roll_u_dot * t4) +
-            l_dot * t3 * t10 * t15 - pitch_u_dot * t6 * t11 * t12 * t15;
-  J(0, 2) = t3 * t6 * (ay * roll_u_dot * t5 - az * roll_u_dot * t4) +
-            l_dot * t3 * t10 * t18 - pitch_u_dot * t6 * t11 * t12 * t18;
-  J(0, 3) = -t3 * t5 * t6 * t136 - t3 * t4 * t6 * t169 +
-            l_dot * t3 * t4 * t10 * t71 + l_dot * t3 * t5 * t10 * t72 -
-            roll_u_dot * t3 * t4 * t6 * t72 + roll_u_dot * t3 * t5 * t6 * t71 -
-            pitch_u_dot * t4 * t6 * t11 * t12 * t71 -
+  J(0, 0) = t3 * t6 * (roll_u_dot * sy * t5 - roll_u_dot * sz * t4) + l_dot * t3 * t9 * t10 -
+            pitch_u_dot * t6 * t9 * t11 * t12;
+  J(0, 1) = t3 * t6 * (ny * roll_u_dot * t5 - nz * roll_u_dot * t4) + l_dot * t3 * t10 * t15 -
+            pitch_u_dot * t6 * t11 * t12 * t15;
+  J(0, 2) = t3 * t6 * (ay * roll_u_dot * t5 - az * roll_u_dot * t4) + l_dot * t3 * t10 * t18 -
+            pitch_u_dot * t6 * t11 * t12 * t18;
+  J(0, 3) = -t3 * t5 * t6 * t136 - t3 * t4 * t6 * t169 + l_dot * t3 * t4 * t10 * t71 +
+            l_dot * t3 * t5 * t10 * t72 - roll_u_dot * t3 * t4 * t6 * t72 +
+            roll_u_dot * t3 * t5 * t6 * t71 - pitch_u_dot * t4 * t6 * t11 * t12 * t71 -
             pitch_u_dot * t5 * t6 * t11 * t12 * t72;
-  J(0, 4) = -t3 * t5 * t6 * t151 - t3 * t4 * t6 * t156 +
-            l_dot * t3 * t5 * t10 * t93 + l_dot * t3 * t4 * t10 * t96 -
-            roll_u_dot * t3 * t4 * t6 * t93 + roll_u_dot * t3 * t5 * t6 * t96 -
-            pitch_u_dot * t5 * t6 * t11 * t12 * t93 -
+  J(0, 4) = -t3 * t5 * t6 * t151 - t3 * t4 * t6 * t156 + l_dot * t3 * t5 * t10 * t93 +
+            l_dot * t3 * t4 * t10 * t96 - roll_u_dot * t3 * t4 * t6 * t93 +
+            roll_u_dot * t3 * t5 * t6 * t96 - pitch_u_dot * t5 * t6 * t11 * t12 * t93 -
             pitch_u_dot * t4 * t6 * t11 * t12 * t96;
-  J(0, 5) = -t3 * t5 * t6 * t161 - t3 * t4 * t6 * t182 +
-            l_dot * t3 * t5 * t10 * t124 + l_dot * t3 * t4 * t10 * t127 -
-            roll_u_dot * t3 * t4 * t6 * t124 +
-            roll_u_dot * t3 * t5 * t6 * t127 -
-            pitch_u_dot * t5 * t6 * t11 * t12 * t124 -
+  J(0, 5) = -t3 * t5 * t6 * t161 - t3 * t4 * t6 * t182 + l_dot * t3 * t5 * t10 * t124 +
+            l_dot * t3 * t4 * t10 * t127 - roll_u_dot * t3 * t4 * t6 * t124 +
+            roll_u_dot * t3 * t5 * t6 * t127 - pitch_u_dot * t5 * t6 * t11 * t12 * t124 -
             pitch_u_dot * t4 * t6 * t11 * t12 * t127;
-  J(1, 0) = t6 * (-pitch_u_dot * sx * t12 + pitch_u_dot * sy * t2 * t5 -
-                  pitch_u_dot * sz * t2 * t4 + roll_u_dot * sy * t4 * t12 +
-                  roll_u_dot * sz * t5 * t12) -
-            l_dot * t10 * (sx * t2 + sy * t5 * t12 - sz * t4 * t12);
-  J(1, 1) = t6 * (-nx * pitch_u_dot * t12 + ny * pitch_u_dot * t2 * t5 -
-                  nz * pitch_u_dot * t2 * t4 + ny * roll_u_dot * t4 * t12 +
-                  nz * roll_u_dot * t5 * t12) -
-            l_dot * t10 * (nx * t2 + ny * t5 * t12 - nz * t4 * t12);
-  J(1, 2) = t6 * (-ax * pitch_u_dot * t12 + ay * pitch_u_dot * t2 * t5 -
-                  az * pitch_u_dot * t2 * t4 + ay * roll_u_dot * t4 * t12 +
-                  az * roll_u_dot * t5 * t12) -
-            l_dot * t10 * (ax * t2 + ay * t5 * t12 - az * t4 * t12);
-  J(1, 3) = t2 * t6 * (t167 - nx * t36) - l_dot * t2 * t10 * t139 -
-            pitch_u_dot * t6 * t12 * t139 - t4 * t6 * t12 * t136 +
-            t5 * t6 * t12 * t169 - l_dot * t5 * t10 * t12 * t71 -
-            pitch_u_dot * t2 * t4 * t6 * t72 +
-            l_dot * t4 * t10 * t12 * (t69 - t140) +
-            pitch_u_dot * t2 * t5 * t6 * (t70 - t141) +
-            roll_u_dot * t5 * t6 * t12 * (t69 - t140) +
+  J(1, 0) =
+      t6 * (-pitch_u_dot * sx * t12 + pitch_u_dot * sy * t2 * t5 - pitch_u_dot * sz * t2 * t4 +
+            roll_u_dot * sy * t4 * t12 + roll_u_dot * sz * t5 * t12) -
+      l_dot * t10 * (sx * t2 + sy * t5 * t12 - sz * t4 * t12);
+  J(1, 1) =
+      t6 * (-nx * pitch_u_dot * t12 + ny * pitch_u_dot * t2 * t5 - nz * pitch_u_dot * t2 * t4 +
+            ny * roll_u_dot * t4 * t12 + nz * roll_u_dot * t5 * t12) -
+      l_dot * t10 * (nx * t2 + ny * t5 * t12 - nz * t4 * t12);
+  J(1, 2) =
+      t6 * (-ax * pitch_u_dot * t12 + ay * pitch_u_dot * t2 * t5 - az * pitch_u_dot * t2 * t4 +
+            ay * roll_u_dot * t4 * t12 + az * roll_u_dot * t5 * t12) -
+      l_dot * t10 * (ax * t2 + ay * t5 * t12 - az * t4 * t12);
+  J(1, 3) = t2 * t6 * (t167 - nx * t36) - l_dot * t2 * t10 * t139 - pitch_u_dot * t6 * t12 * t139 -
+            t4 * t6 * t12 * t136 + t5 * t6 * t12 * t169 - l_dot * t5 * t10 * t12 * t71 -
+            pitch_u_dot * t2 * t4 * t6 * t72 + l_dot * t4 * t10 * t12 * (t69 - t140) +
+            pitch_u_dot * t2 * t5 * t6 * (t70 - t141) + roll_u_dot * t5 * t6 * t12 * (t69 - t140) +
             roll_u_dot * t4 * t6 * t12 * (t70 - t141);
-  J(1, 4) = t2 * t6 * t175 - l_dot * t2 * t10 * t146 -
-            pitch_u_dot * t6 * t12 * t146 - t4 * t6 * t12 * t151 +
-            t5 * t6 * t12 * t156 + l_dot * t4 * t10 * t12 * t93 -
+  J(1, 4) = t2 * t6 * t175 - l_dot * t2 * t10 * t146 - pitch_u_dot * t6 * t12 * t146 -
+            t4 * t6 * t12 * t151 + t5 * t6 * t12 * t156 + l_dot * t4 * t10 * t12 * t93 -
             l_dot * t5 * t10 * t12 * t96 - pitch_u_dot * t2 * t4 * t6 * t93 +
-            pitch_u_dot * t2 * t5 * t6 * t96 +
-            roll_u_dot * t5 * t6 * t12 * t93 + roll_u_dot * t4 * t6 * t12 * t96;
+            pitch_u_dot * t2 * t5 * t6 * t96 + roll_u_dot * t5 * t6 * t12 * t93 +
+            roll_u_dot * t4 * t6 * t12 * t96;
   J(1, 5) = t2 * t6 * (t179 + t180 - nx * t112) - l_dot * t2 * t10 * t166 -
-            pitch_u_dot * t6 * t12 * t166 - t4 * t6 * t12 * t161 +
-            t5 * t6 * t12 * t182 + l_dot * t4 * t10 * t12 * t124 -
-            l_dot * t5 * t10 * t12 * t127 - pitch_u_dot * t2 * t4 * t6 * t124 +
-            pitch_u_dot * t2 * t5 * t6 * t127 +
-            roll_u_dot * t5 * t6 * t12 * t124 +
-            roll_u_dot * t4 * t6 * t12 * t127;
-  J(2, 0) = pitch_u_dot * sx * t2 + pitch_u_dot * sy * t5 * t12 -
-            pitch_u_dot * sz * t4 * t12 - roll_u_dot * sy * t2 * t4 -
-            roll_u_dot * sz * t2 * t5;
-  J(2, 1) = nx * pitch_u_dot * t2 + ny * pitch_u_dot * t5 * t12 -
-            nz * pitch_u_dot * t4 * t12 - ny * roll_u_dot * t2 * t4 -
-            nz * roll_u_dot * t2 * t5;
-  J(2, 2) = ax * pitch_u_dot * t2 + ay * pitch_u_dot * t5 * t12 -
-            az * pitch_u_dot * t4 * t12 - ay * roll_u_dot * t2 * t4 -
-            az * roll_u_dot * t2 * t5;
-  J(2, 3) = t12 * (t167 - nx * t36) - t2 * t5 * t169 +
-            pitch_u_dot * t2 * (t138 - t170) + t2 * t4 * (t135 - t168) -
-            pitch_u_dot * t4 * t12 * t72 - roll_u_dot * t2 * t4 * t71 -
+            pitch_u_dot * t6 * t12 * t166 - t4 * t6 * t12 * t161 + t5 * t6 * t12 * t182 +
+            l_dot * t4 * t10 * t12 * t124 - l_dot * t5 * t10 * t12 * t127 -
+            pitch_u_dot * t2 * t4 * t6 * t124 + pitch_u_dot * t2 * t5 * t6 * t127 +
+            roll_u_dot * t5 * t6 * t12 * t124 + roll_u_dot * t4 * t6 * t12 * t127;
+  J(2, 0) = pitch_u_dot * sx * t2 + pitch_u_dot * sy * t5 * t12 - pitch_u_dot * sz * t4 * t12 -
+            roll_u_dot * sy * t2 * t4 - roll_u_dot * sz * t2 * t5;
+  J(2, 1) = nx * pitch_u_dot * t2 + ny * pitch_u_dot * t5 * t12 - nz * pitch_u_dot * t4 * t12 -
+            ny * roll_u_dot * t2 * t4 - nz * roll_u_dot * t2 * t5;
+  J(2, 2) = ax * pitch_u_dot * t2 + ay * pitch_u_dot * t5 * t12 - az * pitch_u_dot * t4 * t12 -
+            ay * roll_u_dot * t2 * t4 - az * roll_u_dot * t2 * t5;
+  J(2, 3) = t12 * (t167 - nx * t36) - t2 * t5 * t169 + pitch_u_dot * t2 * (t138 - t170) +
+            t2 * t4 * (t135 - t168) - pitch_u_dot * t4 * t12 * t72 - roll_u_dot * t2 * t4 * t71 -
             roll_u_dot * t2 * t5 * t72 + pitch_u_dot * t5 * t12 * (t70 - t141);
-  J(2, 4) = t12 * t175 + pitch_u_dot * t2 * t146 + t2 * t4 * t151 -
-            t2 * t5 * t156 - pitch_u_dot * t4 * t12 * t93 +
-            pitch_u_dot * t5 * t12 * t96 - roll_u_dot * t2 * t5 * t93 -
-            roll_u_dot * t2 * t4 * t96;
+  J(2, 4) = t12 * t175 + pitch_u_dot * t2 * t146 + t2 * t4 * t151 - t2 * t5 * t156 -
+            pitch_u_dot * t4 * t12 * t93 + pitch_u_dot * t5 * t12 * t96 -
+            roll_u_dot * t2 * t5 * t93 - roll_u_dot * t2 * t4 * t96;
   J(2, 5) = t12 * (t179 + t180 - nx * t112) + t2 * t4 * (t159 + t160 - t181) +
-            pitch_u_dot * t2 * t166 - t2 * t5 * t182 -
-            pitch_u_dot * t4 * t12 * t124 + pitch_u_dot * t5 * t12 * t127 -
-            roll_u_dot * t2 * t5 * t124 - roll_u_dot * t2 * t4 * t127;
+            pitch_u_dot * t2 * t166 - t2 * t5 * t182 - pitch_u_dot * t4 * t12 * t124 +
+            pitch_u_dot * t5 * t12 * t127 - roll_u_dot * t2 * t5 * t124 -
+            roll_u_dot * t2 * t4 * t127;
 
   return J;
 }
 
-} // namespace UPS6
+}  // namespace UPS6

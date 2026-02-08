@@ -1,21 +1,20 @@
 #ifndef SUBMECHANISMSASSEMBLY_H
 #define SUBMECHANISMSASSEMBLY_H
 
-#include <algorithm>
-#include <fstream>
-#include <iostream>
 #include <limits.h>
+#include <rbdl/rbdl.h>
 #include <string.h>
 #include <unistd.h>
 
-#include <rbdl/rbdl.h>
+#include <algorithm>
+#include <fstream>
+#include <iostream>
 
 #ifndef RBDL_BUILD_ADDON_URDFREADER
 #error "Error: RBDL addon URDFReader not enabled."
 #endif
-#include <rbdl/addons/urdfreader/urdfreader.h>
-
 #include <math.h>
+#include <rbdl/addons/urdfreader/urdfreader.h>
 
 #include "ExplicitLoopConstraints.hpp"
 #include "HyRoDyn.hpp"
@@ -63,7 +62,6 @@ namespace AssembleinHyRoDyn {
 
 // Struct for storing a submechanism
 struct submechanism {
-
   /// \brief Reflects topology of the mechanism
   string type;
   /// \brief Reflects a common name from literature (e.g. stewart platform)
@@ -86,8 +84,7 @@ struct submechanism {
   std::vector<string> jointnames;
 
   /// \brief Vector of loop constraints
-  std::vector<NUMERICALLOOPCONSTRAINTS::Loop_constraints>
-      loop_constraints_submech;
+  std::vector<NUMERICALLOOPCONSTRAINTS::Loop_constraints> loop_constraints_submech;
 
   /// \brief Print the submechanism details
   void print_submechanism_details() {
@@ -120,10 +117,8 @@ struct submechanism {
     for (unsigned int j = 0; j < jointnames_active.size(); j++)
       cout << jointnames_active[j] << endl;
 
-    cout << "All the Joint(s) in the submechanism (including fixed joints): "
-         << endl;
-    for (unsigned int j = 0; j < jointnames.size(); j++)
-      cout << jointnames[j] << endl;
+    cout << "All the Joint(s) in the submechanism (including fixed joints): " << endl;
+    for (unsigned int j = 0; j < jointnames.size(); j++) cout << jointnames[j] << endl;
 
     // cout <<"=========Loop Constraints Details======="<<endl;
     for (uint i = 0; i < loop_constraints_submech.size(); i++) {
@@ -140,7 +135,6 @@ struct submechanism {
 
 // Struct for storing a exoskeleton to the mechanism
 struct exoskeleton {
-
   /// \brief Reflects a common name from literature (e.g. stewart platform)
   string name;
   /// \brief Name of the submechanism around which the exoskeleton is defined
@@ -170,15 +164,13 @@ struct exoskeleton {
     for (unsigned int j = 0; j < jointnames_dependent.size(); j++)
       cout << jointnames_dependent[j] << endl;
     cout << "All the Joint(s) in the exo (including fixed joints): " << endl;
-    for (unsigned int j = 0; j < jointnames.size(); j++)
-      cout << jointnames[j] << endl;
+    for (unsigned int j = 0; j < jointnames.size(); j++) cout << jointnames[j] << endl;
     cout << "====================================" << endl;
   }
 };
 
-class SubmechanismsAssembly
-    : public ExplicitLoopConstraints::ExplicitLoopConstraintSet {
-public:
+class SubmechanismsAssembly : public ExplicitLoopConstraints::ExplicitLoopConstraintSet {
+ public:
   /// \brief Vector of available parallel submechanisms
   std::vector<string> available_parallelsubmechanisms;
   /// \brief Vector of submechanisms
@@ -186,11 +178,9 @@ public:
   /// \brief Vector of exoskeletons
   std::vector<exoskeleton> exteriors;
   /// \brief Vector of Explicit Loop Constraint Set for different submechanisms
-  std::vector<ExplicitLoopConstraints::ExplicitLoopConstraintSet *>
-      submechanism_constraint_set;
+  std::vector<ExplicitLoopConstraints::ExplicitLoopConstraintSet*> submechanism_constraint_set;
   /// \brief Vector of Explicit Loop Constraint Set for different exoskeletons
-  std::vector<ExplicitLoopConstraints::ExplicitLoopConstraintSet *>
-      exterior_constraint_set;
+  std::vector<ExplicitLoopConstraints::ExplicitLoopConstraintSet*> exterior_constraint_set;
   /// \brief Environment path variable
   std::string path;
 
@@ -206,7 +196,7 @@ public:
    *
    * \param y vector of independent joint positions
    */
-  VectorXd calc_loopclosure_function(const Math::VectorNd &y);
+  VectorXd calc_loopclosure_function(const Math::VectorNd& y);
   /** \brief Returns the loop closure Jacobian (G) from independent joint
    * position (y)
    *
@@ -215,7 +205,7 @@ public:
    *
    * \param y vector of independent joint positions
    */
-  MatrixXd calc_loopclosure_Jacobian(const Math::VectorNd &y);
+  MatrixXd calc_loopclosure_Jacobian(const Math::VectorNd& y);
   /** \brief Returns the loop closure Jacobian derivative (Gdot) from
    * independent joint position and velocity (y, yd)
    *
@@ -225,8 +215,7 @@ public:
    * \param y vector of independent joint positions
    * \param ydot vector of independent joint velocities
    */
-  MatrixXd calc_loopclosure_Jacobiand(const Math::VectorNd &y,
-                                      const Math::VectorNd &ydot);
+  MatrixXd calc_loopclosure_Jacobiand(const Math::VectorNd& y, const Math::VectorNd& ydot);
 
   /** \brief Returns the loop closure bias acceleration (g) from independent
    * joint position and velocity (y, yd)
@@ -237,8 +226,7 @@ public:
    * \param y vector of independent joint positions
    * \param ydot vector of independent joint velocities
    */
-  VectorXd calc_loopclosure_g(const Math::VectorNd &y,
-                              const Math::VectorNd &ydot);
+  VectorXd calc_loopclosure_g(const Math::VectorNd& y, const Math::VectorNd& ydot);
 
   /** \brief Returns the actuator selection matrix of size (p x n)
    *
@@ -254,14 +242,13 @@ public:
    * the free floating joint \param jointnames_independent_robot vector of
    * independent joint names inside the robot
    */
-  void
-  calc_permutationmatrix2(std::vector<string> jointnames_independent,
-                          std::vector<string> jointnames_independent_robot);
+  void calc_permutationmatrix2(std::vector<string> jointnames_independent,
+                               std::vector<string> jointnames_independent_robot);
   /// \brief Explicit Loop Constraint Set of the full series-parallel hybrid
   /// system
   ExplicitLoopConstraints::ExplicitLoopConstraintSet obj;
 };
 
-} // namespace AssembleinHyRoDyn
+}  // namespace AssembleinHyRoDyn
 
-#endif // SUBMECHANISMSASSEMBLY
+#endif  // SUBMECHANISMSASSEMBLY

@@ -26,7 +26,7 @@ class Simulator {
     \param y state vector comprising of position and velocity variables of the
     generalized coordinates
   */
-  VectorNd rhs(double t, const VectorNd &y);
+  VectorNd rhs(double t, const VectorNd& y);
   //! Fourth order Runge Kutta Integrator
   /*!
     \param t time
@@ -36,7 +36,7 @@ class Simulator {
     meaning that the local truncation error is on the order of O(h^5), while the
     total accumulated error is order O(h^4).
   */
-  VectorNd runge_integrator(const double t, const double h, const VectorNd &y);
+  VectorNd runge_integrator(const double t, const double h, const VectorNd& y);
   //! First Order Newton-Euler Integrator
   /*!
     \param t time
@@ -45,7 +45,7 @@ class Simulator {
     generalized coordinates	\n NOTE: The accuracy of the Euler method is
     limited and frequently its solutions are unstable.
   */
-  VectorNd euler_integrator(const double t, const double h, const VectorNd &y);
+  VectorNd euler_integrator(const double t, const double h, const VectorNd& y);
 
   //! Writes the simulation output in a csv file so that it can be played or
   //! plotted in external applications
@@ -53,9 +53,9 @@ class Simulator {
     \param filename Name of the csv file where the simulation output should be
     dumped
   */
-  void write_simulation_data_into_csv(const char *filename);
+  void write_simulation_data_into_csv(const char* filename);
 
-public:
+ public:
   /// \brief Dimension of the state vector (two times the dof)
   unsigned int state_dim;
 
@@ -90,8 +90,8 @@ public:
     \param dump_sim_output_into_csv flag to decide whether to dump the
     simulation output to a csv file
   */
-  VectorNd simulate_over_period(const double t0, const VectorNd &y0,
-                                const double tf = 1.0, const double h = 0.001,
+  VectorNd simulate_over_period(const double t0, const VectorNd& y0, const double tf = 1.0,
+                                const double h = 0.001,
                                 const bool dump_sim_output_into_csv = false);
 
   //! Simulate the plant dynamics instantenously to the next step
@@ -101,6 +101,6 @@ public:
   void simulate(const double h = 0.001);
 };
 
-} // namespace hyrodyn
+}  // namespace hyrodyn
 
-#endif // HYRODYN
+#endif  // HYRODYN

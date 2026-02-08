@@ -1,18 +1,16 @@
 #ifndef PARALLELOGRAMCHAIN_H
 #define PARALLELOGRAMCHAIN_H
 
-#include <Eigen/Dense>
-#include <iostream>
 #include <math.h>
+#include <rbdl/addons/urdfreader/urdfreader.h>
+#include <rbdl/rbdl.h>
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
 
+#include <Eigen/Dense>
 #include <fstream>
-
-#include <rbdl/rbdl.h>
-
-#include <rbdl/addons/urdfreader/urdfreader.h>
+#include <iostream>
 
 #include "ExplicitLoopConstraints.hpp"
 
@@ -42,9 +40,8 @@ namespace PARALLELOGRAMCHAIN {
  * -1, 0 as its entries) and B is the offset vector containing b (0s or angular
  * offset, in rad) involved with the active joint frame.
  */
-class parallelogramchain
-    : public ExplicitLoopConstraints::ExplicitLoopConstraintSet {
-public:
+class parallelogramchain : public ExplicitLoopConstraints::ExplicitLoopConstraintSet {
+ public:
   /// \brief Vector of offset values
   VectorXd offset;
   /// \brief Loop closure Jacobian matrix
@@ -61,8 +58,7 @@ public:
    * \param jointnames_spanningtree vector of spanning tree joint names
    * \param jointnames_active vector of actuator joint names
    */
-  parallelogramchain(string file_path,
-                     std::vector<string> jointnames_spanningtree,
+  parallelogramchain(string file_path, std::vector<string> jointnames_spanningtree,
                      std::vector<string> jointnames_active);
 
   // Manually coded
@@ -74,7 +70,7 @@ public:
    *
    * \param y vector of independent joint positions
    */
-  VectorXd calc_loopclosure_function(const Math::VectorNd &y);
+  VectorXd calc_loopclosure_function(const Math::VectorNd& y);
 
   /** \brief Returns the loop closure Jacobian (G) from independent joint
    * position (y)
@@ -84,7 +80,7 @@ public:
    *
    * \param y vector of independent joint positions
    */
-  MatrixXd calc_loopclosure_Jacobian(const Math::VectorNd &y);
+  MatrixXd calc_loopclosure_Jacobian(const Math::VectorNd& y);
 
   /** \brief Returns the loop closure Jacobian derivative (Gdot) from
    * independent joint position and velocity (y, ydot)
@@ -95,8 +91,7 @@ public:
    * \param y vector of independent joint positions
    * \param ydot vector of independent joint velocities
    */
-  MatrixXd calc_loopclosure_Jacobiand(const Math::VectorNd &y,
-                                      const Math::VectorNd &ydot);
+  MatrixXd calc_loopclosure_Jacobiand(const Math::VectorNd& y, const Math::VectorNd& ydot);
 
   /** \brief Returns the loop closure bias acceleration (g) from independent
    * joint position and velocity (y, yd)
@@ -107,10 +102,9 @@ public:
    * \param y vector of independent joint positions
    * \param ydot vector of independent joint velocities
    */
-  VectorXd calc_loopclosure_g(const Math::VectorNd &y,
-                              const Math::VectorNd &ydot);
+  VectorXd calc_loopclosure_g(const Math::VectorNd& y, const Math::VectorNd& ydot);
 };
 
-} // end namespace PARALLELOGRAMCHAIN
+}  // end namespace PARALLELOGRAMCHAIN
 
-#endif // PARALLELOGRAMCHAIN
+#endif  // PARALLELOGRAMCHAIN

@@ -9,18 +9,16 @@
 #ifndef R3US2_ANKLE_H
 #define R3US2_ANKLE_H
 
-#include <Eigen/Dense>
-#include <iostream>
 #include <math.h>
+#include <rbdl/addons/urdfreader/urdfreader.h>
+#include <rbdl/rbdl.h>
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
 
+#include <Eigen/Dense>
 #include <fstream>
-
-#include <rbdl/rbdl.h>
-
-#include <rbdl/addons/urdfreader/urdfreader.h>
+#include <iostream>
 
 #include "ExplicitLoopConstraints.hpp"
 
@@ -86,8 +84,7 @@ const double PI = 3.14159265;
  */
 
 class r3us2_ankle : public ExplicitLoopConstraints::ExplicitLoopConstraintSet {
-
-protected:
+ protected:
   // Physical parameters of the mechanism
 
   /// \brief Spanning tree joint position state at zero configuration
@@ -200,10 +197,10 @@ protected:
   /// \brief Transformation matrix of EE in zero configuration
   Eigen::Matrix4d G_T_Tprime;
 
-public:
+ public:
   /// \brief RBDL Model of the R3US2_ANKLE mechanism
   Model m;
-  double r, l, d; // ASM Parameters
+  double r, l, d;  // ASM Parameters
   double tolerance = 1e-06;
   MatrixXd G_T_E;
 
@@ -226,7 +223,7 @@ public:
    *
    * \param y vector of independent joint positions
    */
-  VectorXd calc_loopclosure_function(const Math::VectorNd &y);
+  VectorXd calc_loopclosure_function(const Math::VectorNd& y);
 
   /** \brief Returns the loop closure Jacobian (G) from independent joint
    * position (y)
@@ -236,7 +233,7 @@ public:
    *
    * \param y vector of independent joint positions
    */
-  MatrixXd calc_loopclosure_Jacobian(const Math::VectorNd &y);
+  MatrixXd calc_loopclosure_Jacobian(const Math::VectorNd& y);
 
   /** \brief Returns the loop closure Jacobian derivative (Gdot) from
    * independent joint position and velocity (y, yd)
@@ -247,8 +244,7 @@ public:
    * \param y vector of independent joint positions
    * \param ydot vector of independent joint velocities
    */
-  MatrixXd calc_loopclosure_Jacobiand(const Math::VectorNd &y,
-                                      const Math::VectorNd &ydot);
+  MatrixXd calc_loopclosure_Jacobiand(const Math::VectorNd& y, const Math::VectorNd& ydot);
 
   /** \brief Returns the loop closure bias acceleration (g) from independent
    * joint position and velocity (y, yd)
@@ -259,8 +255,7 @@ public:
    * \param y vector of independent joint positions
    * \param ydot vector of independent joint velocities
    */
-  VectorXd calc_loopclosure_g(const Math::VectorNd &y,
-                              const Math::VectorNd &ydot);
+  VectorXd calc_loopclosure_g(const Math::VectorNd& y, const Math::VectorNd& ydot);
   /** \brief Returns the loop closure Jacobian of R-3US2 leg from independent
    * joint position y, position vector of leg base joint in base frame b, vector
    * of leg endeffector joint in ee frame and rotation of leg base joint frame
@@ -271,10 +266,8 @@ public:
    * \param e_ee position vector of endeffector joint of the leg in ee frame
    * \param RotMat_b rotation of base joint frame of the leg in base frame
    */
-  MatrixXd compute_loopclosure_Jacobian(const Math::VectorNd y,
-                                        const Math::Vector3d c,
-                                        const Math::Vector3d ee_,
-                                        const Math::Matrix3d RotMat_c);
+  MatrixXd compute_loopclosure_Jacobian(const Math::VectorNd y, const Math::Vector3d c,
+                                        const Math::Vector3d ee_, const Math::Matrix3d RotMat_c);
 
   /** \brief Returns the loop closure Jacobian derivative of R-3US2_ANKLE from
    * independent joint position y, independent joint velocity ydot, position
@@ -287,10 +280,8 @@ public:
    * \param e_ee position vector of endeffector joint of the leg in ee frame
    * \param RotMat_b rotation of base joint frame of the leg in base frame
    */
-  MatrixXd compute_loopclosure_Jacobiandot(const Math::VectorNd y,
-                                           const Math::VectorNd ydot,
-                                           const Math::Vector3d c,
-                                           const Math::Vector3d e,
+  MatrixXd compute_loopclosure_Jacobiandot(const Math::VectorNd y, const Math::VectorNd ydot,
+                                           const Math::Vector3d c, const Math::Vector3d e,
                                            const Math::Matrix3d RotMat_c);
 
   double wrap2pi(double x);
@@ -305,7 +296,7 @@ public:
 
   Vector3d IGM(MatrixXd G_T_E);
 
-  void calculate_crankpoints(Vector3d q, MatrixXd &c);
+  void calculate_crankpoints(Vector3d q, MatrixXd& c);
   /** \brief Calculates the crank points (ci) by the motion of the joint
      actuators
                *
@@ -318,7 +309,7 @@ public:
               //~ * \f$ \mathbf{C} = (ci: 1<=i<=6)\f$
               */
 
-  void calculate_endeffectorpoints(MatrixXd G_T_E, MatrixXd &e);
+  void calculate_endeffectorpoints(MatrixXd G_T_E, MatrixXd& e);
   /** \brief Calculates the six end effector position vectors (E) from the
      coordinate points of the end effector position (ei) and orinetation vectors
      (s, n, a)
@@ -328,7 +319,7 @@ public:
               *
               */
 
-  void calculate_rodlengths(MatrixXd c, MatrixXd e, VectorXd &rod_lengths);
+  void calculate_rodlengths(MatrixXd c, MatrixXd e, VectorXd& rod_lengths);
   /** \brief This function computes the kinematic contraint equations to
      calculate the rod length (l), the distance  btw the end effector points and
      the crank points.
@@ -360,7 +351,7 @@ public:
    *
    */
 
-  void solve_RIGM(MatrixXd G_T_E, Vector3d &q, Vector3d &E);
+  void solve_RIGM(MatrixXd G_T_E, Vector3d& q, Vector3d& E);
   /** \brief This function returns the solution of the Rotative inverse
    * kinematic model
    *
@@ -378,15 +369,14 @@ public:
    *
    */
 
-  Vector3d sphere_intersection(Vector3d fc1, Vector3d fc2, Vector3d fc3,
-                               double r1, double r2, double r3,
-                               unsigned int pos);
+  Vector3d sphere_intersection(Vector3d fc1, Vector3d fc2, Vector3d fc3, double r1, double r2,
+                               double r3, unsigned int pos);
   /** \brief This function generates the intersection points of the rotative
    * spheres on the surface of the cranks
    *
    */
 };
 
-} // end namespace R3US2_ANKLE
+}  // end namespace R3US2_ANKLE
 
-#endif // R3US2_ANKLE
+#endif  // R3US2_ANKLE

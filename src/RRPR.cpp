@@ -4,11 +4,9 @@ namespace RRPR {
 
 void rrPr::calc_permutationmatrix(std::vector<string> jointnames_spanningtree,
                                   std::vector<string> jointnames_active) {
-
   // MatrixXd Q;
   // Q.setZero(jointnames_active.size(), jointnames_spanningtree.size());
-  permutation_matrix.setZero(jointnames_active.size(),
-                             jointnames_spanningtree.size());
+  permutation_matrix.setZero(jointnames_active.size(), jointnames_spanningtree.size());
 
   for (unsigned int i = 0; i < jointnames_active.size(); i++) {
     for (unsigned int j = 0; j < jointnames_spanningtree.size(); j++) {
@@ -25,45 +23,40 @@ void rrPr::calc_permutationmatrix(std::vector<string> jointnames_spanningtree,
 // Constructor
 rrPr::rrPr(string file_path, std::vector<string> jointnames_spanningtree,
            std::vector<string> jointnames_active) {
-
   Model m;
 
-  const char *ext;
+  const char* ext;
   ext = strrchr(file_path.c_str(), '.');
-  if (!strcmp(ext, ".urdf") || !strcmp(ext, ".URDF") ||
-      !strcmp(ext, ".robot")) {
+  if (!strcmp(ext, ".urdf") || !strcmp(ext, ".URDF") || !strcmp(ext, ".robot")) {
     //	cout<<"Input file is URDF"<<endl;
     //		if (!Addons::URDFReadFromFile (file_path.c_str(), &m, false)) {
-    if (!Addons::URDFReadFromFileWithModularity(
-            file_path.c_str(), &m, jointnames_spanningtree,
-            false)) { // done to ensure that urdf is parsed according to correct
-                      // numbering scheme
+    if (!Addons::URDFReadFromFileWithModularity(file_path.c_str(), &m, jointnames_spanningtree,
+                                                false)) {  // done to ensure that urdf is parsed
+                                                           // according to correct numbering scheme
       std::cerr << "Error loading urdf model" << std::endl;
       abort();
     }
   } else {
-    std::cerr << "Unknown file type: Accepted file types are .urdf or .lua"
-              << endl;
+    std::cerr << "Unknown file type: Accepted file types are .urdf or .lua" << endl;
     abort();
   }
 
   VectorNd Q(VectorNd::Zero(m.dof_count));
   UpdateKinematicsCustom(m, &Q, NULL, NULL);
 
-  Vector3d root_position =
-      CalcBodyToBaseCoordinates(m, Q, 0., Vector3d(0., 0., 0.), false);
+  Vector3d root_position = CalcBodyToBaseCoordinates(m, Q, 0., Vector3d(0., 0., 0.), false);
   //	cout<<"root pos: "<<root_position.transpose()<<endl;
-  Vector3d ee_position = CalcBodyToBaseCoordinates(
-      m, Q, 1., Vector3d(0., 0., 0.), false); // B1 frame
+  Vector3d ee_position =
+      CalcBodyToBaseCoordinates(m, Q, 1., Vector3d(0., 0., 0.), false);  // B1 frame
   //	cout<<"ee pos: "<<ee_position.transpose()<<endl;
-  Vector3d b2_position = CalcBodyToBaseCoordinates(
-      m, Q, 2., Vector3d(0., 0., 0.),
-      false); // B2 frame (In case of RH5, Stator-knee or Actor-hip2)
-              //	cout<<"b2 pos: "<<b2_position.transpose()<<endl;
-  Vector3d b3_position = CalcBodyToBaseCoordinates(
-      m, Q, 3., Vector3d(0., 0., 0.),
-      false); // B3 frame (In case of RH5, Stator-hip2 or Actor-knee)
-              //	cout<<"b3 pos: "<<b3_position.transpose()<<endl;
+  Vector3d b2_position =
+      CalcBodyToBaseCoordinates(m, Q, 2., Vector3d(0., 0., 0.),
+                                false);  // B2 frame (In case of RH5, Stator-knee or Actor-hip2)
+                                         //	cout<<"b2 pos: "<<b2_position.transpose()<<endl;
+  Vector3d b3_position =
+      CalcBodyToBaseCoordinates(m, Q, 3., Vector3d(0., 0., 0.),
+                                false);  // B3 frame (In case of RH5, Stator-hip2 or Actor-knee)
+                                         //	cout<<"b3 pos: "<<b3_position.transpose()<<endl;
 
   /* // Old code
   l1 = (b2_position - root_position).norm();
@@ -139,7 +132,7 @@ accordingly) l1 = 340.82/1000; l2 = 85.0/1000; d = 273.41/1000;
   calc_permutationmatrix(jointnames_spanningtree, jointnames_active);
 }
 
-VectorXd rrPr::calc_loopclosure_function(const Math::VectorNd &y) {
+VectorXd rrPr::calc_loopclosure_function(const Math::VectorNd& y) {
   // This function calculates the loop closure functions gamma
   // for the mechanism
   //
@@ -168,7 +161,7 @@ VectorXd rrPr::calc_loopclosure_function(const Math::VectorNd &y) {
   return Q;
 }
 
-MatrixXd rrPr::calc_loopclosure_Jacobian(const Math::VectorNd &y) {
+MatrixXd rrPr::calc_loopclosure_Jacobian(const Math::VectorNd& y) {
   // This function calculates the loop closure Jacobian G
   // for the mechanism
   //
@@ -190,8 +183,7 @@ MatrixXd rrPr::calc_loopclosure_Jacobian(const Math::VectorNd &y) {
   return G;
 }
 
-MatrixXd rrPr::calc_loopclosure_Jacobiand(const Math::VectorNd &y,
-                                          const Math::VectorNd &ydot) {
+MatrixXd rrPr::calc_loopclosure_Jacobiand(const Math::VectorNd& y, const Math::VectorNd& ydot) {
   // This function calculates the loop closure Jacobiand Gdot
   // for the mechanism
   //
@@ -208,15 +200,13 @@ MatrixXd rrPr::calc_loopclosure_Jacobiand(const Math::VectorNd &y,
   double u2 = (l1 * l2 * sin(theta1)) / d;
 
   Gdot(0, 0) = 0.0;
-  Gdot(1, 0) =
-      (((l1 * l1 - l2 * l2) * l1 * l2 * sin(theta1)) * theta1_dot) / pow(d, 4);
+  Gdot(1, 0) = (((l1 * l1 - l2 * l2) * l1 * l2 * sin(theta1)) * theta1_dot) / pow(d, 4);
   Gdot(2, 0) = ((l1 * l2 * cos(theta1) - u2 * u2) * theta1_dot) / d;
 
   return Gdot;
 }
 
-VectorXd rrPr::calc_loopclosure_g(const Math::VectorNd &y,
-                                  const Math::VectorNd &ydot) {
+VectorXd rrPr::calc_loopclosure_g(const Math::VectorNd& y, const Math::VectorNd& ydot) {
   // This function calculates the loop closure bias acceleration g= Gdot*ydot
   // for the mechanism
   //
@@ -227,4 +217,4 @@ VectorXd rrPr::calc_loopclosure_g(const Math::VectorNd &y,
   return calc_loopclosure_Jacobiand(y, ydot) * ydot;
 }
 
-} // namespace RRPR
+}  // namespace RRPR

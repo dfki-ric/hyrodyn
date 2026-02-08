@@ -1,13 +1,14 @@
 #ifndef HYRODYN_LIMIT_CHECKER_H
 #define HYRODYN_LIMIT_CHECKER_H
 
+#include <math.h>
+#include <stdio.h>
+#include <yaml-cpp/yaml.h>
+
 #include <Eigen/Dense>
 #include <fstream>
 #include <iostream>
-#include <math.h>
-#include <stdio.h>
 #include <string>
-#include <yaml-cpp/yaml.h>
 
 using namespace std;
 using Eigen::MatrixXd;
@@ -23,8 +24,7 @@ using Eigen::VectorXd;
 using namespace hyrodyn;
 
 class HyRoDyn_Limit_Checker {
-
-protected:
+ protected:
   /// \brief vector of independent joint position limits (minimum)
   VectorXd y_min;
   /// \brief vector of independent joint position limits (maximum)
@@ -77,9 +77,9 @@ protected:
   VectorXd Tau_actuated_max;
 
   /// \brief Robot Model in HyRoDyn
-  RobotModel_HyRoDyn *robot_model;
+  RobotModel_HyRoDyn* robot_model;
 
-public:
+ public:
   /// \brief vector of joint indices of independent joints vector where the
   /// position limit is violated
   std::vector<unsigned int> input_pos_limit_violation_report;
@@ -108,7 +108,7 @@ public:
     \param filepath_submechanisms string file path to submechanisms yml
   */
   HyRoDyn_Limit_Checker(string filepath_urdf,
-                        string filepath_submechanisms); // constructor
+                        string filepath_submechanisms);  // constructor
 
   /** \brief Compares two eigen vectors element-wise (returns true if vector
    * values are within min-max limits, otherwise false)
@@ -119,7 +119,7 @@ public:
    * \param index vector of the indices where the check failed (output)
    */
   bool compare_eigen_vectors(VectorXd vec, VectorXd min, VectorXd max,
-                             std::vector<unsigned int> &index);
+                             std::vector<unsigned int>& index);
 
   /** \brief Performs a hierarchical point-wise capability check (returns true
    * if capability is feasible, otherwise false)
@@ -131,8 +131,7 @@ public:
    * exact reason of the failure is stored into the limit violation report
    * variables of the class.
    */
-  bool hierarchical_capability_check(const VectorXd y, const VectorXd yd,
-                                     const VectorXd ydd);
+  bool hierarchical_capability_check(const VectorXd y, const VectorXd yd, const VectorXd ydd);
 };
 
-#endif // HyRoDyn_Limit_Checker
+#endif  // HyRoDyn_Limit_Checker

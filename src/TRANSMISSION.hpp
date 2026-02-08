@@ -9,16 +9,15 @@
 #ifndef TRANSMISSION_H
 #define TRANSMISSION_H
 
-#include <Eigen/Dense>
-#include <iostream>
 #include <math.h>
+#include <rbdl/rbdl.h>
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
 
+#include <Eigen/Dense>
 #include <fstream>
-
-#include <rbdl/rbdl.h>
+#include <iostream>
 
 #ifndef RBDL_BUILD_ADDON_URDFREADER
 #error "Error: RBDL addon URDFReader not enabled."
@@ -72,8 +71,7 @@ namespace TRANSMISSION {
  */
 
 class transmission : public ExplicitLoopConstraints::ExplicitLoopConstraintSet {
-
-protected:
+ protected:
   /// \brief Vector of offset values
   VectorXd offset;
   /// \brief Loop closure Jacobian matrix
@@ -85,7 +83,7 @@ protected:
   /// \brief Independent joints degrees of freedom of the mechanism
   unsigned int dof_independent;
 
-public:
+ public:
   // Constructor
   /** \brief Constructor of the transmission mechanism class
    *
@@ -105,7 +103,7 @@ public:
    *
    * \param y vector of independent joint positions
    */
-  VectorXd calc_loopclosure_function(const Math::VectorNd &y);
+  VectorXd calc_loopclosure_function(const Math::VectorNd& y);
 
   /** \brief Returns the loop closure Jacobian (G) from independent joint
    * position (y)
@@ -115,7 +113,7 @@ public:
    *
    * \param y vector of independent joint positions
    */
-  MatrixXd calc_loopclosure_Jacobian(const Math::VectorNd &y);
+  MatrixXd calc_loopclosure_Jacobian(const Math::VectorNd& y);
 
   /** \brief Returns the loop closure Jacobian derivative (Gdot) from
    * independent joint position and velocity (y, yd)
@@ -126,8 +124,7 @@ public:
    * \param y vector of independent joint positions
    * \param ydot vector of independent joint velocities
    */
-  MatrixXd calc_loopclosure_Jacobiand(const Math::VectorNd &y,
-                                      const Math::VectorNd &ydot);
+  MatrixXd calc_loopclosure_Jacobiand(const Math::VectorNd& y, const Math::VectorNd& ydot);
 
   /** \brief Returns the loop closure bias acceleration (g) from independent
    * joint position and velocity (y, yd)
@@ -138,10 +135,9 @@ public:
    * \param y vector of independent joint positions
    * \param ydot vector of independent joint velocities
    */
-  VectorXd calc_loopclosure_g(const Math::VectorNd &y,
-                              const Math::VectorNd &ydot);
+  VectorXd calc_loopclosure_g(const Math::VectorNd& y, const Math::VectorNd& ydot);
 };
 
-} // end namespace TRANSMISSION
+}  // end namespace TRANSMISSION
 
-#endif // TRANSMISSION
+#endif  // TRANSMISSION

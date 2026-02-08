@@ -3,9 +3,7 @@
 namespace SPU2U1 {
 void sPu2u1::calc_permutationmatrix(std::vector<string> jointnames_spanningtree,
                                     std::vector<string> jointnames_active) {
-
-  permutation_matrix.setZero(jointnames_active.size(),
-                             jointnames_spanningtree.size());
+  permutation_matrix.setZero(jointnames_active.size(), jointnames_spanningtree.size());
 
   for (unsigned int i = 0; i < jointnames_active.size(); i++) {
     for (unsigned int j = 0; j < jointnames_spanningtree.size(); j++) {
@@ -28,13 +26,11 @@ double sPu2u1::wrap2pi(double x) {
 // Constructor
 sPu2u1::sPu2u1(string file_path, std::vector<string> jointnames_spanningtree,
                std::vector<string> jointnames_active) {
-
   Model m;
 
-  const char *ext;
+  const char* ext;
   ext = strrchr(file_path.c_str(), '.');
-  if (!strcmp(ext, ".urdf") || !strcmp(ext, ".URDF") ||
-      !strcmp(ext, ".robot")) {
+  if (!strcmp(ext, ".urdf") || !strcmp(ext, ".URDF") || !strcmp(ext, ".robot")) {
     // cout<<"Input file is URDF"<<endl;
     /*
             if (!Addons::URDFReadFromFile (file_path.c_str(), &m, false)) {
@@ -43,8 +39,8 @@ sPu2u1::sPu2u1(string file_path, std::vector<string> jointnames_spanningtree,
             }
             */
 
-    if (!Addons::URDFReadFromFileWithModularity(
-            file_path.c_str(), &m, jointnames_spanningtree, false)) {
+    if (!Addons::URDFReadFromFileWithModularity(file_path.c_str(), &m, jointnames_spanningtree,
+                                                false)) {
       std::cerr << "Error loading robot model from urdf" << std::endl;
       abort();
     }
@@ -80,8 +76,7 @@ sPu2u1::sPu2u1(string file_path, std::vector<string> jointnames_spanningtree,
 
   cout << "Model DoF overview:" << Utils::GetModelDOFOverview(m) << endl;
   cout << "Model Hierarchy overview:" << Utils::GetModelHierarchy(m) << endl;
-  cout << "Named Body Origins overview:"
-       << Utils::GetNamedBodyOriginsOverview(m) << endl;
+  cout << "Named Body Origins overview:" << Utils::GetNamedBodyOriginsOverview(m) << endl;
 
   dof_active = 2;
   dof_spanningtree = m.dof_count;
@@ -102,7 +97,7 @@ sPu2u1::sPu2u1(string file_path, std::vector<string> jointnames_spanningtree,
       */
 }
 
-VectorXd sPu2u1::calc_loopclosure_function(const Math::VectorNd &y) {
+VectorXd sPu2u1::calc_loopclosure_function(const Math::VectorNd& y) {
   // This function calculates the loop closure functions gamma
   // for the mechanism
 
@@ -111,8 +106,8 @@ VectorXd sPu2u1::calc_loopclosure_function(const Math::VectorNd &y) {
   Matrix3d RotMat_x, RotMat_y, RotMat;
 
   double roll, pitch;
-  roll = y(0);  // roll
-  pitch = y(1); // pitch
+  roll = y(0);   // roll
+  pitch = y(1);  // pitch
 
   RotMat_x << 1, 0, 0, 0, cos(roll), -sin(roll), 0, sin(roll), cos(roll);
 
@@ -162,20 +157,20 @@ VectorXd sPu2u1::calc_loopclosure_function(const Math::VectorNd &y) {
   */
 
   Q(0) = y(0);
-  Q(1) = y(1);     // actor 2 length
-  Q(2) = roll_u1;  // roll
-  Q(3) = pitch_u1; // pitch
-  Q(4) = d1;       // theta 1
-  Q(5) = roll_u2;  // theta 2
+  Q(1) = y(1);      // actor 2 length
+  Q(2) = roll_u1;   // roll
+  Q(3) = pitch_u1;  // pitch
+  Q(4) = d1;        // theta 1
+  Q(5) = roll_u2;   // theta 2
   Q(6) = pitch_u2;
   Q(7) = d2;
 
-  Q = Q - Q_zero; // wrt to zero position of assembly
+  Q = Q - Q_zero;  // wrt to zero position of assembly
 
   return Q;
 }
 
-MatrixXd sPu2u1::calc_loopclosure_Jacobian(const Math::VectorNd &y) {
+MatrixXd sPu2u1::calc_loopclosure_Jacobian(const Math::VectorNd& y) {
   // This function calculates the loop closure Jacobian G
   // for the mechanism
 
@@ -206,8 +201,7 @@ MatrixXd sPu2u1::calc_loopclosure_Jacobian(const Math::VectorNd &y) {
   return G;
 }
 
-MatrixXd sPu2u1::calc_loopclosure_Jacobiand(const Math::VectorNd &y,
-                                            const Math::VectorNd &ydot) {
+MatrixXd sPu2u1::calc_loopclosure_Jacobiand(const Math::VectorNd& y, const Math::VectorNd& ydot) {
   // This function calculates the loop closure Jacobiand Gdot
   // for the mechanism
   //
@@ -224,10 +218,8 @@ MatrixXd sPu2u1::calc_loopclosure_Jacobiand(const Math::VectorNd &y,
   G1dot.setZero(3, 2);
   G2dot.setZero(3, 2);
 
-  G1dot =
-      compute_loopclosure_Jacobiandot_UPS_leg(y, ydot, e1_ee, b1, RotMat_b1);
-  G2dot =
-      compute_loopclosure_Jacobiandot_UPS_leg(y, ydot, e2_ee, b2, RotMat_b2);
+  G1dot = compute_loopclosure_Jacobiandot_UPS_leg(y, ydot, e1_ee, b1, RotMat_b1);
+  G2dot = compute_loopclosure_Jacobiandot_UPS_leg(y, ydot, e2_ee, b2, RotMat_b2);
   /*
   Gdot.block(0,0,3,2) = G1dot;
   Gdot.block(3,0,3,2) = G2dot;
@@ -239,8 +231,7 @@ MatrixXd sPu2u1::calc_loopclosure_Jacobiand(const Math::VectorNd &y,
   return Gdot;
 }
 
-VectorXd sPu2u1::calc_loopclosure_g(const Math::VectorNd &y,
-                                    const Math::VectorNd &ydot) {
+VectorXd sPu2u1::calc_loopclosure_g(const Math::VectorNd& y, const Math::VectorNd& ydot) {
   // This function calculates the loop closure bias acceleration g= Gdot*ydot
   // for the mechanism
   //
@@ -251,10 +242,8 @@ VectorXd sPu2u1::calc_loopclosure_g(const Math::VectorNd &y,
   return calc_loopclosure_Jacobiand(y, ydot) * ydot;
 }
 
-VectorXd sPu2u1::calc_geometricmodel_forward(const Math::VectorNd u,
-                                             unsigned int max_iterations,
+VectorXd sPu2u1::calc_geometricmodel_forward(const Math::VectorNd u, unsigned int max_iterations,
                                              double step_tol) {
-
   VectorNd y(VectorNd::Zero(dof_active));
   VectorNd u_i(VectorNd::Zero(dof_active));
   VectorNd du(VectorNd::Zero(dof_active));
@@ -264,7 +253,6 @@ VectorXd sPu2u1::calc_geometricmodel_forward(const Math::VectorNd u,
   unsigned int i = 0;
 
   while (1) {
-
     u_i = sPu2u1::calc_geometricmodel_inverse(y);
 
     du = u - u_i;
@@ -290,10 +278,9 @@ VectorXd sPu2u1::calc_geometricmodel_forward(const Math::VectorNd u,
 }
 
 VectorXd sPu2u1::calc_geometricmodel_inverse(const Math::VectorNd y) {
-
   double roll, pitch;
-  roll = y(0);  // roll
-  pitch = y(1); // pitch
+  roll = y(0);   // roll
+  pitch = y(1);  // pitch
 
   Matrix3d RotMat_x, RotMat_y, RotMat;
 
@@ -323,14 +310,13 @@ VectorXd sPu2u1::calc_geometricmodel_inverse(const Math::VectorNd y) {
 }
 
 Matrix2d sPu2u1::compute_kinematic_Jacobian(const Math::VectorNd y) {
-
   // forward kinematic jacobian in terms of independent params
 
   Matrix2d J = Matrix2d::Zero();
 
   double roll, pitch;
-  roll = y(0);  // roll
-  pitch = y(1); // pitch
+  roll = y(0);   // roll
+  pitch = y(1);  // pitch
 
   double b1x, b1y, b1z, e1x, e1y, e1z;
   // point b1 (in base frame) and e1(in end effector frame)
@@ -458,13 +444,11 @@ Matrix2d sPu2u1::compute_kinematic_Jacobian(const Math::VectorNd y) {
   double t112 = e2y * e1z * t2 * t5 * t7 * t8 * t24 * t25 * t33;
   double t113 = e1x * e2z * t2 * t4 * t5 * t8 * t12 * t13 * t33;
   double t114 = e2x * e1z * t2 * t4 * t5 * t8 * t12 * t13 * t33;
-  double t76 = t44 + t45 + t46 + t47 + t48 + t49 + t50 + t51 + t52 + t53 + t54 +
-               t55 + t56 + t57 + t58 + t59 + t60 + t61 + t62 + t63 + t64 + t65 +
-               t66 + t67 + t68 + t69 + t70 + t71 + t72 + t73 + t74 + t75 - t83 -
-               t84 - t85 - t86 - t87 - t88 - t89 - t90 - t91 - t92 - t93 - t94 -
-               t95 - t96 - t97 - t98 - t99 - t100 - t101 - t102 - t103 - t104 -
-               t105 - t106 - t107 - t108 - t109 - t110 - t111 - t112 - t113 -
-               t114;
+  double t76 = t44 + t45 + t46 + t47 + t48 + t49 + t50 + t51 + t52 + t53 + t54 + t55 + t56 + t57 +
+               t58 + t59 + t60 + t61 + t62 + t63 + t64 + t65 + t66 + t67 + t68 + t69 + t70 + t71 +
+               t72 + t73 + t74 + t75 - t83 - t84 - t85 - t86 - t87 - t88 - t89 - t90 - t91 - t92 -
+               t93 - t94 - t95 - t96 - t97 - t98 - t99 - t100 - t101 - t102 - t103 - t104 - t105 -
+               t106 - t107 - t108 - t109 - t110 - t111 - t112 - t113 - t114;
   double t77 = 1.0 / t76;
   double t78 = t3 * t3;
   double t79 = t6 * t6;
@@ -478,38 +462,31 @@ Matrix2d sPu2u1::compute_kinematic_Jacobian(const Math::VectorNd y) {
   double t119 = sqrt(t118);
 
   J(0, 0) = -t77 * t82 *
-            (e2x * t5 * t12 * t13 - e2z * t4 * t12 * t13 +
-             e2x * t4 * t7 * t20 * t21 - e2x * t2 * t4 * t24 * t25 +
-             e2z * t5 * t7 * t20 * t21 - e2z * t2 * t5 * t24 * t25);
+            (e2x * t5 * t12 * t13 - e2z * t4 * t12 * t13 + e2x * t4 * t7 * t20 * t21 -
+             e2x * t2 * t4 * t24 * t25 + e2z * t5 * t7 * t20 * t21 - e2z * t2 * t5 * t24 * t25);
   J(0, 1) = t77 * t119 *
-            (e1x * t5 * t6 * t34 - e1z * t4 * t6 * t34 -
-             e1x * t2 * t3 * t4 * t39 + e1x * t4 * t7 * t8 * t33 -
-             e1z * t2 * t3 * t5 * t39 + e1z * t5 * t7 * t8 * t33);
+            (e1x * t5 * t6 * t34 - e1z * t4 * t6 * t34 - e1x * t2 * t3 * t4 * t39 +
+             e1x * t4 * t7 * t8 * t33 - e1z * t2 * t3 * t5 * t39 + e1z * t5 * t7 * t8 * t33);
   J(1, 0) = -t77 * t82 *
-            (e2y * t7 * t20 * t21 - e2y * t2 * t24 * t25 -
-             e2x * t2 * t5 * t20 * t21 - e2x * t5 * t7 * t24 * t25 +
-             e2z * t2 * t4 * t20 * t21 + e2z * t4 * t7 * t24 * t25);
+            (e2y * t7 * t20 * t21 - e2y * t2 * t24 * t25 - e2x * t2 * t5 * t20 * t21 -
+             e2x * t5 * t7 * t24 * t25 + e2z * t2 * t4 * t20 * t21 + e2z * t4 * t7 * t24 * t25);
   J(1, 1) = -t77 * t119 *
-            (e1y * t2 * t3 * t39 - e1y * t7 * t8 * t33 +
-             e1x * t2 * t5 * t8 * t33 + e1x * t3 * t5 * t7 * t39 -
-             e1z * t2 * t4 * t8 * t33 - e1z * t3 * t4 * t7 * t39);
+            (e1y * t2 * t3 * t39 - e1y * t7 * t8 * t33 + e1x * t2 * t5 * t8 * t33 +
+             e1x * t3 * t5 * t7 * t39 - e1z * t2 * t4 * t8 * t33 - e1z * t3 * t4 * t7 * t39);
 
   return J;
 }
 
-MatrixXd sPu2u1::compute_loopclosure_Jacobian_UPS_leg(const Math::VectorNd y,
-                                                      const Vector3d e_ee,
-                                                      const Vector3d b,
-                                                      const Matrix3d RotMat_b) {
-
+MatrixXd sPu2u1::compute_loopclosure_Jacobian_UPS_leg(const Math::VectorNd y, const Vector3d e_ee,
+                                                      const Vector3d b, const Matrix3d RotMat_b) {
   MatrixXd J;
   J.setZero(3, 2);
 
   double bx, by, bz, ex, ey, ez;
   double sx, sy, sz, nx, ny, nz, ax, ay,
-      az; // elements of rotation matrix to the universal joint frame
-  double roll, pitch;        // independent joints
-  double roll_u, pitch_u, l; // parameters for UPS leg
+      az;                     // elements of rotation matrix to the universal joint frame
+  double roll, pitch;         // independent joints
+  double roll_u, pitch_u, l;  // parameters for UPS leg
 
   // independent params
   roll = y(0);
@@ -606,8 +583,7 @@ MatrixXd sPu2u1::compute_loopclosure_Jacobian_UPS_leg(const Math::VectorNd y,
 
   J(0, 0) = -t6 * t8 * t16 * t28 - t6 * t8 * t15 * t38;
   J(0, 1) = t6 * t8 * t15 * t34 + t6 * t8 * t16 * t43;
-  J(1, 0) =
-      t6 * t7 * (t37 - nx * t11) - t6 * t15 * t28 * t29 + t6 * t16 * t29 * t38;
+  J(1, 0) = t6 * t7 * (t37 - nx * t11) - t6 * t15 * t28 * t29 + t6 * t16 * t29 * t38;
   J(1, 1) = -t6 * t7 * t42 - t6 * t16 * t29 * t34 + t6 * t15 * t29 * t43;
   J(2, 0) = t29 * (t37 - nx * t11) - t7 * t16 * t38 + t7 * t15 * (t27 - t39);
   J(2, 1) = -t29 * t42 + t7 * t16 * (t32 + t33 - t44) - t7 * t15 * t43;
@@ -615,18 +591,18 @@ MatrixXd sPu2u1::compute_loopclosure_Jacobian_UPS_leg(const Math::VectorNd y,
   return J;
 }
 
-MatrixXd sPu2u1::compute_loopclosure_Jacobiandot_UPS_leg(
-    const Math::VectorNd y, const Math::VectorNd yd, const Vector3d e_ee,
-    const Vector3d b, const Matrix3d RotMat_b) {
-
+MatrixXd sPu2u1::compute_loopclosure_Jacobiandot_UPS_leg(const Math::VectorNd y,
+                                                         const Math::VectorNd yd,
+                                                         const Vector3d e_ee, const Vector3d b,
+                                                         const Matrix3d RotMat_b) {
   MatrixXd Gdot;
   Gdot.setZero(3, 2);
 
   double bx, by, bz, ex, ey, ez;
   double sx, sy, sz, nx, ny, nz, ax, ay,
-      az; // elements of rotation matrix to the universal joint frame
-  double roll, pitch;        // independent joints
-  double roll_u, pitch_u, l; // parameters for UPS leg
+      az;                     // elements of rotation matrix to the universal joint frame
+  double roll, pitch;         // independent joints
+  double roll_u, pitch_u, l;  // parameters for UPS leg
 
   // independent params
   roll = y(0);
@@ -781,40 +757,31 @@ MatrixXd sPu2u1::compute_loopclosure_Jacobiandot_UPS_leg(
   double t92 = t90 + t91 - sx * t36;
   double t95 = t84 + t85 - nx * t50;
 
-  Gdot(0, 0) = -t6 * t8 * t17 * t71 - t6 * t8 * t25 * t68 +
-               l_dot * t8 * t17 * t24 * t30 + l_dot * t8 * t24 * t25 * t33 -
-               roll_u_dot * t6 * t8 * t17 * t33 +
-               roll_u_dot * t6 * t8 * t25 * t30 -
-               pitch_u_dot * t6 * t17 * t30 * t31 * t32 -
+  Gdot(0, 0) = -t6 * t8 * t17 * t71 - t6 * t8 * t25 * t68 + l_dot * t8 * t17 * t24 * t30 +
+               l_dot * t8 * t24 * t25 * t33 - roll_u_dot * t6 * t8 * t17 * t33 +
+               roll_u_dot * t6 * t8 * t25 * t30 - pitch_u_dot * t6 * t17 * t30 * t31 * t32 -
                pitch_u_dot * t6 * t25 * t31 * t32 * t33;
-  Gdot(0, 1) = -t6 * t8 * t17 * t83 - t6 * t8 * t25 * t80 -
-               l_dot * t8 * t17 * t24 * t59 - l_dot * t8 * t24 * t25 * t56 +
-               roll_u_dot * t6 * t8 * t17 * t56 -
+  Gdot(0, 1) = -t6 * t8 * t17 * t83 - t6 * t8 * t25 * t80 - l_dot * t8 * t17 * t24 * t59 -
+               l_dot * t8 * t24 * t25 * t56 + roll_u_dot * t6 * t8 * t17 * t56 -
                roll_u_dot * t6 * t8 * t25 * t59 +
                pitch_u_dot * t6 * t17 * t31 * t32 * (t57 + t58 - t60) +
                pitch_u_dot * t6 * t25 * t31 * t32 * (t53 + t55 - t61);
-  Gdot(1, 0) = t6 * t7 * t88 - l_dot * t7 * t24 * t73 -
-               pitch_u_dot * t6 * t32 * t73 - t6 * t17 * t32 * t68 +
-               t6 * t25 * t32 * t71 - l_dot * t24 * t25 * t30 * t32 -
-               pitch_u_dot * t6 * t7 * t17 * t33 +
-               l_dot * t17 * t24 * t32 * (t28 - t74) +
-               pitch_u_dot * t6 * t7 * t25 * (t29 - t75) +
-               roll_u_dot * t6 * t17 * t32 * (t29 - t75) +
-               roll_u_dot * t6 * t25 * t32 * (t28 - t74);
-  Gdot(1, 1) =
-      t6 * t7 * t92 + l_dot * t7 * t24 * t95 + pitch_u_dot * t6 * t32 * t95 -
-      t6 * t17 * t32 * t80 + t6 * t25 * t32 * t83 +
-      l_dot * t24 * t25 * t32 * (t57 + t58 - t60) +
-      pitch_u_dot * t6 * t7 * t17 * (t53 + t55 - t61) -
-      l_dot * t17 * t24 * t32 * t56 - pitch_u_dot * t6 * t7 * t25 * t59 -
-      roll_u_dot * t6 * t17 * t32 * t59 - roll_u_dot * t6 * t25 * t32 * t56;
-  Gdot(2, 0) = t32 * t88 + t7 * t17 * t68 - t7 * t25 * t71 +
-               pitch_u_dot * t7 * (t72 - t89) - pitch_u_dot * t17 * t32 * t33 -
-               roll_u_dot * t7 * t17 * t30 - roll_u_dot * t7 * t25 * t33 +
-               pitch_u_dot * t25 * t32 * (t29 - t75);
-  Gdot(2, 1) = t32 * t92 - pitch_u_dot * t7 * t95 + t7 * t17 * t80 -
-               t7 * t25 * t83 - pitch_u_dot * t25 * t32 * t59 +
-               pitch_u_dot * t17 * t32 * (t53 + t55 - t61) +
+  Gdot(1, 0) =
+      t6 * t7 * t88 - l_dot * t7 * t24 * t73 - pitch_u_dot * t6 * t32 * t73 - t6 * t17 * t32 * t68 +
+      t6 * t25 * t32 * t71 - l_dot * t24 * t25 * t30 * t32 - pitch_u_dot * t6 * t7 * t17 * t33 +
+      l_dot * t17 * t24 * t32 * (t28 - t74) + pitch_u_dot * t6 * t7 * t25 * (t29 - t75) +
+      roll_u_dot * t6 * t17 * t32 * (t29 - t75) + roll_u_dot * t6 * t25 * t32 * (t28 - t74);
+  Gdot(1, 1) = t6 * t7 * t92 + l_dot * t7 * t24 * t95 + pitch_u_dot * t6 * t32 * t95 -
+               t6 * t17 * t32 * t80 + t6 * t25 * t32 * t83 +
+               l_dot * t24 * t25 * t32 * (t57 + t58 - t60) +
+               pitch_u_dot * t6 * t7 * t17 * (t53 + t55 - t61) - l_dot * t17 * t24 * t32 * t56 -
+               pitch_u_dot * t6 * t7 * t25 * t59 - roll_u_dot * t6 * t17 * t32 * t59 -
+               roll_u_dot * t6 * t25 * t32 * t56;
+  Gdot(2, 0) = t32 * t88 + t7 * t17 * t68 - t7 * t25 * t71 + pitch_u_dot * t7 * (t72 - t89) -
+               pitch_u_dot * t17 * t32 * t33 - roll_u_dot * t7 * t17 * t30 -
+               roll_u_dot * t7 * t25 * t33 + pitch_u_dot * t25 * t32 * (t29 - t75);
+  Gdot(2, 1) = t32 * t92 - pitch_u_dot * t7 * t95 + t7 * t17 * t80 - t7 * t25 * t83 -
+               pitch_u_dot * t25 * t32 * t59 + pitch_u_dot * t17 * t32 * (t53 + t55 - t61) +
                roll_u_dot * t7 * t17 * (t57 + t58 - t60) +
                roll_u_dot * t7 * t25 * (t53 + t55 - t61);
 
@@ -886,4 +853,4 @@ MatrixXd sPu2u1::compute_loopclosure_Jacobiandot_UPS_leg(
   return Gdot;
 }
 
-} // namespace SPU2U1
+}  // namespace SPU2U1
