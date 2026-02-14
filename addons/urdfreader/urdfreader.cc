@@ -1311,18 +1311,17 @@ RBDL_ADDON_DLLAPI bool URDFReadFromStringWithModularity(const char* model_xml_st
 }
 */
 
-/*
 // Transmission LCF
-bool URDFReadLoopClosureFunctionTransmission(const char* filename, MatrixN_t& G, VectorN_t& offset,
-                                             const std::vector<std::string>& actuated_joint_names,
-                                             const std::vector<std::string>& tree_joint_names) {
+bool URDFReadLoopClosureFunctionTransmission(
+    const char* filename, MatrixN_t& G, VectorN_t& offset,
+    const std::vector<std::string>& independent_joint_names,
+    const std::vector<std::string>& tree_joint_names, bool verbose) {
   ifstream model_file(filename);
   if (!model_file) {
     ostringstream error_msg;
     error_msg << "Error opening file '" << filename << "'." << endl;
     throw RBDLFileParseError(error_msg.str());
   }
-
   // reserve memory for the contents of the file
   string model_xml_string;
   model_file.seekg(0, std::ios::end);
@@ -1334,7 +1333,7 @@ bool URDFReadLoopClosureFunctionTransmission(const char* filename, MatrixN_t& G,
 
   std::vector<TransmissionInfo> transmissions;
   TransmissionParser parser_obj;
-  parser_obj.parse(model_xml_string, transmissions);
+  parser_obj.Parse(model_xml_string, transmissions);
   if (verbose) {
     cout << "No. of transmissions: " << transmissions.size() << endl;
     for (unsigned int i = 0; i < transmissions.size(); i++) {
@@ -1360,12 +1359,11 @@ bool URDFReadLoopClosureFunctionTransmission(const char* filename, MatrixN_t& G,
 
   // Check if spanning tree joints size equals to actuated joints size
   if (tree_joint_names.size() == independent_joint_names.size()) {
-    ostringstream error_msg;
-    error_msg
-        << "Number of tree joints equals to number of actuators. Calling this function has no "
-           "meaning! Note: Spanning tree joints should always contain the active joints."
-        << endl;
-    throw RBDLFileParseError(error_msg.str());
+    cerr << "Number of tree joints equals to number of actuators. Calling this "
+            "function has no meaning! Note: Spanning tree joints should always "
+            "contain the active joints."
+         << endl;
+    return false;
   }
 
   // Build matrix G and vector offset
@@ -1395,7 +1393,7 @@ bool URDFReadLoopClosureFunctionTransmission(const char* filename, MatrixN_t& G,
 
   return true;
 }
-*/
+
 }  // namespace Addons
 
 }  // namespace RigidBodyDynamics

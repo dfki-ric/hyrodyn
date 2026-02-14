@@ -78,10 +78,10 @@ RBDL_ADDON_DLLAPI bool PartialURDFReadFromString(const char* model_xml_string, M
 //     const char* filename, const std::vector<std::string>& joint_names_respecting_modularity,
 //     VectorN_t& q_max, VectorN_t& q_min, VectorN_t& vel_limit, VectorN_t& effort_limit);
 
-// RBDL_ADDON_DLLAPI bool URDFReadLoopClosureFunctionTransmission(
-//     const char* filename, MatrixN_t& G, VectorN_t& offset,
-//     const std::vector<std::string>& actuated_joint_names,
-//     const std::vector<std::string>& tree_joint_names);
+RBDL_ADDON_DLLAPI bool URDFReadLoopClosureFunctionTransmission(
+    const char* filename, MatrixN_t& G, VectorN_t& offset,
+    const std::vector<std::string>& independent_joint_names,
+    const std::vector<std::string>& tree_joint_names, bool verbose = false);
 
 // RBDL_ADDON_DLLAPI bool URDFReadFromStringWithModularity(const char* model_xml_string, Model*
 // model,
