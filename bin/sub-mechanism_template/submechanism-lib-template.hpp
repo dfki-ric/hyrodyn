@@ -8,8 +8,8 @@
 #ifndef mech_type_cap_H
 #define mech_type_cap_H
 
+#include <addons/urdfreader/urdfreader.h>
 #include <math.h>
-#include <rbdl/addons/urdfreader/urdfreader.h>
 #include <rbdl/rbdl.h>
 #include <stdio.h>
 #include <string.h>

@@ -1,8 +1,8 @@
 #ifndef PARALLELOGRAMCHAIN_H
 #define PARALLELOGRAMCHAIN_H
 
+#include <addons/urdfreader/urdfreader.h>
 #include <math.h>
-#include <rbdl/addons/urdfreader/urdfreader.h>
 #include <rbdl/rbdl.h>
 #include <stdio.h>
 #include <string.h>

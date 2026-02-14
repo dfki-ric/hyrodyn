@@ -9,8 +9,8 @@
 #ifndef R3US2_H
 #define R3US2_H
 
+#include <addons/urdfreader/urdfreader.h>
 #include <math.h>
-#include <rbdl/addons/urdfreader/urdfreader.h>
 #include <rbdl/rbdl.h>
 #include <stdio.h>
 #include <string.h>

@@ -1,7 +1,9 @@
 #ifndef SUBMECHANISMSASSEMBLY_H
 #define SUBMECHANISMSASSEMBLY_H
 
+#include <addons/urdfreader/urdfreader.h>
 #include <limits.h>
+#include <math.h>
 #include <rbdl/rbdl.h>
 #include <string.h>
 #include <unistd.h>
@@ -9,12 +11,6 @@
 #include <algorithm>
 #include <fstream>
 #include <iostream>
-
-#ifndef RBDL_BUILD_ADDON_URDFREADER
-#error "Error: RBDL addon URDFReader not enabled."
-#endif
-#include <math.h>
-#include <rbdl/addons/urdfreader/urdfreader.h>
 
 #include "ExplicitLoopConstraints.hpp"
 #include "HyRoDyn.hpp"

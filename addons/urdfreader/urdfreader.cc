@@ -504,6 +504,7 @@ RBDL_ADDON_DLLAPI bool PartialURDFReadFromString(const char* model_xml_string, M
 }
 // Finished as same
 
+/*
 RBDL_ADDON_DLLAPI bool URDFReadLoopClosureFunction(
     const char* filename, MatrixN_t& G, VectorN_t& offset, MatrixN_t& Gu,
     const std::vector<std::string>& actuated_joint_names,
@@ -772,100 +773,6 @@ RBDL_ADDON_DLLAPI bool URDFReadJointLimits(
       y++;
     }
   }
-
-  /* // Working approach
-  ifstream model_file (filename);
-  if (!model_file) {
-          cerr << "Error opening file '" << filename << "'." << endl;
-          abort();
-  }
-
-  // reserve memory for the contents of the file
-  string model_xml_string;
-  model_file.seekg(0, std::ios::end);
-  model_xml_string.reserve(model_file.tellg());
-  model_file.seekg(0, std::ios::beg);
-  model_xml_string.assign((std::istreambuf_iterator<char>(model_file)),
-  std::istreambuf_iterator<char>()); model_file.close();
-
-  // Parse URDF
-  ModelPtr urdf_model = urdf::parseURDF (model_xml_string);
-
-  LinkPtr urdf_root_link;
-
-  URDFLinkMap link_map;
-  link_map = urdf_model->links_;
-
-  URDFJointMap joint_map;
-  joint_map = urdf_model->joints_;
-
-  vector<string> joint_names;
-
-  stack<LinkPtr > link_stack;
-  stack<int> joint_index_stack;
-
-  // add the bodies in a depth-first order of the model tree
-  link_stack.push (link_map[(urdf_model->getRoot()->name)]);
-
-  // add the root body
-  ConstLinkPtr& root = urdf_model->getRoot ();
-
-  // depth first traversal: push the first child onto our joint_index_stack
-  joint_index_stack.push(0);
-
-  while (link_stack.size() > 0) {
-          LinkPtr cur_link = link_stack.top();
-          unsigned int joint_idx = joint_index_stack.top();
-
-          if (joint_idx < cur_link->child_joints.size()) {
-                  JointPtr cur_joint = cur_link->child_joints[joint_idx];
-
-                  // increment joint index
-                  joint_index_stack.pop();
-                  joint_index_stack.push (joint_idx + 1);
-
-                  link_stack.push (link_map[cur_joint->child_link_name]);
-                  joint_index_stack.push(0);
-
-                  joint_names.push_back(cur_joint->name);
-          } else {
-                  link_stack.pop();
-                  joint_index_stack.pop();
-          }
-  }
-
-  unsigned int y = 0;
-  std::vector<string> tree_joint_names;
-
-  for (unsigned int z = 0; z < joint_names.size(); z++) {
-          JointPtr urdf_joint = joint_map[joint_names[z]];
-          if(urdf_joint->type == urdf::Joint::FLOATING){
-          cout<<"Floating base systems are not supported yet."<<endl;
-          return false;
-          }
-          if(urdf_joint->type == urdf::Joint::PLANAR){
-          cout<<"Planar joints are not yet supported in RBDL URDF parsing."<<endl;
-          return false;
-          }
-          if(!(urdf_joint->type == urdf::Joint::FIXED)){
-                  tree_joint_names.push_back(joint_names[z]);
-          }
-  }
-
-  // Allocate size and set zeros
-  q_max.setZero(tree_joint_names.size());
-  q_min.setZero(tree_joint_names.size());
-  vel_limit.setZero(tree_joint_names.size());
-  effort_limit.setZero(tree_joint_names.size());
-
-  for (unsigned int y = 0; y < tree_joint_names.size(); y++) {
-          JointPtr urdf_tree_joint = joint_map[tree_joint_names[y]];
-          q_min(y) = urdf_tree_joint->limits->lower;
-          q_max(y) = urdf_tree_joint->limits->upper;
-          vel_limit(y) = urdf_tree_joint->limits->velocity;
-          effort_limit(y) = urdf_tree_joint->limits->effort;
-  }
-  */
   return true;
 }
 
@@ -988,43 +895,6 @@ bool construct_model_with_modularity(Model* rbdl_model, ModelPtr urdf_model,
   // if there is a fixed joint found, insert it into the joint names respecting modularity vector so
   // that user does not have to define in submechanisms.yml file
 
-  /*
-  // idea: find the indices between which fixed joint is contained and insert into
-  joint_names_respecting_modularity accordingly. std::vector<string> fixed_jointnames; for (unsigned
-  int j = 0; j < joint_names.size(); j++) { JointPtr urdf_joint = joint_map[joint_names[j]]; if
-  (urdf_joint->type == urdf::Joint::FIXED) { fixed_jointnames.push_back(joint_names[j]);
-                  cout<<"fixed joint found: "<<joint_names[j]<<endl;
-                  if (std::find(joint_names_respecting_modularity.begin(),
-  joint_names_respecting_modularity.end(), joint_names[j+1]) !=
-  joint_names_respecting_modularity.end())
-                  {
-                    auto it = std::find(joint_names_respecting_modularity.begin(),
-  joint_names_respecting_modularity.end(), joint_names[j+1]); auto index =
-  std::distance(joint_names_respecting_modularity.begin(), it); cout<<"successor joint with name
-  "<<joint_names[j+1]<<" to fixed joint found at "<<index<<endl;
-                    joint_names_respecting_modularity.insert(joint_names_respecting_modularity.begin()+index,
-  joint_names[j]);
-                  }
-                  else
-                  joint_names_respecting_modularity.insert(joint_names_respecting_modularity.begin()+j,
-  joint_names[j]);	// for fixed transformation to ee link
-
-                  //if (std::find(joint_names_respecting_modularity.begin(),
-  joint_names_respecting_modularity.end(), joint_names[j-1]) !=
-  joint_names_respecting_modularity.end())
-                  //{
-                    //auto it = std::find(joint_names_respecting_modularity.begin(),
-  joint_names_respecting_modularity.end(), joint_names[j-1]);
-                    //auto index = std::distance(joint_names_respecting_modularity.begin(), it);
-                    //cout<<"predecessor joint with name "<<joint_names[j-1]<<" to fixed joint found
-  at "<<index<<endl;
-                    ////joint_names_respecting_modularity.insert(joint_names_respecting_modularity.begin()+index,
-  joint_names[j]);
-                  //}
-          }
-  }
-  */
-
   // Fixed joint processing is used when joint_names_respecting_modularity vector (joint names
   // provided by the submechanism definition) size is different from joint_names vector (joint names
   // extracted from the URDF) size.
@@ -1131,11 +1001,7 @@ bool construct_model_with_modularity(Model* rbdl_model, ModelPtr urdf_model,
                  << ", successor joint does not exist " << endl;
           }
         }
-        /*
-        cout<<"Joint names respecting modularity with fixed joints(not final): "<<endl;
-        for (unsigned int j = 0; j < joint_names_respecting_modularity.size(); j++)
-                cout<<"j: "<<j<<" "<<joint_names_respecting_modularity[j]<<endl;
-        */
+
         unsigned int index_predecessor = 0, index_successor = 0;
 
         if (std::find(joint_names_respecting_modularity.begin(),
@@ -1163,21 +1029,6 @@ bool construct_model_with_modularity(Model* rbdl_model, ModelPtr urdf_model,
           }
           index_successor = index_s;
         }
-        /*
-                                cout<<"jn="<<jn<<"index_predecessor"<<index_predecessor<<"joint
-           names respecting modularity size"<<joint_names_respecting_modularity.size()<<endl;
-
-                                if(index_predecessor>jn){
-                                        joint_names_respecting_modularity.insert(joint_names_respecting_modularity.begin()+index_predecessor+1,
-           fixed_jointnames_inbetween.begin(), fixed_jointnames_inbetween.end()); cout<<"Fixed joint
-           successfully inserted after predecessor joint name"<<endl; temp.insert(temp.end(),
-           fixed_jointnames_inbetween.begin(), fixed_jointnames_inbetween.end()); } else{
-                                  joint_names_respecting_modularity.insert(joint_names_respecting_modularity.begin()+index_successor,
-           fixed_jointnames_inbetween.begin(), fixed_jointnames_inbetween.end()); cout<<"Fixed joint
-           successfully inserted after successor joint name"<<endl; temp.insert(temp.end(),
-           fixed_jointnames_inbetween.begin(), fixed_jointnames_inbetween.end());
-                                }
-                                */
         if (index_predecessor < index_successor) {
           joint_names_respecting_modularity.insert(
               joint_names_respecting_modularity.begin() + index_successor,
@@ -1415,7 +1266,8 @@ bool construct_model_with_modularity(Model* rbdl_model, ModelPtr urdf_model,
   cout << "URDF parsed successfully" << endl;
   return true;
 }
-
+*/
+/*
 RBDL_ADDON_DLLAPI bool URDFReadFromFileWithModularity(const char* filename, Model* model,
                                                       const std::vector<std::string>& joint_names,
                                                       bool floating_base, bool verbose = false) {
@@ -1457,7 +1309,9 @@ RBDL_ADDON_DLLAPI bool URDFReadFromStringWithModularity(const char* model_xml_st
 
   return true;
 }
+*/
 
+/*
 // Transmission LCF
 bool URDFReadLoopClosureFunctionTransmission(const char* filename, MatrixN_t& G, VectorN_t& offset,
                                              const std::vector<std::string>& actuated_joint_names,
@@ -1541,7 +1395,7 @@ bool URDFReadLoopClosureFunctionTransmission(const char* filename, MatrixN_t& G,
 
   return true;
 }
-
+*/
 }  // namespace Addons
 
 }  // namespace RigidBodyDynamics

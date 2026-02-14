@@ -2,8 +2,8 @@
 #define NUMERICALLOOPCONSTRAINTS_H
 
 // Author: Rohit Kumar
+#include <addons/urdfreader/urdfreader.h>
 #include <math.h>
-#include <rbdl/addons/urdfreader/urdfreader.h>
 #include <rbdl/rbdl.h>
 #include <stdio.h>
 #include <string.h>

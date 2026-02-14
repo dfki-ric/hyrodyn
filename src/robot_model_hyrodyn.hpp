@@ -1,6 +1,7 @@
 #ifndef _HYRODYN_RH5_ROBOT_MODEL_HYRODYN_HPP_
 #define _HYRODYN_RH5_ROBOT_MODEL_HYRODYN_HPP_
 
+#include <addons/urdfreader/urdfreader.h>
 #include <math.h>
 #include <rbdl/rbdl.h>
 #include <string.h>
@@ -10,11 +11,6 @@
 #include <algorithm>
 #include <fstream>
 #include <iostream>
-
-#ifndef RBDL_BUILD_ADDON_URDFREADER
-#error "Error: RBDL addon URDFReader not enabled."
-#endif
-#include <rbdl/addons/urdfreader/urdfreader.h>
 
 #include "HyRoDyn.hpp"
 #include "SubmechanismsAssembly.hpp"

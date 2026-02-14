@@ -1,6 +1,7 @@
 #ifndef SPRR2U1_H
 #define SPRR2U1_H
 
+#include <addons/urdfreader/urdfreader.h>
 #include <math.h>
 #include <rbdl/rbdl.h>
 #include <stdio.h>
@@ -10,11 +11,6 @@
 #include <Eigen/Dense>
 #include <fstream>
 #include <iostream>
-
-#ifndef RBDL_BUILD_ADDON_URDFREADER
-#error "Error: RBDL addon URDFReader not enabled."
-#endif
-#include <rbdl/addons/urdfreader/urdfreader.h>
 
 #include "ExplicitLoopConstraints.hpp"
 

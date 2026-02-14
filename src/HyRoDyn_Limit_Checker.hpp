@@ -14,12 +14,9 @@ using namespace std;
 using Eigen::MatrixXd;
 using Eigen::VectorXd;
 
-#include "robot_model_hyrodyn.hpp"
+#include <addons/urdfreader/urdfreader.h>
 
-#ifndef RBDL_BUILD_ADDON_URDFREADER
-#error "Error: RBDL addon URDFReader not enabled."
-#endif
-#include <rbdl/addons/urdfreader/urdfreader.h>
+#include "robot_model_hyrodyn.hpp"
 
 using namespace hyrodyn;
 
