@@ -35,20 +35,21 @@
 
 #pragma once
 
-#include "transmission_info.h"
-
-// XML
 #include <tinyxml.h>
+
+#include <string>
+#include <vector>
+
+#include "transmission_info.h"
 
 namespace transmission_interface {
 
 class TransmissionParser {
  public:
-  static bool parse(const std::string& urdf_string, std::vector<TransmissionInfo>& transmissions);
+  static bool Parse(const std::string& urdfString, std::vector<TransmissionInfo>& transmissions);
 
- protected:
-  static bool parseCustomTransmission(TiXmlElement* trans_it, std::vector<JointInfo>& joints);
-
-};  // class
+ private:
+  static bool ParseCustomTransmission(TiXmlElement* transIt, std::vector<JointInfo>& joints);
+};
 
 }  // namespace transmission_interface

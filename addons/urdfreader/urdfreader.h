@@ -4,6 +4,9 @@
 #include <rbdl/rbdl_config.h>
 #include <rbdl/rbdl_math.h>
 
+#include <string>
+#include <vector>
+
 namespace RigidBodyDynamics {
 
 struct Model;
@@ -60,27 +63,33 @@ RBDL_ADDON_DLLAPI bool PartialURDFReadFromString(const char* model_xml_string, M
                                                  const std::vector<std::string>& tip_links,
                                                  bool floating_base, bool verbose = false);
 
-RBDL_DLLAPI bool URDFReadLoopClosureFunction(const char* filename, MatrixN_t& G, VectorN_t& offset,
-                                             MatrixN_t& Gu,
-                                             std::vector<std::string>& actuated_joint_names,
-                                             std::vector<std::string>& tree_joint_names);
-RBDL_DLLAPI bool URDFReadLoopClosureFunctionExterior(const char* filename, MatrixN_t& G,
-                                                     VectorN_t& offset,
-                                                     std::vector<std::string> actuated_joint_names,
-                                                     std::vector<std::string> tree_joint_names);
-RBDL_DLLAPI bool URDFReadLoopClosureFunctionTransmission(
+// HyRoDyn Specific Parser
+RBDL_ADDON_DLLAPI bool URDFReadLoopClosureFunction(
+    const char* filename, MatrixN_t& G, VectorN_t& offset, MatrixN_t& Gu,
+    const std::vector<std::string>& actuated_joint_names,
+    const std::vector<std::string>& tree_joint_names);
+
+RBDL_ADDON_DLLAPI bool URDFReadLoopClosureFunctionExterior(
     const char* filename, MatrixN_t& G, VectorN_t& offset,
-    std::vector<std::string>& actuated_joint_names, std::vector<std::string>& tree_joint_names);
-RBDL_DLLAPI bool URDFReadJointLimits(const char* filename,
-                                     std::vector<std::string> joint_names_respecting_modularity,
-                                     VectorN_t& q_max, VectorN_t& q_min, VectorN_t& vel_limit,
-                                     VectorN_t& effort_limit);
-RBDL_DLLAPI bool URDFReadFromFileWithModularity(const char* filename, Model* model,
-                                                std::vector<std::string> joint_names,
-                                                bool floating_base, bool verbose = false);
-RBDL_DLLAPI bool URDFReadFromStringWithModularity(const char* model_xml_string, Model* model,
-                                                  std::vector<std::string> joint_names,
-                                                  bool floating_base, bool verbose = false);
+    const std::vector<std::string>& actuated_joint_names,
+    const std::vector<std::string>& tree_joint_names);
+
+RBDL_ADDON_DLLAPI bool URDFReadJointLimits(
+    const char* filename, const std::vector<std::string>& joint_names_respecting_modularity,
+    VectorN_t& q_max, VectorN_t& q_min, VectorN_t& vel_limit, VectorN_t& effort_limit);
+
+RBDL_ADDON_DLLAPI bool URDFReadLoopClosureFunctionTransmission(
+    const char* filename, MatrixN_t& G, VectorN_t& offset,
+    const std::vector<std::string>& actuated_joint_names,
+    const std::vector<std::string>& tree_joint_names);
+
+RBDL_ADDON_DLLAPI bool URDFReadFromStringWithModularity(const char* model_xml_string, Model* model,
+                                                        const std::vector<std::string>& joint_names,
+                                                        bool floating_base, bool verbose = false);
+
+RBDL_ADDON_DLLAPI bool URDFReadFromFileWithModularity(const char* filename, Model* model,
+                                                      const std::vector<std::string>& joint_names,
+                                                      bool floating_base, bool verbose = false);
 
 }  // namespace Addons
 

@@ -4,6 +4,7 @@ set(TARGET_NAME hyrodyn)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_BUILD_TYPE Release)
 
 option(BUILD_PYTHON_BINDINGS "Build Python bindings using pybind11" ON)
 option(RBDL_PKG_CONFIG_PATH "Custom path to RBDL's PkgConfig directory" "")
@@ -34,7 +35,6 @@ set_target_properties(hyrodyn PROPERTIES POSITION_INDEPENDENT_CODE ON)
 # Include directories (RBDL install path)
 target_include_directories(hyrodyn PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
-    # ${CMAKE_CURRENT_SOURCE_DIR}/src
     ${EIGEN3_INCLUDE_DIR}
     ${RBDL_INSTALL_DIR}/include
 )
