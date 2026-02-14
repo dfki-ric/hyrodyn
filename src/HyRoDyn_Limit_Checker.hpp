@@ -107,8 +107,8 @@ class HyRoDyn_Limit_Checker {
     \param filepath_urdf string file path to URDF.
     \param filepath_submechanisms string file path to submechanisms yml
   */
-  HyRoDyn_Limit_Checker(string filepath_urdf,
-                        string filepath_submechanisms);  // constructor
+  HyRoDyn_Limit_Checker(string filepath_urdf, string filepath_submechanisms,
+                        bool verbose = false);  // constructor
 
   /** \brief Compares two eigen vectors element-wise (returns true if vector
    * values are within min-max limits, otherwise false)

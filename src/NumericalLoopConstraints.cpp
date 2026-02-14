@@ -7,8 +7,7 @@ namespace NUMERICALLOOPCONSTRAINTS {
 NumericalLoopConstraints::NumericalLoopConstraints(
     const string& file_path, const std::vector<string>& jointnames_spanningtree,
     const std::vector<string>& jointnames_independent, const std::vector<string>& jointnames_active,
-    const std::vector<Loop_constraints>& loop_constraints_set) {
-  cout << "NumericalLoopConstraint Constructor Called" << endl;
+    const std::vector<Loop_constraints>& loop_constraints_set, bool verbose) {
   const char* ext;
   ext = strrchr(file_path.c_str(), '.');
 
@@ -39,7 +38,6 @@ NumericalLoopConstraints::NumericalLoopConstraints(
   Vector3d pos_pk, pos_sk;
 
   dof_spanningtree = jointnames_spanningtree.size();
-  cout << "DOF: " << m.dof_count << endl;
 
   Q = VectorNd::Zero(m.dof_count);
   QDot = VectorNd::Zero(m.dof_count);
@@ -94,7 +92,6 @@ NumericalLoopConstraints::NumericalLoopConstraints(
     }
   }
   cs.Bind(m);
-  cout << "Constraint set size: " << cs.size() << endl;
 
   // Set the matrices to zero
   K = MatrixNd::Zero(cs.size(), m.dof_count);
@@ -128,15 +125,17 @@ NumericalLoopConstraints::NumericalLoopConstraints(
   if (!assembly_success) {
     cerr << "WARNING: computation of assembly Q was not successful." << endl;
     abort();
-  } else {
-    cout << "Initial Q: " << Q.transpose() << endl;
   }
   // Test in zero position.
   VectorNd err(VectorNd::Zero(cs.size()));
   CalcConstraintsPositionError(m, Q, cs, err);
-  cout << "Initial position error: " << err.transpose() << endl;
-
-  cout << "Numerical Constructor executed successfully" << endl;
+  if (verbose) {
+    cout << "DOF: " << m.dof_count << endl;
+    cout << "Constraint set size: " << cs.size() << endl;
+    cout << "Initial Q: " << Q.transpose() << endl;
+    cout << "Initial position error: " << err.transpose() << endl;
+    cout << "Numerical Constructor executed successfully" << endl;
+  }
 }
 
 VectorXd NumericalLoopConstraints::calc_loopclosure_function(const ::VectorNd& y) {
@@ -144,26 +143,17 @@ VectorXd NumericalLoopConstraints::calc_loopclosure_function(const ::VectorNd& y
   QInit = independent_joints_selection_matrix.transpose() * y +
           dependent_joints_selection_matrix.transpose() * dependent_joints_selection_matrix * Q;
   succ = CalcAssemblyQ(m, QInit, cs, Q, weights);
-  // std::cout << "\n G : \n" << G << std::endl;
-  // Q = G * y;
-  // succ = true;
-  // succ = CalcAssemblyQwithEnergy(m, QInit, QDot, cs, Q, weights);
   if (succ) {
     internal_y = y;
     return Q;
   } else {
-    cerr << "Assembly of Q was not succeessfull through numerical approach. "
-            "The initial condition can be too far from the desired one."
-         << endl;
     VectorNd err(VectorNd::Zero(cs.size()));
     CalcConstraintsPositionError(m, Q, cs, err);
     cout << "Position error: " << err.transpose() << "\nQ: \n" << Q << endl;
     cerr << "y : " << y.transpose() << endl;
-    abort();
-    // cerr << "Internal Qdot : " << QDot.transpose() << endl;
-    // cerr << "Internal QInit : " << QInit.transpose() << endl;
-    // Q = calc_loopclosure_Jacobian(y) * y;
-    // succ = CalcAssemblyQwithEnergy(m, QInit, QDot, cs, Q, weights);
+    throw std::runtime_error(
+        "Assembly of Q was not succeessfull through numerical approach. The "
+        "initial condition can be too far from the desired one.");
     // return Q;
   }
 }
@@ -171,15 +161,12 @@ VectorXd NumericalLoopConstraints::calc_loopclosure_function(const ::VectorNd& y
 MatrixXd NumericalLoopConstraints::calc_loopclosure_Jacobian(const ::VectorNd& y) {
   if (internal_y.isApprox(y)) {
     CalcConstraintsJacobian(m, Q, cs, K);
-    // cout<<"Called Q before" <<endl;
   } else {
     Q = calc_loopclosure_function(y);
     CalcConstraintsJacobian(m, Q, cs, K);
   }
   G = calc_G_from_K(K);
   internal_G = G;
-  // std::cout << "K \n" << K << std::endl;
-  // std::cout << "G \n" << G << std::endl;
   return G;
 }
 
@@ -187,7 +174,6 @@ VectorXd NumericalLoopConstraints::calc_loopclosure_g(const ::VectorNd& y, const
   if (G.isApprox(internal_G)) {
     Q = calc_loopclosure_function(y);
     QDot = G * ydot;
-    // cout<<"Called G before"<<endl;
   } else {
     G = calc_loopclosure_Jacobian(y);
     QDot = G * ydot;

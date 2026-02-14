@@ -69,7 +69,8 @@ class HyRoDyn_Utils {
  public:
   /// \brief Constructor for the HyRoDyn_Utils class
   HyRoDyn_Utils(string filepath_urdf, string filepath_submechanisms, string filepath_jointlimits,
-                int num_steps_per_joint = 5);  // constructor
+                int num_steps_per_joint = 5,
+                bool verbose = false);  // constructor
 
   /// \brief Generates the full configuration space (all the joints in the
   /// spanning tree) of the mechanism

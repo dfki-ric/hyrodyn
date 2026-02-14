@@ -186,7 +186,7 @@ class SubmechanismsAssembly : public ExplicitLoopConstraints::ExplicitLoopConstr
 
   //! Constructor of the SubmechanismsAssembly class
   SubmechanismsAssembly(std::vector<submechanism> to_assemble,
-                        std::vector<exoskeleton> to_externally_attach);
+                        std::vector<exoskeleton> to_externally_attach, bool verbose = false);
   // Interface for abstract class i.e. ExplicitLoopConstraintSet
   /** \brief Returns spanning tree state at position (q) level from independent
    * joint position (y) by solving the loop closure function

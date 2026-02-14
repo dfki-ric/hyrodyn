@@ -241,7 +241,7 @@ class RobotModel_HyRoDyn {
 
   //! Print a welcome to stdout
   void welcome();
-  void load_submechanisms_yaml(string filepath);
+  void load_submechanisms_yaml(string filepath, bool verbose);
   //! Loads the urdf and submechanism.yml file to create the hyrodyn robot model
   /*!
     \param filepath_urdf string file path to URDF.
@@ -253,7 +253,7 @@ class RobotModel_HyRoDyn {
     [0,0,-9.81])
   */
   void set_gravity_vector(Vector3d gravity_vector);
-  void load_robotmodel(string filepath_urdf, string filepath_submechanisms);
+  void load_robotmodel(string filepath_urdf, string filepath_submechanisms, bool verbose = false);
   //! Loads a smurf file and parses from it the urdf and submechanisms file to
   //! then create a RobotModel_HyRoDyn instance
   void load_smurf(string filepath_smurf);

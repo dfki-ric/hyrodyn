@@ -25,7 +25,8 @@ std::string getexepath()
 
 // constructor
 SubmechanismsAssembly::SubmechanismsAssembly(std::vector<submechanism> to_assemble,
-                                             std::vector<exoskeleton> to_externally_attach) {
+                                             std::vector<exoskeleton> to_externally_attach,
+                                             bool verbose) {
   // Add the name of the parallel submechanisms that are known to the solver
   available_parallelsubmechanisms.push_back("rrPr");
   available_parallelsubmechanisms.push_back("2SPRR+1U");
@@ -123,7 +124,9 @@ SubmechanismsAssembly::SubmechanismsAssembly(std::vector<submechanism> to_assemb
   // dof_independent_robot << endl;
 
   for (unsigned int i = 0; i < assembly.size(); i++) {
-    cout << "Loading submechanism URDF at index " << i << endl;
+    if (verbose) {
+      cout << "Loading submechanism URDF at index " << i << endl;
+    }
     if (std::find(available_parallelsubmechanisms.begin(), available_parallelsubmechanisms.end(),
                   assembly[i].type) != available_parallelsubmechanisms.end()) {
       if (assembly[i].file_path == "") {
@@ -170,12 +173,12 @@ SubmechanismsAssembly::SubmechanismsAssembly(std::vector<submechanism> to_assemb
             assembly[i].jointnames_independent));
 
       else if (assembly[i].type == "NUMERICAL") {
-        cout << "Let's do it." << endl;
+        // cout << "Let's do it." << endl;
         submechanism_constraint_set.push_back(
             new NUMERICALLOOPCONSTRAINTS::NumericalLoopConstraints(
                 assembly[i].file_path, assembly[i].jointnames_spanningtree,
                 assembly[i].jointnames_independent, assembly[i].jointnames_active,
-                assembly[i].loop_constraints_submech));
+                assembly[i].loop_constraints_submech, verbose));
       }
 
       else {

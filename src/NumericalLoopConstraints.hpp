@@ -130,7 +130,8 @@ class NumericalLoopConstraints : public ExplicitLoopConstraints::ExplicitLoopCon
                            const std::vector<string>& jointnames_spanningtree,
                            const std::vector<string>& jointnames_independent,
                            const std::vector<string>& jointnames_active,
-                           const std::vector<Loop_constraints>& loop_contraints_set);
+                           const std::vector<Loop_constraints>& loop_contraints_set,
+                           bool verbose = false);
 
   /** \brief Returns spanning tree state at position (q) level from independent
    * joint position (y) by solving the loop closure function

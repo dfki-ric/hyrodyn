@@ -203,7 +203,7 @@ rpy_dot(2);
     return ydot_full;
 }
 */
-void RobotModel_HyRoDyn::load_submechanisms_yaml(string filepath) {
+void RobotModel_HyRoDyn::load_submechanisms_yaml(string filepath, bool verbose) {
   YAML::Node doc = YAML::LoadFile(filepath.c_str());
 
   std::size_t last_sep_pos = filepath.find_last_of('/');
@@ -222,7 +222,6 @@ void RobotModel_HyRoDyn::load_submechanisms_yaml(string filepath) {
   }
 
   const YAML::Node& submechanisms_node = doc["submechanisms"];
-
   cout << "Number of submechanisms found: " << submechanisms_node.size() << endl;
 
   if (submechanisms_node.size() == 0) {
@@ -303,8 +302,6 @@ void RobotModel_HyRoDyn::load_submechanisms_yaml(string filepath) {
       if (submechanisms_node[i]["loop_constraints"]) {
         // Parse loop constraints in the submechanisms.yml file
         const YAML::Node& loop_constraint_node = submechanisms_node[i]["loop_constraints"];
-        cout << "Loop constraints found for submechanism " << i + 1 << " :"
-             << loop_constraint_node.size() << endl;
 
         for (uint j = 0; j < loop_constraint_node.size(); j++) {
           // Added by Rohit Kumar
@@ -331,11 +328,8 @@ void RobotModel_HyRoDyn::load_submechanisms_yaml(string filepath) {
           }
 
           const YAML::Node& constraint_dof_node = loop_constraint_node[j]["constraint_axes"];
-          cout << "Number of constraints found for loop constraint " << j + 1 << " :"
-               << constraint_dof_node.size() << endl;
           for (uint k = 0; k < constraint_dof_node.size(); k++) {
             NUMERICALLOOPCONSTRAINTS::Constraint_dof cons_dof;
-            // cout<<"Inside constraint_axes" <<endl;
             std::vector<float> spatial_vector;
 
             if (constraint_dof_node[k]["name"]) {
@@ -421,39 +415,42 @@ void RobotModel_HyRoDyn::load_submechanisms_yaml(string filepath) {
 
   // jointnames_spanningtree = jointnames;
 
-  // Print the submechanism details
-  for (unsigned int i = 0; i < assembly.size(); i++) assembly[i].print_submechanism_details();
+  if (verbose) {
+    // Print the submechanism details
+    for (unsigned int i = 0; i < assembly.size(); i++) assembly[i].print_submechanism_details();
 
-  // Print the exoskeleton details
-  for (unsigned int i = 0; i < exteriors.size(); i++) exteriors[i].print_exoskeleton_details();
+    // Print the exoskeleton details
+    for (unsigned int i = 0; i < exteriors.size(); i++) exteriors[i].print_exoskeleton_details();
 
-  cout << "Modularly enumerated Joint Names in the Spanning Tree: " << endl;
-  cout << "Size: " << jointnames_spanningtree.size() << endl;
-  for (unsigned int i = 0; i < jointnames_spanningtree.size(); i++)
-    cout << jointnames_spanningtree[i] << endl;
+    cout << "Modularly enumerated Joint Names in the Spanning Tree: " << endl;
+    cout << "Size: " << jointnames_spanningtree.size() << endl;
+    for (unsigned int i = 0; i < jointnames_spanningtree.size(); i++)
+      cout << jointnames_spanningtree[i] << endl;
 
-  cout << "Modularly enumerated Active Joint Names: " << endl;
-  cout << "Size: " << jointnames_active.size() << endl;
-  for (unsigned int i = 0; i < jointnames_active.size(); i++) cout << jointnames_active[i] << endl;
+    cout << "Modularly enumerated Active Joint Names: " << endl;
+    cout << "Size: " << jointnames_active.size() << endl;
+    for (unsigned int i = 0; i < jointnames_active.size(); i++)
+      cout << jointnames_active[i] << endl;
 
-  cout << "Modularly enumerated Independent Joint Names: " << endl;
-  cout << "Size: " << jointnames_independent.size() << endl;
-  for (unsigned int i = 0; i < jointnames_independent.size(); i++)
-    cout << jointnames_independent[i] << endl;
+    cout << "Modularly enumerated Independent Joint Names: " << endl;
+    cout << "Size: " << jointnames_independent.size() << endl;
+    for (unsigned int i = 0; i < jointnames_independent.size(); i++)
+      cout << jointnames_independent[i] << endl;
 
-  // if jointnames is not defined in the submechanisms, assign the spanning tree
-  // joint names to the jointnames and use the hyrodyn fixed joint processing in
-  // the rbdl parser (Backward Compatibility).
-  if (jointnames.empty()) {
-    cout << "jointnames vector including the fixed joints is not initialized "
-            "in the submechanisms file. HyRoDyn will attempt automatic fixed "
-            "joint processing!"
-         << endl;
-    jointnames = jointnames_spanningtree;
-  } else {
-    cout << "Modularly enumerated Joint Names (including fixed joints): " << endl;
-    cout << "Size: " << jointnames.size() << endl;
-    for (unsigned int i = 0; i < jointnames.size(); i++) cout << jointnames[i] << endl;
+    // if jointnames is not defined in the submechanisms, assign the spanning
+    // tree joint names to the jointnames and use the hyrodyn fixed joint
+    // processing in the rbdl parser (Backward Compatibility).
+    if (jointnames.empty()) {
+      cout << "jointnames vector including the fixed joints is not initialized "
+              "in the submechanisms file. HyRoDyn will attempt automatic fixed "
+              "joint processing!"
+           << endl;
+      jointnames = jointnames_spanningtree;
+    } else {
+      cout << "Modularly enumerated Joint Names (including fixed joints): " << endl;
+      cout << "Size: " << jointnames.size() << endl;
+      for (unsigned int i = 0; i < jointnames.size(); i++) cout << jointnames[i] << endl;
+    }
   }
 }
 
@@ -785,47 +782,53 @@ double RobotModel_HyRoDyn::calculate_total_energy() {
   return calculate_kinetic_energy() + calculate_potential_energy();
 }
 
-void RobotModel_HyRoDyn::load_robotmodel(string filepath_urdf, string filepath_submechanisms) {
-  load_submechanisms_yaml(filepath_submechanisms);
+void RobotModel_HyRoDyn::load_robotmodel(string filepath_urdf, string filepath_submechanisms,
+                                         bool verbose) {
+  load_submechanisms_yaml(filepath_submechanisms, verbose);
 
-  if (!Addons::URDFReadFromFileWithModularity(filepath_urdf.c_str(), &m, jointnames, false)) {
+  if (!Addons::URDFReadFromFileWithModularity(filepath_urdf.c_str(), &m, jointnames, false,
+                                              false)) {
     std::cerr << "Error loading robot model from urdf" << std::endl;
     abort();
   }
-  cout << "Full spanning tree URDF loaded successfully!" << endl;
+  // cout << "Full spanning tree URDF loaded successfully!" << endl;
 
-  elcs = (new AssembleinHyRoDyn::SubmechanismsAssembly(assembly, exteriors));
+  elcs = (new AssembleinHyRoDyn::SubmechanismsAssembly(assembly, exteriors, verbose));
 
   spanningtree_dof = jointnames_spanningtree.size();
   active_dof = jointnames_active.size();
   independent_dof = jointnames_independent.size();
   floatingbase_dof = independent_dof - elcs->get_dof_independent_robot();
-  cout << "Active DoF count: " << active_dof << endl;
-  cout << "Independent DoF count: " << independent_dof << endl;
 
   Q = VectorNd::Zero(spanningtree_dof);
   QDot = VectorNd::Zero(spanningtree_dof);
   QDDot = VectorNd::Zero(spanningtree_dof);
 
-  cout << "Model DoF overview:" << Utils::GetModelDOFOverview(m) << endl;
-  cout << "Model Hierarchy overview:" << Utils::GetModelHierarchy(m) << endl;
-  cout << "Named Body Origins overview:" << Utils::GetNamedBodyOriginsOverview(m) << endl;
-  cout << "Gravity: " << endl << m.gravity << endl;
-  cout << "Spanning tree DoF count: " << m.dof_count << endl;
-
   double mass;
   Vector3d com;
   Utils::CalcCenterOfMass(m, Q, QDot, NULL, mass, com);
-  cout << "Total moving mass :" << mass << " Overall COM of the moving bodies:" << com.transpose()
-       << endl;
 
   y_zero = VectorNd::Zero(independent_dof);
   VectorNd yd_zero = VectorNd::Zero(independent_dof);
   VectorNd ydd_zero = VectorNd::Zero(independent_dof);
   VectorNd Tau_actuated_zero = VectorNd::Zero(active_dof);
 
-  cout << "Number of submechanisms in the robot: "
-       << dynamic_cast<AssembleinHyRoDyn::SubmechanismsAssembly*>(elcs)->assembly.size() << endl;
+  if (verbose) {
+    cout << "Active DoF count: " << active_dof << endl;
+    cout << "Independent DoF count: " << independent_dof << endl;
+
+    cout << "Model DoF overview:" << Utils::GetModelDOFOverview(m) << endl;
+    cout << "Model Hierarchy overview:" << Utils::GetModelHierarchy(m) << endl;
+    cout << "Named Body Origins overview:" << Utils::GetNamedBodyOriginsOverview(m) << endl;
+    cout << "Gravity: " << endl << m.gravity << endl;
+    cout << "Spanning tree DoF count: " << m.dof_count << endl;
+    cout << "Total moving mass :" << mass << " Overall COM of the moving bodies:" << com.transpose()
+         << endl;
+
+    cout << "Number of submechanisms in the robot: "
+         << dynamic_cast<AssembleinHyRoDyn::SubmechanismsAssembly*>(elcs)->assembly.size() << endl;
+  }
+
   for (unsigned int i = 0;
        i < dynamic_cast<AssembleinHyRoDyn::SubmechanismsAssembly*>(elcs)->assembly.size(); i++) {
     submechanism_active_dof_distribution.push_back(
@@ -842,17 +845,18 @@ void RobotModel_HyRoDyn::load_robotmodel(string filepath_urdf, string filepath_s
             .jointnames_independent.size());
   }
 
-  cout << "Gamma: " << endl << elcs->calc_loopclosure_function(y_zero) << endl;
+  cout << "Gamma: " << endl << elcs->calc_loopclosure_function(y_zero).transpose() << endl;
 
   cout << "G: " << endl << elcs->calc_loopclosure_Jacobian(y_zero) << endl;
 
-  cout << "g: " << endl << elcs->calc_loopclosure_g(y_zero, yd_zero) << endl;
+  cout << "g: " << endl << elcs->calc_loopclosure_g(y_zero, yd_zero).transpose() << endl;
 
   Tau_actuated_zero = HyRoDyn::calc_dynamicmodel_inverse(m, *elcs, y_zero, yd_zero, ydd_zero);
   std::cout << "Tau actuated for system: " << Tau_actuated_zero.transpose() << std::endl;
   if (!floating_base_robot)
     std::cout << "ydd for system: " << endl
               << HyRoDyn::calc_dynamicmodel_forward(m, *elcs, y_zero, yd_zero, Tau_actuated_zero)
+                     .transpose()
               << endl;
 
   y = VectorNd::Zero(independent_dof);

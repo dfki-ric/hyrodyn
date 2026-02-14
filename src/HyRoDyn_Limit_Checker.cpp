@@ -1,10 +1,11 @@
 #include "HyRoDyn_Limit_Checker.hpp"
 
-HyRoDyn_Limit_Checker::HyRoDyn_Limit_Checker(string filepath_urdf, string filepath_submechanisms) {
+HyRoDyn_Limit_Checker::HyRoDyn_Limit_Checker(string filepath_urdf, string filepath_submechanisms,
+                                             bool verbose) {
   robot_model = new RobotModel_HyRoDyn;
 
   // creates the robot model in hyrodyn
-  robot_model->load_robotmodel(filepath_urdf, filepath_submechanisms);
+  robot_model->load_robotmodel(filepath_urdf, filepath_submechanisms, verbose);
 
   VectorXd vel_limit;
   VectorXd effort_limit;

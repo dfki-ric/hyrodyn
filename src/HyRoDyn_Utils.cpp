@@ -57,12 +57,12 @@ std::string SplitRobotName(const std::string& str) {
 }
 
 HyRoDyn_Utils::HyRoDyn_Utils(string filepath_urdf, string filepath_submechanisms,
-                             string filepath_jointlimits, int num_steps_per_joint) {
+                             string filepath_jointlimits, int num_steps_per_joint, bool verbose) {
   robot_model = new RobotModel_HyRoDyn;
   num_steps = num_steps_per_joint;
 
   // creates the robot model in hyrodyn
-  robot_model->load_robotmodel(filepath_urdf, filepath_submechanisms);
+  robot_model->load_robotmodel(filepath_urdf, filepath_submechanisms, verbose);
   robot_name = SplitRobotName(filepath_urdf);
   cout << "Robot Name: " << robot_name << endl;
   cout << "Number of steps per joint: " << num_steps << endl;
@@ -268,8 +268,8 @@ void HyRoDyn_Utils::log_actuatorforces_Tau() {
     else {
       // compute the full system state via the forward model
       robot_model->u = discretized_input_matrix.row(i);
-      robot_model->calculate_forward_system_state();  // this will implicitly update the
-                                                      // independent joint space y
+      robot_model->calculate_forward_system_state();  // this will implicitly update
+                                                      // the independent joint space y
     }
 
     robot_model->calculate_inverse_dynamics();
@@ -360,8 +360,8 @@ void HyRoDyn_Utils::log_forwardkinematics_x(string body_name) {
     else {
       // compute the full system state via the forward model
       robot_model->u = discretized_input_matrix.row(i);
-      robot_model->calculate_forward_system_state();  // this will implicitly update the
-                                                      // independent joint space y
+      robot_model->calculate_forward_system_state();  // this will implicitly update
+                                                      // the independent joint space y
     }
 
     robot_model->calculate_forward_kinematics(body_name);

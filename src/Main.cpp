@@ -36,7 +36,7 @@ string filepath_submechanisms =
   rh5.calculate_system_state();
 
   // std::cout << " System state: " << rh5.Q << std::endl;
-  std::cout << " Tot energy: " << rh5.calculate_total_energy() << std::endl;
+  // std::cout << " Tot energy: " << rh5.calculate_total_energy() << std::endl;
 
   return 0;
 }
