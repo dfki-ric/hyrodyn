@@ -1,0 +1,23 @@
+digraph G {
+node [shape=box];
+"HeadBase_Link" [label="HeadBase_Link"];
+"HeadActC_Link" [label="HeadActC_Link"];
+"HeadActL_Link" [label="HeadActL_Link"];
+"HeadActR_Link" [label="HeadActR_Link"];
+"HeadPitch_Link" [label="HeadPitch_Link"];
+"HeadRoll_Link" [label="HeadRoll_Link"];
+"HeadYaw_Link" [label="HeadYaw_Link"];
+node [shape=ellipse, color=blue, fontcolor=blue];
+"HeadBase_Link" -> "HeadActC" [label="xyz: 0.15925 0 0 \nrpy: -1.5708 0 0 \naxis: 1, 0, 0\ntype: revolute "]
+"HeadActC" -> "HeadActC_Link"
+"HeadBase_Link" -> "HeadActL" [label="xyz: 0.15925 0 0 \nrpy: -3.14159 -4.23516e-22 1.5708 \naxis: 1, 0, 0\ntype: revolute "]
+"HeadActL" -> "HeadActL_Link"
+"HeadBase_Link" -> "HeadActR" [label="xyz: 0.15925 0 0 \nrpy: 0 0 -1.5708 \naxis: 1, 0, 0\ntype: revolute "]
+"HeadActR" -> "HeadActR_Link"
+"HeadBase_Link" -> "HeadPitch" [label="xyz: 0.15925 0 0 \nrpy: 0 0 -1.5708 \naxis: 1, 0, 0\ntype: revolute "]
+"HeadPitch" -> "HeadPitch_Link"
+"HeadPitch_Link" -> "HeadRoll" [label="xyz: 0 0 0 \nrpy: 0 -1.5708 -1.5708 \naxis: 1, 0, 0\ntype: revolute "]
+"HeadRoll" -> "HeadRoll_Link"
+"HeadRoll_Link" -> "HeadYaw" [label="xyz: 0 0 0 \nrpy: 0 -1.5708 1.5708 \naxis: 1, 0, 0\ntype: revolute "]
+"HeadYaw" -> "HeadYaw_Link"
+}

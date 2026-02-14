@@ -1,0 +1,248 @@
+digraph G {
+node [shape=box];
+"RH5v2_Root_Link" [label="RH5v2_Root_Link"];
+"BodyRoot_Link" [label="BodyRoot_Link"];
+"BodyBL1_Link" [label="BodyBL1_Link"];
+"BodyBL2_Link" [label="BodyBL2_Link"];
+"BodyActL_Link" [label="BodyActL_Link"];
+"BodyBR1_Link" [label="BodyBR1_Link"];
+"BodyBR2_Link" [label="BodyBR2_Link"];
+"BodyActR_Link" [label="BodyActR_Link"];
+"BodyPitch_Link" [label="BodyPitch_Link"];
+"BodyRoll_Link" [label="BodyRoll_Link"];
+"BodyYaw_Link" [label="BodyYaw_Link"];
+"Connector_Body/Torso_Link" [label="Connector_Body/Torso_Link"];
+"ALBase_Link" [label="ALBase_Link"];
+"ALShoulder1_Link" [label="ALShoulder1_Link"];
+"ALShoulder2_Link" [label="ALShoulder2_Link"];
+"ALShoulder3_Link" [label="ALShoulder3_Link"];
+"ALElbow_Link" [label="ALElbow_Link"];
+"ALWristRoll_Link" [label="ALWristRoll_Link"];
+"ALWristRoot_Link" [label="ALWristRoot_Link"];
+"ALWristAL1_Link" [label="ALWristAL1_Link"];
+"ALWristActL_Link" [label="ALWristActL_Link"];
+"ALWristAR1_Link" [label="ALWristAR1_Link"];
+"ALWristActR_Link" [label="ALWristActR_Link"];
+"ALWristBL1_Link" [label="ALWristBL1_Link"];
+"ALWristBR1_Link" [label="ALWristBR1_Link"];
+"ALWristBase_Link" [label="ALWristBase_Link"];
+"ALWristPitch_Link" [label="ALWristPitch_Link"];
+"ALWristYaw_Link" [label="ALWristYaw_Link"];
+"ALWristBL4_Link" [label="ALWristBL4_Link"];
+"ALWristBL3_Link" [label="ALWristBL3_Link"];
+"ALWristBL0_Link" [label="ALWristBL0_Link"];
+"ALWristBL2_Link" [label="ALWristBL2_Link"];
+"ALWristBR4_Link" [label="ALWristBR4_Link"];
+"ALWristBR3_Link" [label="ALWristBR3_Link"];
+"ALWristBR0_Link" [label="ALWristBR0_Link"];
+"ALWristBR2_Link" [label="ALWristBR2_Link"];
+"ALWristFT_Link" [label="ALWristFT_Link"];
+"GLBase_Link" [label="GLBase_Link"];
+"ALElbowB11_Link" [label="ALElbowB11_Link"];
+"ALElbowAct_Link" [label="ALElbowAct_Link"];
+"ARBase_Link" [label="ARBase_Link"];
+"ARShoulder1_Link" [label="ARShoulder1_Link"];
+"ARShoulder2_Link" [label="ARShoulder2_Link"];
+"ARShoulder3_Link" [label="ARShoulder3_Link"];
+"ARElbow_Link" [label="ARElbow_Link"];
+"ARWristRoll_Link" [label="ARWristRoll_Link"];
+"ARWristRoot_Link" [label="ARWristRoot_Link"];
+"ARWristAL1_Link" [label="ARWristAL1_Link"];
+"ARWristActL_Link" [label="ARWristActL_Link"];
+"ARWristAR1_Link" [label="ARWristAR1_Link"];
+"ARWristActR_Link" [label="ARWristActR_Link"];
+"ARWristBL1_Link" [label="ARWristBL1_Link"];
+"ARWristBR1_Link" [label="ARWristBR1_Link"];
+"ARWristBase_Link" [label="ARWristBase_Link"];
+"ARWristPitch_Link" [label="ARWristPitch_Link"];
+"ARWristYaw_Link" [label="ARWristYaw_Link"];
+"ARWristBL4_Link" [label="ARWristBL4_Link"];
+"ARWristBL3_Link" [label="ARWristBL3_Link"];
+"ARWristBL0_Link" [label="ARWristBL0_Link"];
+"ARWristBL2_Link" [label="ARWristBL2_Link"];
+"ARWristBR4_Link" [label="ARWristBR4_Link"];
+"ARWristBR3_Link" [label="ARWristBR3_Link"];
+"ARWristBR0_Link" [label="ARWristBR0_Link"];
+"ARWristBR2_Link" [label="ARWristBR2_Link"];
+"ARWristFT_Link" [label="ARWristFT_Link"];
+"GRBase_Link" [label="GRBase_Link"];
+"ARElbowB11_Link" [label="ARElbowB11_Link"];
+"ARElbowAct_Link" [label="ARElbowAct_Link"];
+"Connector_Torso/Backpack_Link" [label="Connector_Torso/Backpack_Link"];
+"HeadBase_Link" [label="HeadBase_Link"];
+"HeadActC_Link" [label="HeadActC_Link"];
+"HeadActL_Link" [label="HeadActL_Link"];
+"HeadActR_Link" [label="HeadActR_Link"];
+"HeadPitch_Link" [label="HeadPitch_Link"];
+"HeadRoll_Link" [label="HeadRoll_Link"];
+"HeadYaw_Link" [label="HeadYaw_Link"];
+"Stereo_Camera_Head_Link" [label="Stereo_Camera_Head_Link"];
+"IMU_Torso_Link" [label="IMU_Torso_Link"];
+"Structure_Sensor_Link" [label="Structure_Sensor_Link"];
+"Connector_Body/Leg_left_Link" [label="Connector_Body/Leg_left_Link"];
+"Connector_Body/Leg_right_Link" [label="Connector_Body/Leg_right_Link"];
+"IMU_Body_Link" [label="IMU_Body_Link"];
+node [shape=ellipse, color=blue, fontcolor=blue];
+"RH5v2_Root_Link" -> "BodyRoot" [label="xyz: 0 0 0.016 \nrpy: -3.14159 -0 1.57079 \naxis: 0, 0, 0\ntype: fixed "]
+"BodyRoot" -> "BodyRoot_Link"
+"BodyRoot_Link" -> "BodyBL1" [label="xyz: 0.02 -0.089827 0.21 \nrpy: 2.89982 -1.38778e-17 1.5708 \naxis: 1, 0, 0\ntype: revolute "]
+"BodyBL1" -> "BodyBL1_Link"
+"BodyBL1_Link" -> "BodyBL2" [label="xyz: 0 0 0 \nrpy: 0 -0.010339 0 \naxis: 0, 1, 0\ntype: revolute "]
+"BodyBL2" -> "BodyBL2_Link"
+"BodyBL2_Link" -> "BodyActL" [label="xyz: 0 0 0.23999 \nrpy: 0 0 0 \naxis: 0, 0, 1\ntype: prismatic "]
+"BodyActL" -> "BodyActL_Link"
+"BodyRoot_Link" -> "BodyBR1" [label="xyz: -0.02 -0.089827 0.21 \nrpy: -2.89982 1.38778e-17 1.5708 \naxis: 1, 0, 0\ntype: revolute "]
+"BodyBR1" -> "BodyBR1_Link"
+"BodyBR1_Link" -> "BodyBR2" [label="xyz: 0 0 0 \nrpy: 0 -0.010339 0 \naxis: 0, 1, 0\ntype: revolute "]
+"BodyBR2" -> "BodyBR2_Link"
+"BodyBR2_Link" -> "BodyActR" [label="xyz: 0 0 0.23999 \nrpy: 0 0 0 \naxis: 0, 0, 1\ntype: prismatic "]
+"BodyActR" -> "BodyActR_Link"
+"BodyRoot_Link" -> "BodyPitch" [label="xyz: 0 0 0 \nrpy: -3.14159 -0 1.5708 \naxis: 0, 1, 0\ntype: revolute "]
+"BodyPitch" -> "BodyPitch_Link"
+"BodyPitch_Link" -> "BodyRoll" [label="xyz: 0 0 0 \nrpy: 0 0 0 \naxis: 1, 0, 0\ntype: revolute "]
+"BodyRoll" -> "BodyRoll_Link"
+"BodyRoll_Link" -> "BodyYaw" [label="xyz: 0 0 0 \nrpy: 0 0 0 \naxis: 0, 0, 1\ntype: revolute "]
+"BodyYaw" -> "BodyYaw_Link"
+"BodyYaw_Link" -> "Connector_Body/Torso" [label="xyz: 0 0 0.0525 \nrpy: 0 -1.5708 -3.26795e-07 \naxis: 0, 0, 0\ntype: fixed "]
+"Connector_Body/Torso" -> "Connector_Body/Torso_Link"
+"Connector_Body/Torso_Link" -> "ALBase" [label="xyz: 0.29809 0.12609 0.025162 \nrpy: 1.50809 0.25436 1.3265 \naxis: 0, 0, 0\ntype: fixed "]
+"ALBase" -> "ALBase_Link"
+"ALBase_Link" -> "ALShoulder1" [label="xyz: 0.1076 0 0 \nrpy: -3.14159 -0 0 \naxis: 1, 0, 0\ntype: revolute "]
+"ALShoulder1" -> "ALShoulder1_Link"
+"ALShoulder1_Link" -> "ALShoulder2" [label="xyz: 0 0 0 \nrpy: 0 -0 0 \naxis: 0, 1, 0\ntype: revolute "]
+"ALShoulder2" -> "ALShoulder2_Link"
+"ALShoulder2_Link" -> "ALShoulder3" [label="xyz: 0 0 0 \nrpy: 0 -0 1.5707 \naxis: 0, 0, 1\ntype: revolute "]
+"ALShoulder3" -> "ALShoulder3_Link"
+"ALShoulder3_Link" -> "ALElbow" [label="xyz: 0 0.001 0.3511 \nrpy: 0 -0 0 \naxis: 1, 0, 0\ntype: revolute "]
+"ALElbow" -> "ALElbow_Link"
+"ALElbow_Link" -> "ALWristRoll" [label="xyz: 0 0 0.122 \nrpy: 0 -1.5708 3.1416 \naxis: 1, 0, 0\ntype: revolute "]
+"ALWristRoll" -> "ALWristRoll_Link"
+"ALWristRoll_Link" -> "ALWristRoot" [label="xyz: 0.173 0 0 \nrpy: 0 -1.5708 3.14159 \naxis: 0, 0, 0\ntype: fixed "]
+"ALWristRoot" -> "ALWristRoot_Link"
+"ALWristRoot_Link" -> "ALWristAL1" [label="xyz: 0.0155 -0.034 -0.178 \nrpy: 1.5885 -0 0 \naxis: 1, 0, 0\ntype: revolute "]
+"ALWristAL1" -> "ALWristAL1_Link"
+"ALWristAL1_Link" -> "ALWristActL" [label="xyz: 0 0.13346 0 \nrpy: -1.5708 0 0 \naxis: 0, 0, 1\ntype: prismatic "]
+"ALWristActL" -> "ALWristActL_Link"
+"ALWristRoot_Link" -> "ALWristAR1" [label="xyz: -0.0155 -0.034 -0.178 \nrpy: 1.5885 -0 0 \naxis: 1, 0, 0\ntype: revolute "]
+"ALWristAR1" -> "ALWristAR1_Link"
+"ALWristAR1_Link" -> "ALWristActR" [label="xyz: 0 0.13346 0 \nrpy: -1.5708 0 0 \naxis: 0, 0, 1\ntype: prismatic "]
+"ALWristActR" -> "ALWristActR_Link"
+"ALWristRoot_Link" -> "ALWristBL1" [label="xyz: 0.0155 0.011 -0.032 \nrpy: -2.8824 0 0 \naxis: 1, 0, 0\ntype: revolute "]
+"ALWristBL1" -> "ALWristBL1_Link"
+"ALWristRoot_Link" -> "ALWristBR1" [label="xyz: -0.0155 0.011 -0.032 \nrpy: -2.8824 0 0 \naxis: 1, 0, 0\ntype: revolute "]
+"ALWristBR1" -> "ALWristBR1_Link"
+"ALWristRoot_Link" -> "ALWristBase" [label="xyz: 0 0 -0.168 \nrpy: 0 -1.5708 0 \naxis: 0, 0, 0\ntype: fixed "]
+"ALWristBase" -> "ALWristBase_Link"
+"ALWristRoot_Link" -> "ALWristPitch" [label="xyz: 0 0 0 \nrpy: 0 -0 0 \naxis: 1, 0, 0\ntype: revolute "]
+"ALWristPitch" -> "ALWristPitch_Link"
+"ALWristPitch_Link" -> "ALWristYaw" [label="xyz: 0 0 0 \nrpy: 0 -0 0 \naxis: 0, 1, 0\ntype: revolute "]
+"ALWristYaw" -> "ALWristYaw_Link"
+"ALWristYaw_Link" -> "ALWristBL4" [label="xyz: 0.027 -0.03 0 \nrpy: 2.9998 -0 0 \naxis: 1, 0, 0\ntype: revolute "]
+"ALWristBL4" -> "ALWristBL4_Link"
+"ALWristBL4_Link" -> "ALWristBL3" [label="xyz: 0 0 0 \nrpy: 0 -0.017255 0 \naxis: 0, 1, 0\ntype: revolute "]
+"ALWristBL3" -> "ALWristBL3_Link"
+"ALWristBL3_Link" -> "ALWristBL0" [label="xyz: 0 0 0.045018 \nrpy: 0 -0 0 \naxis: 1, 0, 0\ntype: revolute "]
+"ALWristBL0" -> "ALWristBL0_Link"
+"ALWristBL0_Link" -> "ALWristBL2" [label="xyz: 0 0 0 \nrpy: 0 -0 0 \naxis: 0, 1, 0\ntype: revolute "]
+"ALWristBL2" -> "ALWristBL2_Link"
+"ALWristYaw_Link" -> "ALWristBR4" [label="xyz: -0.027 -0.03 0 \nrpy: -2.9998 -1.05879e-22 3.14159 \naxis: 1, 0, 0\ntype: revolute "]
+"ALWristBR4" -> "ALWristBR4_Link"
+"ALWristBR4_Link" -> "ALWristBR3" [label="xyz: 0 0 0 \nrpy: 0 -0.017255 0 \naxis: 0, 1, 0\ntype: revolute "]
+"ALWristBR3" -> "ALWristBR3_Link"
+"ALWristBR3_Link" -> "ALWristBR0" [label="xyz: 0 0 0.045018 \nrpy: 0 -0 0 \naxis: 1, 0, 0\ntype: revolute "]
+"ALWristBR0" -> "ALWristBR0_Link"
+"ALWristBR0_Link" -> "ALWristBR2" [label="xyz: 0 0 0 \nrpy: 0 -0 0 \naxis: 0, 1, 0\ntype: revolute "]
+"ALWristBR2" -> "ALWristBR2_Link"
+"ALWristYaw_Link" -> "ALWristFT" [label="xyz: -1.2399e-05 0 0.042748 \nrpy: 0 -0 1.5708 \naxis: 0, 0, 0\ntype: fixed "]
+"ALWristFT" -> "ALWristFT_Link"
+"ALWristFT_Link" -> "GLBase" [label="xyz: 0 0 0 \nrpy: 0 -0 0 \naxis: 0, 0, 0\ntype: fixed "]
+"GLBase" -> "GLBase_Link"
+"ALShoulder3_Link" -> "ALElbowB11" [label="xyz: 0 -0.029 0.1391 \nrpy: -0.25319 0 0 \naxis: 1, 0, 0\ntype: revolute "]
+"ALElbowB11" -> "ALElbowB11_Link"
+"ALElbowB11_Link" -> "ALElbowAct" [label="xyz: 0 0 0.29542 \nrpy: 0 -0 0 \naxis: 0, 0, 1\ntype: prismatic "]
+"ALElbowAct" -> "ALElbowAct_Link"
+"Connector_Body/Torso_Link" -> "ARBase" [label="xyz: 0.29809 -0.12609 0.025162 \nrpy: -1.50809 0.25436 -1.3265 \naxis: 0, 0, 0\ntype: fixed "]
+"ARBase" -> "ARBase_Link"
+"ARBase_Link" -> "ARShoulder1" [label="xyz: 0.1076 0 0 \nrpy: -3.14159 -0 -3.14159 \naxis: 1, 0, 0\ntype: revolute "]
+"ARShoulder1" -> "ARShoulder1_Link"
+"ARShoulder1_Link" -> "ARShoulder2" [label="xyz: 0 0 0 \nrpy: 0 0 -3.14159 \naxis: 0, 1, 0\ntype: revolute "]
+"ARShoulder2" -> "ARShoulder2_Link"
+"ARShoulder2_Link" -> "ARShoulder3" [label="xyz: 0 0 0 \nrpy: 3.14159 1e-06 -1.5707 \naxis: 0, 0, 1\ntype: revolute "]
+"ARShoulder3" -> "ARShoulder3_Link"
+"ARShoulder3_Link" -> "ARElbow" [label="xyz: 0 0.001 -0.3511 \nrpy: -3.14159 -0 -3.14159 \naxis: 1, 0, 0\ntype: revolute "]
+"ARElbow" -> "ARElbow_Link"
+"ARElbow_Link" -> "ARWristRoll" [label="xyz: 0 0 0.122 \nrpy: 0 1.5708 -3.1416 \naxis: 1, 0, 0\ntype: revolute "]
+"ARWristRoll" -> "ARWristRoll_Link"
+"ARWristRoll_Link" -> "ARWristRoot" [label="xyz: -0.173 0 0 \nrpy: 0 1.5708 3.14159 \naxis: 0, 0, 0\ntype: fixed "]
+"ARWristRoot" -> "ARWristRoot_Link"
+"ARWristRoot_Link" -> "ARWristAL1" [label="xyz: 0.0155 -0.034 -0.178 \nrpy: 1.5885 -0 0 \naxis: 1, 0, 0\ntype: revolute "]
+"ARWristAL1" -> "ARWristAL1_Link"
+"ARWristAL1_Link" -> "ARWristActL" [label="xyz: 0 0.13346 0 \nrpy: -1.5708 0 0 \naxis: 0, 0, 1\ntype: prismatic "]
+"ARWristActL" -> "ARWristActL_Link"
+"ARWristRoot_Link" -> "ARWristAR1" [label="xyz: -0.0155 -0.034 -0.178 \nrpy: 1.5885 -0 0 \naxis: 1, 0, 0\ntype: revolute "]
+"ARWristAR1" -> "ARWristAR1_Link"
+"ARWristAR1_Link" -> "ARWristActR" [label="xyz: 0 0.13346 0 \nrpy: -1.5708 0 0 \naxis: 0, 0, 1\ntype: prismatic "]
+"ARWristActR" -> "ARWristActR_Link"
+"ARWristRoot_Link" -> "ARWristBL1" [label="xyz: 0.0155 0.011 -0.032 \nrpy: -2.8824 0 0 \naxis: 1, 0, 0\ntype: revolute "]
+"ARWristBL1" -> "ARWristBL1_Link"
+"ARWristRoot_Link" -> "ARWristBR1" [label="xyz: -0.0155 0.011 -0.032 \nrpy: -2.8824 0 0 \naxis: 1, 0, 0\ntype: revolute "]
+"ARWristBR1" -> "ARWristBR1_Link"
+"ARWristRoot_Link" -> "ARWristBase" [label="xyz: 0 0 -0.168 \nrpy: 0 -1.5708 0 \naxis: 0, 0, 0\ntype: fixed "]
+"ARWristBase" -> "ARWristBase_Link"
+"ARWristRoot_Link" -> "ARWristPitch" [label="xyz: 0 0 0 \nrpy: 0 -0 0 \naxis: 1, 0, 0\ntype: revolute "]
+"ARWristPitch" -> "ARWristPitch_Link"
+"ARWristPitch_Link" -> "ARWristYaw" [label="xyz: 0 0 0 \nrpy: 0 -0 0 \naxis: 0, 1, 0\ntype: revolute "]
+"ARWristYaw" -> "ARWristYaw_Link"
+"ARWristYaw_Link" -> "ARWristBL4" [label="xyz: 0.027 -0.03 0 \nrpy: 2.9998 -0 0 \naxis: 1, 0, 0\ntype: revolute "]
+"ARWristBL4" -> "ARWristBL4_Link"
+"ARWristBL4_Link" -> "ARWristBL3" [label="xyz: 0 0 0 \nrpy: 0 -0.017255 0 \naxis: 0, 1, 0\ntype: revolute "]
+"ARWristBL3" -> "ARWristBL3_Link"
+"ARWristBL3_Link" -> "ARWristBL0" [label="xyz: 0 0 0.045018 \nrpy: 0 -0 0 \naxis: 1, 0, 0\ntype: revolute "]
+"ARWristBL0" -> "ARWristBL0_Link"
+"ARWristBL0_Link" -> "ARWristBL2" [label="xyz: 0 0 0 \nrpy: 0 -0 0 \naxis: 0, 1, 0\ntype: revolute "]
+"ARWristBL2" -> "ARWristBL2_Link"
+"ARWristYaw_Link" -> "ARWristBR4" [label="xyz: -0.027 -0.03 0 \nrpy: -2.9998 -1.05879e-22 3.14159 \naxis: 1, 0, 0\ntype: revolute "]
+"ARWristBR4" -> "ARWristBR4_Link"
+"ARWristBR4_Link" -> "ARWristBR3" [label="xyz: 0 0 0 \nrpy: 0 -0.017255 0 \naxis: 0, 1, 0\ntype: revolute "]
+"ARWristBR3" -> "ARWristBR3_Link"
+"ARWristBR3_Link" -> "ARWristBR0" [label="xyz: 0 0 0.045018 \nrpy: 0 -0 0 \naxis: 1, 0, 0\ntype: revolute "]
+"ARWristBR0" -> "ARWristBR0_Link"
+"ARWristBR0_Link" -> "ARWristBR2" [label="xyz: 0 0 0 \nrpy: 0 -0 0 \naxis: 0, 1, 0\ntype: revolute "]
+"ARWristBR2" -> "ARWristBR2_Link"
+"ARWristYaw_Link" -> "ARWristFT" [label="xyz: -1.2399e-05 0 0.042748 \nrpy: 0 -0 1.5708 \naxis: 0, 0, 0\ntype: fixed "]
+"ARWristFT" -> "ARWristFT_Link"
+"ARWristFT_Link" -> "GRBase" [label="xyz: 0 0 0 \nrpy: 0 -0 3.14159 \naxis: 0, 0, 0\ntype: fixed "]
+"GRBase" -> "GRBase_Link"
+"ARShoulder3_Link" -> "ARElbowB11" [label="xyz: 0 -0.029 -0.1391 \nrpy: 2.8884 -0 -3.14159 \naxis: 1, 0, 0\ntype: revolute "]
+"ARElbowB11" -> "ARElbowB11_Link"
+"ARElbowB11_Link" -> "ARElbowAct" [label="xyz: 0 0 0.29542 \nrpy: 0 0 -3.14159 \naxis: 0, 0, 1\ntype: prismatic "]
+"ARElbowAct" -> "ARElbowAct_Link"
+"Connector_Body/Torso_Link" -> "Connector_Torso/Backpack" [label="xyz: 0.3015 0.135 0.139 \nrpy: 0 -1.5708 3.14159 \naxis: 0, 0, 0\ntype: fixed "]
+"Connector_Torso/Backpack" -> "Connector_Torso/Backpack_Link"
+"Connector_Body/Torso_Link" -> "HeadBase" [label="xyz: 0.3485 0 0 \nrpy: -3.14159 0 0 \naxis: 0, 0, 0\ntype: fixed "]
+"HeadBase" -> "HeadBase_Link"
+"HeadBase_Link" -> "HeadActC" [label="xyz: 0.15925 0 0 \nrpy: -1.5708 0 0 \naxis: 1, 0, 0\ntype: revolute "]
+"HeadActC" -> "HeadActC_Link"
+"HeadBase_Link" -> "HeadActL" [label="xyz: 0.15925 0 0 \nrpy: -3.14159 -4.23516e-22 1.5708 \naxis: 1, 0, 0\ntype: revolute "]
+"HeadActL" -> "HeadActL_Link"
+"HeadBase_Link" -> "HeadActR" [label="xyz: 0.15925 0 0 \nrpy: 0 0 -1.5708 \naxis: 1, 0, 0\ntype: revolute "]
+"HeadActR" -> "HeadActR_Link"
+"HeadBase_Link" -> "HeadPitch" [label="xyz: 0.15925 0 0 \nrpy: 0 0 -1.5708 \naxis: 1, 0, 0\ntype: revolute "]
+"HeadPitch" -> "HeadPitch_Link"
+"HeadPitch_Link" -> "HeadRoll" [label="xyz: 0 0 0 \nrpy: 0 -1.5708 -1.5708 \naxis: 1, 0, 0\ntype: revolute "]
+"HeadRoll" -> "HeadRoll_Link"
+"HeadRoll_Link" -> "HeadYaw" [label="xyz: 0 0 0 \nrpy: 0 -1.5708 1.5708 \naxis: 1, 0, 0\ntype: revolute "]
+"HeadYaw" -> "HeadYaw_Link"
+"HeadYaw_Link" -> "Stereo_Camera_Head" [label="xyz: 0.069 -0.1035 -0.0314985 \nrpy: -1.5708 -5.55112e-17 -1.5708 \naxis: 0, 0, 0\ntype: fixed "]
+"Stereo_Camera_Head" -> "Stereo_Camera_Head_Link"
+"Connector_Body/Torso_Link" -> "IMU_Torso" [label="xyz: 0.14735 -0.10255 0.0075 \nrpy: 0 -1.5708 3.14159 \naxis: 0, 0, 0\ntype: fixed "]
+"IMU_Torso" -> "IMU_Torso_Link"
+"Connector_Body/Torso_Link" -> "Structure_Sensor" [label="xyz: 0.31589 -0.03825 -0.12041 \nrpy: 7e-06 -0.34907 3.14159 \naxis: 0, 0, 0\ntype: fixed "]
+"Structure_Sensor" -> "Structure_Sensor_Link"
+"BodyRoot_Link" -> "Connector_Body/Leg_left" [label="xyz: 0.085744 0.025 0.11058 \nrpy: -1.57079 -1.309 7e-06 \naxis: 0, 0, 0\ntype: fixed "]
+"Connector_Body/Leg_left" -> "Connector_Body/Leg_left_Link"
+"BodyRoot_Link" -> "Connector_Body/Leg_right" [label="xyz: -0.085744 0.025 0.11058 \nrpy: 1.57079 -1.309 3.14159 \naxis: 0, 0, 0\ntype: fixed "]
+"Connector_Body/Leg_right" -> "Connector_Body/Leg_right_Link"
+"BodyRoot_Link" -> "IMU_Body" [label="xyz: -0.01745 -0.005 0.10795 \nrpy: 3.14159 -0 1.57079 \naxis: 0, 0, 0\ntype: fixed "]
+"IMU_Body" -> "IMU_Body_Link"
+}

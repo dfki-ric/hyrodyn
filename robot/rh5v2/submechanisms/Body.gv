@@ -1,0 +1,29 @@
+digraph G {
+node [shape=box];
+"BodyRoot_Link" [label="BodyRoot_Link"];
+"BodyBL1_Link" [label="BodyBL1_Link"];
+"BodyBL2_Link" [label="BodyBL2_Link"];
+"BodyActL_Link" [label="BodyActL_Link"];
+"BodyBR1_Link" [label="BodyBR1_Link"];
+"BodyBR2_Link" [label="BodyBR2_Link"];
+"BodyActR_Link" [label="BodyActR_Link"];
+"BodyPitch_Link" [label="BodyPitch_Link"];
+"BodyRoll_Link" [label="BodyRoll_Link"];
+node [shape=ellipse, color=blue, fontcolor=blue];
+"BodyRoot_Link" -> "BodyBL1" [label="xyz: 0.02 -0.089827 0.21 \nrpy: 2.89982 -1.38778e-17 1.5708 \naxis: 1, 0, 0\ntype: revolute "]
+"BodyBL1" -> "BodyBL1_Link"
+"BodyBL1_Link" -> "BodyBL2" [label="xyz: 0 0 0 \nrpy: 0 -0.010339 0 \naxis: 0, 1, 0\ntype: revolute "]
+"BodyBL2" -> "BodyBL2_Link"
+"BodyBL2_Link" -> "BodyActL" [label="xyz: 0 0 0.23999 \nrpy: 0 0 0 \naxis: 0, 0, 1\ntype: prismatic "]
+"BodyActL" -> "BodyActL_Link"
+"BodyRoot_Link" -> "BodyBR1" [label="xyz: -0.02 -0.089827 0.21 \nrpy: -2.89982 1.38778e-17 1.5708 \naxis: 1, 0, 0\ntype: revolute "]
+"BodyBR1" -> "BodyBR1_Link"
+"BodyBR1_Link" -> "BodyBR2" [label="xyz: 0 0 0 \nrpy: 0 -0.010339 0 \naxis: 0, 1, 0\ntype: revolute "]
+"BodyBR2" -> "BodyBR2_Link"
+"BodyBR2_Link" -> "BodyActR" [label="xyz: 0 0 0.23999 \nrpy: 0 0 0 \naxis: 0, 0, 1\ntype: prismatic "]
+"BodyActR" -> "BodyActR_Link"
+"BodyRoot_Link" -> "BodyPitch" [label="xyz: 0 0 0 \nrpy: -3.14159 -0 1.5708 \naxis: 0, 1, 0\ntype: revolute "]
+"BodyPitch" -> "BodyPitch_Link"
+"BodyPitch_Link" -> "BodyRoll" [label="xyz: 0 0 0 \nrpy: 0 0 0 \naxis: 1, 0, 0\ntype: revolute "]
+"BodyRoll" -> "BodyRoll_Link"
+}

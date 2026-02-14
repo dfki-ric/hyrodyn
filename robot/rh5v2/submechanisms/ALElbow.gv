@@ -1,0 +1,14 @@
+digraph G {
+node [shape=box];
+"ALShoulder3_Link" [label="ALShoulder3_Link"];
+"ALElbow_Link" [label="ALElbow_Link"];
+"ALElbowB11_Link" [label="ALElbowB11_Link"];
+"ALElbowAct_Link" [label="ALElbowAct_Link"];
+node [shape=ellipse, color=blue, fontcolor=blue];
+"ALShoulder3_Link" -> "ALElbow" [label="xyz: 0 0.001 0.3511 \nrpy: 0 -0 0 \naxis: 1, 0, 0\ntype: revolute "]
+"ALElbow" -> "ALElbow_Link"
+"ALShoulder3_Link" -> "ALElbowB11" [label="xyz: 0 -0.029 0.1391 \nrpy: -0.25319 0 0 \naxis: 1, 0, 0\ntype: revolute "]
+"ALElbowB11" -> "ALElbowB11_Link"
+"ALElbowB11_Link" -> "ALElbowAct" [label="xyz: 0 0 0.29542 \nrpy: 0 -0 0 \naxis: 0, 0, 1\ntype: prismatic "]
+"ALElbowAct" -> "ALElbowAct_Link"
+}

@@ -1,0 +1,14 @@
+digraph G {
+node [shape=box];
+"ARShoulder3_Link" [label="ARShoulder3_Link"];
+"ARElbow_Link" [label="ARElbow_Link"];
+"ARElbowB11_Link" [label="ARElbowB11_Link"];
+"ARElbowAct_Link" [label="ARElbowAct_Link"];
+node [shape=ellipse, color=blue, fontcolor=blue];
+"ARShoulder3_Link" -> "ARElbow" [label="xyz: 0 0.001 -0.3511 \nrpy: -3.14159 -0 -3.14159 \naxis: 1, 0, 0\ntype: revolute "]
+"ARElbow" -> "ARElbow_Link"
+"ARShoulder3_Link" -> "ARElbowB11" [label="xyz: 0 -0.029 -0.1391 \nrpy: 2.8884 -0 -3.14159 \naxis: 1, 0, 0\ntype: revolute "]
+"ARElbowB11" -> "ARElbowB11_Link"
+"ARElbowB11_Link" -> "ARElbowAct" [label="xyz: 0 0 0.29542 \nrpy: 0 0 -3.14159 \naxis: 0, 0, 1\ntype: prismatic "]
+"ARElbowAct" -> "ARElbowAct_Link"
+}

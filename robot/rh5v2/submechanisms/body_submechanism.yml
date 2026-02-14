@@ -1,0 +1,40 @@
+submechanisms:
+
+- name: "rh5_torso"
+  type: "2SPU+1U"
+#  type: "NUMERICAL"
+  contextual_name: "torso_joint"
+  file_path: "Body.urdf"
+#  jointnames: ["BodyRoot","Connector_Body/Leg_left","Connector_Body/Leg_right","IMU_Body","BodyPitch","BodyRoll", "BodyBL1", "BodyBL2", "BodyActL", "BodyBR1", "BodyBR2","BodyActR"]
+  jointnames_independent: ["BodyPitch", "BodyRoll"]
+  jointnames_spanningtree: ["BodyPitch", "BodyRoll", "BodyBL1", "BodyBL2", "BodyActL", "BodyBR1", "BodyBR2", "BodyActR"]
+  jointnames_active: ["BodyActL", "BodyActR"]
+  loop_constraints:
+  - cut_joint: "BodyActL"
+    predecessor_body: "BodyActL_Link"
+    successor_body: "BodyRoll_Link"
+    constraint_axes: 
+    - name: "loopTX"
+      axis: [0.,0.,0.,1.,0.,0.]
+      baumgarte_stabilization_parameter: 0.01
+    - name: "loopTY"
+      axis: [0.,0.,0.,0.,1.,0.]
+      baumgarte_stabilization_parameter: 0.01
+    - name: "loopTZ"
+      axis: [0.,0.,0.,0.,0.,1.]
+      baumgarte_stabilization_parameter: 0.01
+  - cut_joint: "BodyActR"
+    predecessor_body: "BodyActR_Link"
+    successor_body: "BodyRoll_Link"
+    constraint_axes: 
+    - name: "loopTX"
+      axis: [0.,0.,0.,1.,0.,0.]
+      baumgarte_stabilization_parameter: 0.01
+    - name: "loopTY"
+      axis: [0.,0.,0.,0.,1.,0.]
+      baumgarte_stabilization_parameter: 0.01
+    - name: "loopTZ"
+      axis: [0.,0.,0.,0.,0.,1.]
+      baumgarte_stabilization_parameter: 0.01
+
+
