@@ -435,15 +435,18 @@ bool IK_CS(Model& model, ExplicitLoopConstraintSet& elcs, const Math::VectorNd& 
             CS.J(row, j) = CS.G(i + 3, j);
           }
         }
-      } else if (CS.constraint_type[k] == InverseKinematicsConstraintSet::ConstraintTypeCOM) {
-        for (unsigned int i = 0; i < 3; i++) {
-          unsigned int row = CS.constraint_row_index[k] + i;
-          CS.e[row] = CS.target_positions[k][i] - com[i];
-          for (unsigned int j = 0; j < model.qdot_size; j++) {
-            CS.J(row, j) = Jcom(i, j);
-          }
-        }
-      } else {
+      }
+      // TODO: Check if it is needed. Shivesh Kumar
+      // else if (CS.constraint_type[k] == InverseKinematicsConstraintSet::ConstraintTypeCOM) {
+      //   for (unsigned int i = 0; i < 3; i++) {
+      //     unsigned int row = CS.constraint_row_index[k] + i;
+      //     CS.e[row] = CS.target_positions[k][i] - com[i];
+      //     for (unsigned int j = 0; j < model.qdot_size; j++) {
+      //       CS.J(row, j) = Jcom(i, j);
+      //     }
+      //   }
+      // }
+      else {
         assert(false && !"Invalid inverse kinematics constraint");
       }
     }
@@ -550,10 +553,13 @@ void calc_geometricmodel_inverse(Model& model, ExplicitLoopConstraintSet& elcs,
          << endl;
   }
   // Add COM constraint
-  if (!com_input.isZero()) {
-    cs.AddCOMConstraint(com_input);
-    cout << "IGM input for COM:" << com_input.transpose() << endl;
-  }
+
+  // TODO: Check if it is needed. (Shivesh Kumar)
+
+  // if (!com_input.isZero()) {
+  //   cs.AddCOMConstraint(com_input);
+  //   cout << "IGM input for COM:" << com_input.transpose() << endl;
+  // }
 
   VectorNd YInit(VectorNd::Zero(elcs.get_dof_independent())),
       Yres(VectorNd::Zero(elcs.get_dof_independent()));

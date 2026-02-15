@@ -18,12 +18,6 @@ NumericalLoopConstraints::NumericalLoopConstraints(
       std::cerr << "Error loading urdf model" << std::endl;
       abort();
     }
-  }
-
-  else if (!strcmp(ext, ".lua")) {
-    std::cerr << "Lua models are not supported for parallelogram chains. "
-                 "Please provide a URDF file with mimic joints defined."
-              << std::endl;
   } else {
     std::cerr << "Unknown file type: Accepted file types is .urdf" << endl;
     abort();
@@ -63,9 +57,7 @@ NumericalLoopConstraints::NumericalLoopConstraints(
     rot_pred = CalcBodyWorldOrientation(m, Q, pred_body_id).transpose();
     rot_succ = CalcBodyWorldOrientation(m, Q, succ_body_id).transpose();
     // rot_cut = CalcBodyWorldOrientation(m, Q, cut_joint_id).transpose();
-    // std::cout<< "pred_body_pos: \n" << pred_body_pos <<std::endl;
-    // std::cout<< "succ_body_pos: \n" << succ_body_pos <<std::endl;
-    // std::cout<< "cut_joint_pos: \n" << cut_joint_pos <<std::endl;
+
     cut_joint_pos = pred_body_pos;
     rot_cut = rot_pred;
     T0_p = SpatialTransform(rot_pred, pred_body_pos);
@@ -80,13 +72,12 @@ NumericalLoopConstraints::NumericalLoopConstraints(
 
     Tp_k = SpatialTransform(rot_pk, pos_pk);
     Ts_k = SpatialTransform(rot_sk, pos_sk);
-    // std::cout<< "Tp_k: \n" << Tp_k <<std::endl;
-    // std::cout<< "Ts_k: \n" << Ts_k <<std::endl;
+
     for (uint j = 0; j < loop_constraints_set[i].constraint_axes.size(); j++) {
       // cout << "Axis :
       // "<<loop_constraints_set[i].constraint_axes[j].axis<<endl;
       cs.AddLoopConstraint(pred_body_id, succ_body_id, Tp_k, Ts_k,
-                           loop_constraints_set[i].constraint_axes[j].axis, true,
+                           loop_constraints_set[i].constraint_axes[j].axis, false,
                            loop_constraints_set[i].constraint_axes[j].baumg_stab_param,
                            loop_constraints_set[i].constraint_axes[j].name.c_str());
     }
@@ -205,40 +196,10 @@ VectorXd NumericalLoopConstraints::calc_g_from_k(MatrixNd& K, VectorXd& k) {
 VectorXd NumericalLoopConstraints::calc_k(Model& m, const Math::VectorNd& Q,
                                           const Math::VectorNd& QDot, ConstraintSet& CS) {
   // Code for computing k=-\dot(K)*\dot(q)
-  for (unsigned int i = 0; i < CS.mLoopConstraintIndices.size(); i++) {
-    const unsigned int c = CS.mLoopConstraintIndices[i];
-    // Variables used for computations.
-    Vector3d pos_p;
-    Matrix3d rot_p;
-    SpatialVector vel_p;
-    SpatialVector vel_s;
-    SpatialVector axis;
-    // Express the constraint axis in the base frame.
-    pos_p = CalcBodyToBaseCoordinates(m, Q, CS.body_p[c], CS.X_p[c].r, true);
-    rot_p = CalcBodyWorldOrientation(m, Q, CS.body_p[c], true).transpose() * CS.X_p[c].E;
-    axis = SpatialTransform(rot_p, pos_p).apply(CS.constraintAxis[c]);
-
-    // Compute the spatial velocities of the two constrained bodies.
-    vel_p = CalcPointVelocity6D(m, Q, QDot, CS.body_p[c], CS.X_p[c].r, true);
-    vel_s = CalcPointVelocity6D(m, Q, QDot, CS.body_s[c], CS.X_s[c].r, true);
-
-    // Compute the derivative of the axis wrt the base frame.
-    SpatialVector axis_dot = crossm(vel_p, axis);
-
-    // Compute the velocity product accelerations. These correspond to the
-    // accelerations that the bodies would have if q ddot were 0.
-    SpatialVector acc_p = CalcPointAcceleration6D(m, Q, QDot, VectorNd::Zero(m.dof_count),
-                                                  CS.body_p[c], CS.X_p[c].r, true);
-    SpatialVector acc_s = CalcPointAcceleration6D(m, Q, QDot, VectorNd::Zero(m.dof_count),
-                                                  CS.body_s[c], CS.X_s[c].r, true);
-
-    // Problem here if one of the bodies is fixed...
-    // Compute the value of gamma.
-    CS.gamma[c]
-        // Right hand side term.
-        = -axis.dot(acc_s - acc_p) - axis_dot.dot(vel_s - vel_p);
+  Math::MatrixNd Gdummy;
+  for (unsigned int k = 0; k < CS.loopConstraints.size(); ++k) {
+    CS.loopConstraints[k]->calcGamma(m, 0., Q, QDot, Gdummy, CS.gamma, CS.cache, true);
   }
-
   return CS.gamma;
 }
 

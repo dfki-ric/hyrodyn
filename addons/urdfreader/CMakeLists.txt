@@ -13,6 +13,8 @@ add_subdirectory(thirdparty)
 # Library
 add_library(urdfreader urdfreader.cc transmission_parser.cc)
 
+set_target_properties(urdfreader PROPERTIES POSITION_INDEPENDENT_CODE ON)
+
 target_include_directories(
   urdfreader
   PUBLIC
