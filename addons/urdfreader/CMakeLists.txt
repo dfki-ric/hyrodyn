@@ -7,6 +7,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Find installed RBDL
 find_package(RBDL REQUIRED)
 find_package(Eigen3 REQUIRED)
+message(STATUS "RBDL_LIBRARIES = ${RBDL_LIBRARIES}")
+message(STATUS "RBDL_INCLUDE_DIR = ${RBDL_INCLUDE_DIR}")
 
 add_subdirectory(thirdparty)
 

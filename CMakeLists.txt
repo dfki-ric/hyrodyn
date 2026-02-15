@@ -10,15 +10,23 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_BUILD_TYPE Release)
 
 option(BUILD_PYTHON_BINDINGS "Build Python bindings using pybind11" OFF)
+option(RBDL_PKG_CONFIG_PATH "Custom path to RBDL's PkgConfig directory" "")
 
 # ---------------- Dependencies ----------------
-
-find_package(RBDL REQUIRED)
 find_package(Eigen3 REQUIRED)
 find_package(yaml-cpp REQUIRED)
+find_package(PkgConfig REQUIRED)
+
+if(RBDL_PKG_CONFIG_PATH)
+  set(ENV{PKG_CONFIG_PATH} "${RBDL_PKG_CONFIG_PATH}:$ENV{PKG_CONFIG_PATH}")
+endif()
+pkg_search_module(rbdl REQUIRED IMPORTED_TARGET rbdl)
+list(APPEND PKGCONFIG_REQUIRES rbdl)
 
 # Internal urdfreader
 add_subdirectory(addons/urdfreader)
+message(STATUS "RBDL_LIBRARIES = ${RBDL_LIBRARIES}")
+message(STATUS "RBDL_INCLUDE_DIR = ${RBDL_INCLUDE_DIR}")
 
 # ---------------- Sources ----------------
 
@@ -31,19 +39,12 @@ add_library(hyrodyn SHARED ${SOURCES})
 
 set_target_properties(hyrodyn PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
-target_include_directories(
-  hyrodyn PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} ${RBDL_INCLUDE_DIR}
-                 ${RBDL_INCLUDE_DIRS})
+target_include_directories(hyrodyn PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}
+                                          ${RBDL_INCLUDE_DIR}/include)
 
-target_link_libraries(hyrodyn PUBLIC ${RBDL_LIBRARIES} urdfreader Eigen3::Eigen
-                                     yaml-cpp)
-
-# ---------------- Executable ----------------
-
-add_executable(hyrodyn_bin src/Main.cpp)
-
-# IMPORTANT: must link RBDL explicitly because it is not an imported target
-target_link_libraries(hyrodyn_bin PRIVATE hyrodyn ${RBDL_LIBRARIES})
+target_link_libraries(hyrodyn PkgConfig::rbdl urdfreader yaml-cpp)
+add_executable(hyrodyn_bin ${CMAKE_CURRENT_SOURCE_DIR}/src/Main.cpp)
+target_link_libraries(hyrodyn_bin hyrodyn)
 
 # ---------------- Python Bindings ----------------
 
@@ -68,3 +69,6 @@ install(
   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
 install(FILES ${HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/hyrodyn)
+
+
+# cmake ..   -DRBDL_PKG_CONFIG_PATH=/home/dfki.uni-bremen.de/rkumar/dynamics/install/lib/pkgconfig -DCMAKE_PREFIX_PATH=/home/dfki.uni-bremen.de/rkumar/dynamics/install

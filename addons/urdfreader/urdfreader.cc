@@ -1216,7 +1216,6 @@ bool construct_model_with_modularity(Model* rbdl_model, ModelPtr urdf_model,
                           urdf_child->name);
     }
   }
-  cout << "URDF parsed successfully" << endl;
   return true;
 }
 
