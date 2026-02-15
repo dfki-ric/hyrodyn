@@ -31,8 +31,6 @@ target_include_directories(rbdl PUBLIC
 
 # Internal urdfreader
 add_subdirectory(addons/urdfreader)
-# message(STATUS "RBDL_LIBRARIES = ${RBDL_LIBRARIES}")
-# message(STATUS "RBDL_INCLUDE_DIR = ${RBDL_INCLUDE_DIR}")
 
 # ---------------- Sources ----------------
 
@@ -73,5 +71,3 @@ install(
 
 install(FILES ${HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/hyrodyn)
 
-
-# cmake ..   -DRBDL_PKG_CONFIG_PATH=/home/dfki.uni-bremen.de/rkumar/dynamics/install/lib/pkgconfig -DCMAKE_PREFIX_PATH=/home/dfki.uni-bremen.de/rkumar/dynamics/install

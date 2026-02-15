@@ -9,7 +9,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(hyrodyn_py, m) {
+PYBIND11_MODULE(hyrodyn, m) {
   py::class_<hyrodyn::RobotModel_HyRoDyn>(m, "RobotModel")
       .def(py::init<>())
       .def(py::init([](const std::string& urdf, const std::string& submech) {
