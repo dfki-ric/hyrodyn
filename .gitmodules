@@ -4,3 +4,4 @@
 [submodule "external/rbdl"]
 	path = external/rbdl
 	url = https://github.com/rbdl/rbdl.git
+	shallow = true
