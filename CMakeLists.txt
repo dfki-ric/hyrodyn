@@ -10,23 +10,29 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_BUILD_TYPE Release)
 
 option(BUILD_PYTHON_BINDINGS "Build Python bindings using pybind11" OFF)
-option(RBDL_PKG_CONFIG_PATH "Custom path to RBDL's PkgConfig directory" "")
 
 # ---------------- Dependencies ----------------
 find_package(Eigen3 REQUIRED)
 find_package(yaml-cpp REQUIRED)
-find_package(PkgConfig REQUIRED)
 
-if(RBDL_PKG_CONFIG_PATH)
-  set(ENV{PKG_CONFIG_PATH} "${RBDL_PKG_CONFIG_PATH}:$ENV{PKG_CONFIG_PATH}")
-endif()
-pkg_search_module(rbdl REQUIRED IMPORTED_TARGET rbdl)
-list(APPEND PKGCONFIG_REQUIRES rbdl)
+# RBDL minimal build configuration
+# set(RBDL_BUILD_STATIC ON CACHE BOOL "" FORCE)
+# set(RBDL_BUILD_ADDON_URDFREADER OFF CACHE BOOL "" FORCE)
+# set(RBDL_BUILD_ADDON_GEOMETRY OFF CACHE BOOL "" FORCE)
+# set(RBDL_BUILD_ADDON_LUAMODEL OFF CACHE BOOL "" FORCE)
+# set(RBDL_BUILD_PYTHON_WRAPPER OFF CACHE BOOL "" FORCE)
+# set(RBDL_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+# set(RBDL_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+
+add_subdirectory(external/rbdl)
+target_include_directories(rbdl PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}/external/rbdl/include>
+)
 
 # Internal urdfreader
 add_subdirectory(addons/urdfreader)
-message(STATUS "RBDL_LIBRARIES = ${RBDL_LIBRARIES}")
-message(STATUS "RBDL_INCLUDE_DIR = ${RBDL_INCLUDE_DIR}")
+# message(STATUS "RBDL_LIBRARIES = ${RBDL_LIBRARIES}")
+# message(STATUS "RBDL_INCLUDE_DIR = ${RBDL_INCLUDE_DIR}")
 
 # ---------------- Sources ----------------
 
@@ -36,13 +42,10 @@ file(GLOB HEADERS "src/*.hpp")
 # ---------------- Library ----------------
 
 add_library(hyrodyn SHARED ${SOURCES})
-
 set_target_properties(hyrodyn PROPERTIES POSITION_INDEPENDENT_CODE ON)
+target_include_directories(hyrodyn PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
-target_include_directories(hyrodyn PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}
-                                          ${RBDL_INCLUDE_DIR}/include)
-
-target_link_libraries(hyrodyn PkgConfig::rbdl urdfreader yaml-cpp)
+target_link_libraries(hyrodyn rbdl urdfreader yaml-cpp)
 add_executable(hyrodyn_bin ${CMAKE_CURRENT_SOURCE_DIR}/src/Main.cpp)
 target_link_libraries(hyrodyn_bin hyrodyn)
 

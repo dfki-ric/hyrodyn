@@ -4,11 +4,7 @@ project(urdfreader)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Find installed RBDL
-find_package(RBDL REQUIRED)
 find_package(Eigen3 REQUIRED)
-message(STATUS "RBDL_LIBRARIES = ${RBDL_LIBRARIES}")
-message(STATUS "RBDL_INCLUDE_DIR = ${RBDL_INCLUDE_DIR}")
 
 add_subdirectory(thirdparty)
 
@@ -23,8 +19,7 @@ target_include_directories(
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/urdfparser/include>
     $<INSTALL_INTERFACE:include> ${RBDL_INCLUDE_DIR})
-target_link_libraries(urdfreader PUBLIC ${RBDL_LIBRARIES} Eigen3::Eigen
-                                        urdfparser)
+target_link_libraries(urdfreader PUBLIC Eigen3::Eigen urdfparser rbdl)
 
 # Install library
 install(

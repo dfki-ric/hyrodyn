@@ -1,3 +1,6 @@
 [submodule "addons/urdfreader/thirdparty/urdfparser"]
 	path = addons/urdfreader/thirdparty/urdfparser
 	url = https://github.com/ORB-HD/URDF_Parser.git
+[submodule "external/rbdl"]
+	path = external/rbdl
+	url = https://github.com/rbdl/rbdl.git
