@@ -1,7 +1,9 @@
 # HyRoDyn
 
-HyRoDyn is a C++ rigid-body dynamics library for hybrid robotic mechanisms, focusing on robots with kinematic loops. The project is self-contained and integrates RBDL internally.
+Hybrid Robot Dynamics (HyRoDyn) is a kinematics and dynamics solver for series-parallel hybrid robots. 
+It exploits the modularity in robot design and can help you solve kinematics and dynamics of such systems analytically. 
 
+![HyRoDyn](doc/HyRoDyn.png)
 ## Requirements
 
 ### C++ Build
