@@ -5,7 +5,6 @@ It exploits the modularity in robot design and can help you solve kinematics and
 
 ![HyRoDyn](doc/HyRoDyn.png)
 
-============================================================
 
 ## Requirements
 
