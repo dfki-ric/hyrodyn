@@ -1,4 +1,15 @@
-image: ubuntu:22.04
+workflow:
+  rules:
+    - changes:
+        - README.md
+        - bin/**/* 
+        - doc/**/* 
+        - python/**/* 
+        - robot/**/* 
+      when: never
+    - when: always
+
+image: harbor.hb.dfki.de/hyrodyn/hyrodyn-ci:ubuntu22
 
 stages:
   - build
