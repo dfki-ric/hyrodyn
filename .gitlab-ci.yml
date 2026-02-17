@@ -6,6 +6,7 @@ workflow:
         - README.md
         - bin/**/* 
         - doc/**/* 
+        - docker/**/*
         - python/**/* 
         - robot/**/* 
       when: never
