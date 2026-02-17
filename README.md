@@ -1,5 +1,6 @@
 # HyRoDyn
-
+[![pipeline status](https://git.hb.dfki.de/hyrodyn/badges/main/pipeline.svg)]
+(https://git.hb.dfki.de/hyrodyn/-/pipelines)
 Hybrid Robot Dynamics (HyRoDyn) is a kinematics and dynamics solver for series-parallel hybrid robots. 
 It exploits the modularity in robot design and can help you solve kinematics and dynamics of such systems analytically. 
 
