@@ -1,0 +1,41 @@
+image: ubuntu:22.04
+
+stages:
+  - build
+  - test
+
+variables:
+  BUILD_DIR: build
+
+before_script:
+  - apt-get update
+  - apt-get install -y --no-install-recommends
+      build-essential
+      cmake
+      git
+      libeigen3-dev
+      libyaml-cpp-dev
+      libgtest-dev
+      ca-certificates
+  # Ubuntu provides gtest sources only — build them
+  - cd /usr/src/gtest
+  - cmake .
+  - make -j
+  - cp lib/*.a /usr/lib
+  - cd -
+
+build:
+  stage: build
+  script:
+    - cmake -S . -B $BUILD_DIR -DBUILD_TESTING=ON
+    - cmake --build $BUILD_DIR --parallel
+  artifacts:
+    paths:
+      - $BUILD_DIR
+    expire_in: 1 hour
+
+test:
+  stage: test
+  script:
+    # IMPORTANT: run tests from PROJECT ROOT
+    - ./build/tests/hyrodyn_tests
