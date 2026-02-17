@@ -42,7 +42,7 @@ test:
   stage: test
   script:
     # IMPORTANT: run tests from PROJECT ROOT
-    - ./build/tests/hyrodyn_tests
+    - ./build/test/hyrodyn_tests
 
 deploy:
   stage: deploy
