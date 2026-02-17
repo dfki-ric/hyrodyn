@@ -3,6 +3,7 @@ image: ubuntu:22.04
 stages:
   - build
   - test
+  - deploy
 
 variables:
   BUILD_DIR: build
@@ -39,3 +40,13 @@ test:
   script:
     # IMPORTANT: run tests from PROJECT ROOT
     - ./build/tests/hyrodyn_tests
+
+deploy:
+  stage: deploy
+  script:
+    - cmake --install build --prefix install
+  artifacts:
+    paths:
+      - install/
+    expire_in: 7 days
+
