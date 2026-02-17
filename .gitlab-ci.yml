@@ -1,3 +1,5 @@
+image: harbor.hb.dfki.de/hyrodyn/hyrodyn-ci:ubuntu22
+
 workflow:
   rules:
     - changes:
@@ -9,8 +11,6 @@ workflow:
       when: never
     - when: always
 
-image: harbor.hb.dfki.de/hyrodyn/hyrodyn-ci:ubuntu22
-
 stages:
   - build
   - test
@@ -20,24 +20,6 @@ variables:
   BUILD_DIR: build
   GIT_SUBMODULE_STRATEGY: recursive
   GIT_DEPTH: -1
-before_script:
-  - apt-get update
-  - apt-get install -y --no-install-recommends
-      build-essential
-      cmake
-      git
-      libeigen3-dev
-      libyaml-cpp-dev
-      libboost-all-dev
-      libtinyxml-dev
-      libgtest-dev
-      ca-certificates
-  # Ubuntu provides gtest sources only — build them
-  - cd /usr/src/gtest
-  - cmake .
-  - make -j
-  - cp lib/*.a /usr/lib
-  - cd -
 
 build:
   stage: build
@@ -54,13 +36,16 @@ test:
   script:
     # IMPORTANT: run tests from PROJECT ROOT
     - ./build/test/hyrodyn_tests
+  needs:
+    - job: build
 
 deploy:
   stage: deploy
   script:
-    - cmake --install build --prefix install
+    - cmake --install $BUILD_DIR --prefix install
   artifacts:
     paths:
       - install/
     expire_in: 7 days
-
+  needs:
+    - job: build
