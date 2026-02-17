@@ -7,7 +7,8 @@ stages:
 
 variables:
   BUILD_DIR: build
-
+  GIT_SUBMODULE_STRATEGY: recursive
+  GIT_DEPTH: -1
 before_script:
   - apt-get update
   - apt-get install -y --no-install-recommends
