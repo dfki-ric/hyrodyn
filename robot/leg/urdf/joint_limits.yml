@@ -1,0 +1,11 @@
+# The limits for the joints. Note that min.speed and min.effort are not used.
+
+limits:
+  names: ["LLHip1", "LLHip2", "LLHip3", "LLKnee", "LLAnkleRoll", "LLAnklePitch"]
+
+  elements: [{max: {position: 0.733, speed: 0.1, effort: 0.5}, min: {position: -0.733}}, 
+             {max: {position: 0.820, speed: 0.1, effort: 0.5}, min: {position: -0.384}}, 
+             {max: {position: 0.12, speed: 0.1, effort: 0.5}, min: {position: -0.82}}, 
+             {max: {position: 1.25, speed: 0.1, effort: 0.5}, min: {position:  0.00}},
+             {max: {position: 0.785, speed: 0.1, effort: 0.5}, min: {position: -0.785}}, 
+             {max: {position: 0.785, speed: 0.1, effort: 0.5}, min: {position: -0.785}}]

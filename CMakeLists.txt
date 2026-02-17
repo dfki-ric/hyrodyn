@@ -10,24 +10,21 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_BUILD_TYPE Release)
 
 option(BUILD_PYTHON_BINDINGS "Build Python bindings using pybind11" OFF)
-
+option(BUILD_TESTING "Build unit tests" ON)
 # ---------------- Dependencies ----------------
 find_package(Eigen3 REQUIRED)
 find_package(yaml-cpp REQUIRED)
 
-# RBDL minimal build configuration
-# set(RBDL_BUILD_STATIC ON CACHE BOOL "" FORCE)
+# RBDL minimal build configuration set(RBDL_BUILD_STATIC ON CACHE BOOL "" FORCE)
 # set(RBDL_BUILD_ADDON_URDFREADER OFF CACHE BOOL "" FORCE)
 # set(RBDL_BUILD_ADDON_GEOMETRY OFF CACHE BOOL "" FORCE)
 # set(RBDL_BUILD_ADDON_LUAMODEL OFF CACHE BOOL "" FORCE)
-# set(RBDL_BUILD_PYTHON_WRAPPER OFF CACHE BOOL "" FORCE)
-# set(RBDL_BUILD_TESTS OFF CACHE BOOL "" FORCE)
-# set(RBDL_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+# set(RBDL_BUILD_PYTHON_WRAPPER OFF CACHE BOOL "" FORCE) set(RBDL_BUILD_TESTS
+# OFF CACHE BOOL "" FORCE) set(RBDL_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 
 add_subdirectory(external/rbdl)
-target_include_directories(rbdl PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}/external/rbdl/include>
-)
+target_include_directories(
+  rbdl PUBLIC $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}/external/rbdl/include>)
 
 # Internal urdfreader
 add_subdirectory(addons/urdfreader)
@@ -51,7 +48,6 @@ target_link_libraries(hyrodyn_bin hyrodyn)
 
 if(BUILD_PYTHON_BINDINGS)
   find_package(pybind11 QUIET)
-
   if(pybind11_FOUND)
     add_subdirectory(python)
   else()
@@ -59,6 +55,11 @@ if(BUILD_PYTHON_BINDINGS)
   endif()
 endif()
 
+include(CTest)
+if(BUILD_TESTING)
+  enable_testing()
+  add_subdirectory(test)
+endif()
 # ---------------- Installation ----------------
 
 include(GNUInstallDirs)
@@ -70,4 +71,3 @@ install(
   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
 install(FILES ${HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/hyrodyn)
-

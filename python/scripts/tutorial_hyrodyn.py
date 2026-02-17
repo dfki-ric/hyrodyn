@@ -1,4 +1,4 @@
-import hyrodyn_py as hyrodyn 
+import hyrodyn as hyrodyn 
 import time 
 import threading
 import numpy as np 
@@ -51,11 +51,11 @@ def main ():
 	dictionary of the joints of the robot
 	"""
 	# Path to URDF and Submechanism.yml files 
-	# path_to_urdf =  "/home/dfki.uni-bremen.de/rkumar/hyrodyn_dev/hyrodyn/data/hybrid/rh5/leg/urdf/leg.urdf" 
-	# path_to_submechamisms = "/home/dfki.uni-bremen.de/rkumar/hyrodyn_dev/hyrodyn/data/hybrid/rh5/leg/urdf/submechanisms.yml"
+	path_to_urdf =  "robot/leg/urdf/leg.urdf" 
+	path_to_submechamisms = "robot/leg/urdf/submechanisms.yml"
 
-	path_to_urdf =  "data/mj_hyrodyn/submechanisms/singular_parallelogram_3.urdf"
-	path_to_submechamisms =  "data/mj_hyrodyn/submechanisms/submechanisms.yml"
+	# path_to_urdf =  "data/mj_hyrodyn/submechanisms/singular_parallelogram_3.urdf"
+	# path_to_submechamisms =  "data/mj_hyrodyn/submechanisms/submechanisms.yml"
 	# Load the robot model in HyRoDyn
 	robot = hyrodyn.RobotModel(path_to_urdf, path_to_submechamisms)
 
