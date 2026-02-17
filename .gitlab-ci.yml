@@ -17,6 +17,7 @@ before_script:
       git
       libeigen3-dev
       libyaml-cpp-dev
+      libboost-all-dev
       libgtest-dev
       ca-certificates
   # Ubuntu provides gtest sources only — build them
