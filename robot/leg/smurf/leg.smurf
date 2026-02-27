@@ -1,4 +1,0 @@
-modelname: RH5v2
-files:
-- ../urdf/leg.urdf
-- ../urdf/submechanisms.yml

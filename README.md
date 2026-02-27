@@ -4,94 +4,106 @@
 Hybrid Robot Dynamics (HyRoDyn) is a kinematics and dynamics solver for series-parallel hybrid robots. 
 It exploits the modularity in robot design and can help you solve kinematics and dynamics of such systems analytically. 
 
-![HyRoDyn](doc/HyRoDyn.png)
+![HyRoDyn](docs/HyRoDyn.png)
+
+# Requirements
+
+## C++ Build
+
+- CMake ≥ 3.10  
+- C++17 compatible compiler  
+- Eigen3  
+- yaml-cpp  
+- Boost (all components)  
+- TinyXML  
+- GoogleTest (for unit tests)
+
+## Python Bindings (Optional)
+
+- Python ≥ 3.8  
+- pybind11  
+- Python development headers  
 
 
-## Requirements
-
-### C++ Build
-
-- CMake >= 3.10
-- C++17 compatible compiler
-- Eigen3
-- yaml-cpp
-
-### Python Bindings (Optional)
-
-- Python >= 3.8
-- pybind11
-- Python development headers
-
-Building and Installation
-=========================
+# Building and Installation
 
 ## Linux: HyRoDyn
 
-1. Update the system
-```
+### 1. Update System
+
+```bash
 sudo apt update
 sudo apt upgrade
 ```
-2. Install Git
+
+### 2. Install Required System Dependencies
+
+```bash
+sudo apt install -y --no-install-recommends \
+    build-essential \
+    cmake \
+    git \
+    ca-certificates \
+    libeigen3-dev \
+    libyaml-cpp-dev \
+    libboost-all-dev \
+    libtinyxml-dev \
+    libgtest-dev
 ```
-sudo apt install git-core
-```
-3. Install CMake (>= 3.10)
-```
-sudo apt install cmake
-```
-Optional (recommended for advanced configuration):
-```
+
+Optional (recommended for advanced CMake configuration):
+
+```bash
 sudo apt install cmake-curses-gui
 ```
-4. Install Eigen3
-```
-sudo apt install libeigen3-dev
-```
-5. Install yaml-cpp
-```
-sudo apt install libyaml-cpp-dev
-```
-6. Install a C++ Compiler (C++17 required)
-```
-sudo apt install build-essential
-```
+
 Optional: install clang
-```
+
+```bash
 sudo apt install clang
 ```
-7. Install Python Dependencies (Optional – for Python bindings)
-```
+
+### 3. Install Python Dependencies (Optional – for Python bindings)
+
+```bash
 sudo apt install python3-dev python3-pip
 pip3 install pybind11
 ```
 
-Build
-=====
+# Build HyRoDyn
 
-Clone the repository:
-```
+## Clone the Repository
+
+```bash
 git clone --recursive git@git.hb.dfki.de:hyrodyn/hyrodyn.git
 cd hyrodyn
 ```
-If you already cloned without --recursive, run:
-```
+
+If already cloned without `--recursive`:
+
+```bash
 git submodule update --init --recursive
 ```
-Create a build directory and compile:
-```
+
+## Compile
+
+```bash
 mkdir build
 cd build
-cmake -D CMAKE_BUILD_TYPE=Release ..
+cmake -DCMAKE_BUILD_TYPE=Release ..
 make -j
 ```
-To build with Python bindings:
-```
+
+## Build with Python Bindings
+
+```bash
 cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_PYTHON_BINDINGS=ON ..
 make -j
 ```
-You can then import it in Python:
-```
+
+You can then use it in Python:
+
+```python
 import hyrodyn
 ```
 

@@ -1,0 +1,65 @@
+\_form#0:$ \mathbf{q} = \mathbf{\gamma}(\mathbf{y}) $
+\_form#1:$ \mathbf{G} = \frac{\partial \gamma}{\partial \mathbf{y}} $
+\_form#2:$ \dot{\mathbf{G}} = \frac{d\mathbf{G}}{dt} $
+\_form#3:$ {\mathbf{g}} = \dot{\mathbf{G}}\dot{\mathbf{y}} $
+\_form#4:$ \mathbf{q} = \mathbf{M} \mathbf{y} + \mathbf{B} $
+\_form#5:$ \dot{\mathbf{q}} = \mathbf{M} \dot{\mathbf{y}} $
+\_form#6:$ \ddot{\mathbf{q}} = \mathbf{M} \ddot{\mathbf{y}} $
+\_form#7:$ \mathbf{q} = \gamma(\mathbf{y}) $
+\_form#8:$ \mathbf{\dot{q}} = \mathbf{G}\mathbf{\dot{y}} $
+\_form#9:$ \mathbf{\ddot{q}} = \mathbf{G}\mathbf{\ddot{y}} + \mathbf{\dot{G}}\dot{\mathbf{y}}$
+\_form#10:$ \mathbf{u} = \mathbf{Q} \mathbf{q} $
+\_form#11:$ \mathbf{\dot{u}} = \mathbf{Q} \mathbf{\dot{q}} $
+\_form#12:$ \mathbf{\ddot{u}} = \mathbf{Q} \mathbf{\ddot{q}} $
+\_form#13:$ \mathbf{u} = \mathbf{Q} \gamma(\mathbf{y}) $
+\_form#14:$ \mathbf{\dot{u}} = \mathbf{Q} \mathbf{G} \mathbf{\dot{y}} $
+\_form#15:$ \mathbf{\ddot{u}} = \mathbf{Q} (\mathbf{G} \mathbf{\dot{y}} + \dot{\mathbf{G}} \dot{\mathbf{y}})$
+\_form#16:$ \mathbf{X}_i = f_i(\mathbf{y}) \quad \forall \quad i \in [1,\ldots, n]$
+\_form#17:$ \mathbf{X} = f(\mathbf{y})$
+\_form#18:$ \mathbf{y} = f^{-1}(\mathbf{X})$
+\_form#19:$ \dot{\mathbf{X}} = \mathbf{J}\mathbf{G}\mathbf{\dot{y}}$
+\_form#20:$ \dot{\mathbf{X}}_i = \mathbf{J}_i\mathbf{G}\mathbf{\dot{y}} \quad \forall \quad i \in [1,\ldots, n]$
+\_form#21:$ \ddot{\mathbf{X}} = \mathbf{J}\mathbf{G}\mathbf{\ddot{y}} + (\mathbf{\dot{J}}\mathbf{G} + \mathbf{J}\mathbf{\dot{G}})\mathbf{\ddot{y}} $
+\_form#22:$ \ddot{\mathbf{X}}_i = \mathbf{J}_i\mathbf{G}\mathbf{\ddot{y}} + (\mathbf{\dot{J}}_i\mathbf{G} + \mathbf{J}_i\mathbf{\dot{G}})\mathbf{\ddot{y}} \quad \forall \quad i \in [1,\ldots, n]$
+\_form#23:$ \mathbf{V}_s = \mathbf{J}_s(\mathbf{y}) \mathbf{\dot{q}}$
+\_form#24:$ \mathbf{V}_b = \mathbf{J}_b(\mathbf{y}) \mathbf{\dot{q}}$
+\_form#25:$ \mathbf{V}_s = \mathbf{J}_s(\mathbf{y}) \mathbf{\dot{y}}$
+\_form#26:$ \mathbf{V}_b = \mathbf{J}_b(\mathbf{y}) \mathbf{\dot{y}}$
+\_form#27:$ \mathbf{V}_s = \mathbf{J}_s(\mathbf{u}) \mathbf{\dot{u}}$
+\_form#28:$ \mathbf{V}_b = \mathbf{J}_b(\mathbf{u}) \mathbf{\dot{u}}$
+\_form#29:$ \mathbf{v}_s = \mathbf{J}_s(\mathbf{y}) \mathbf{\dot{y}}$
+\_form#30:$ \mathbf{v}_c = \mathbf{J}_c(\mathbf{y}) \mathbf{\dot{y}}$
+\_form#31:$ ^s\mathbf{X}_b = \left( \begin{array}{cc} ^s\mathbf{R}_b & \mathbf{0} \\ \mathbf{0} & ^s\mathbf{R}_b \end{array} \right) $
+\_form#32:$ ^s\mathbf{X}_b $
+\_form#33:$ ^s\mathbf{R}_b $
+\_form#34:$ \mathbf{V}_s = ^s\mathbf{X}_b \mathbf{V}_b $
+\_form#35:$ \mathbf{J}_s = ^s\mathbf{X}_b \mathbf{J}_b $
+\_form#36:$ \mathbf{W}_s = ^s\mathbf{X}_b^* \mathbf{W}_b $
+\_form#37:$ ^s\mathbf{X}_b^* $
+\_form#38:$ ^s\mathbf{X}_b^* = ^s\mathbf{X}_b^{-T} $
+\_form#39:$ \mathbf{G_u} = \mathbf{Q}\mathbf{G} $
+\_form#40:$ \mathbf{g} = \dot{\mathbf{G}}\mathbf{\dot{y}} $
+\_form#41:$ \mathbf{\tau} = \mathbf{C}(\mathbf{q},\mathbf{\dot{q}}) $
+\_form#42:$ \mathbf{H} = CRBA(\mathbf{q}) $
+\_form#43:$ \mathbf{\ddot{y}} = (\mathbf{G}^T \mathbf{H}\mathbf{G})^{-1}\mathbf{G}^T_u \mathbf{\tau}_u - \mathbf{G}^T\mathbf{C} - \mathbf{G}^T \mathbf{H}\mathbf{g} $
+\_form#44:$ \mathbf{H}_y = \mathbf{G}^T \mathbf{H}\mathbf{G} $
+\_form#45:$ \mathbf{y} = NewtonRaphson(\mathbf{u}) $
+\_form#46:$ \mathbf{H}_u = \mathbf{G}_u^{-T} \mathbf{G}^T \mathbf{H}\mathbf{G} \mathbf{G}_u^{-1}$
+\_form#47:$ \mathbf{\ddot{q}} = \mathbf{G}\mathbf{\ddot{y}} + \mathbf{g} $
+\_form#48:$ \mathbf{\tau} = \mathbf{M}(\mathbf{q})\mathbf{\ddot{q}} + \mathbf{C}(\mathbf{q},\mathbf{\dot{q}}) $
+\_form#49:$ \mathbf{\tau_y} = \mathbf{G}^T \mathbf{\tau} $
+\_form#50:$ \mathbf{\tau}_u = \mathbf{G}^{-1}_u\mathbf{G}^T\mathbf{\tau} $
+\_form#51:$ \mathbf{\tau}_{ext} = (\mathbf{J}\mathbf{G})^T F_{ext} $
+\_form#52:$ F_{ext} = (\mathbf{J}\mathbf{G})^{-T} \mathbf{\tau}_{ext} $
+\_form#53:$ {\mathbf{k}} = -\dot{\mathbf{K}}\dot{\mathbf{q}} $
+\_form#54:$ \mathbf{C} = (ci: 1<=i<=6)$
+\_form#55:$ \mathbf{E} = (ei: 1<=i<=6)$
+\_form#56:$ \mathbf{l} = norm(ei-ci)$
+\_form#57:$ \mathbf{l} = sum(norm(ei-ci) - l)^2$
+\_form#58:$ \mathbf{y} = f(\mathbf{u})$
+\_form#59:$ \mathbf{u} = f^{-1}(\mathbf{y})$
+\_form#60:$ \mathbf{J} = \mathbf{Q} \frac{\partial \mathbf{\gamma}}{\partial \mathbf{y}} $
+\_form#61:$ \dot{\mathbf{J}} = \frac{d\mathbf{J}}{dt} $
+\_form#62:$ \theta_1 = R + P $
+\_form#63:$ \theta_2 = R - P $
+\_form#64:$ \theta_3 = Y $
