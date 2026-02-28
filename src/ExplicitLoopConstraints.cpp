@@ -28,23 +28,5 @@ VectorXd ExplicitLoopConstraintSet::calc_loopclosure_g(const Math::VectorNd& y,
   VectorXd g = VectorXd::Zero(y.size());
   return g;
 }
-/*
-void ExplicitLoopConstraintSet::set_dofs(unsigned int dof_spanningtree, unsigned
-int dof_active){}
 
-void ExplicitLoopConstraintSet::set_permutation_matrix(MatrixXd
-permutation_matrix){}
-
-unsigned int ExplicitLoopConstraintSet::get_dof_spanningtree(){
-        return dof_spanningtree;
-}
-
-unsigned int ExplicitLoopConstraintSet::get_dof_active(){
-                return dof_active;
-}
-
-MatrixXd ExplicitLoopConstraintSet::get_permutation_matrix(){
-                return permutation_matrix;
-}
-*/
 }  // namespace ExplicitLoopConstraints

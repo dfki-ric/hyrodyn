@@ -47,21 +47,18 @@ SubmechanismsAssembly::SubmechanismsAssembly(std::vector<submechanism> to_assemb
   std::vector<string> jointnames_independent;
   std::vector<string> jointnames_independent_robot;
 
-  // Prepare the joint names vector 
-for (const auto& mech : assembly) {
+  // Prepare the joint names vector
+  for (const auto& mech : assembly) {
     jointnames_spanningtree.insert(jointnames_spanningtree.end(),
                                    mech.jointnames_spanningtree.begin(),
                                    mech.jointnames_spanningtree.end());
-    jointnames_active.insert(jointnames_active.end(),
-                             mech.jointnames_active.begin(),
+    jointnames_active.insert(jointnames_active.end(), mech.jointnames_active.begin(),
                              mech.jointnames_active.end());
-    jointnames_independent.insert(jointnames_independent.end(),
-                                  mech.jointnames_independent.begin(),
+    jointnames_independent.insert(jointnames_independent.end(), mech.jointnames_independent.begin(),
                                   mech.jointnames_independent.end());
-    jointnames_independent_robot.insert(
-        jointnames_independent_robot.end(),
-        mech.jointnames_independent_robot.begin(),
-        mech.jointnames_independent_robot.end());
+    jointnames_independent_robot.insert(jointnames_independent_robot.end(),
+                                        mech.jointnames_independent_robot.begin(),
+                                        mech.jointnames_independent_robot.end());
   }
 
   for (const auto& exo : exteriors) {
@@ -90,7 +87,6 @@ for (const auto& mech : assembly) {
   for (const auto& exo : exteriors) {
     dof_spanningtree += exo.jointnames_spanningtree.size();
   }
-
 
   for (unsigned int i = 0; i < assembly.size(); i++) {
     if (verbose) {
@@ -376,13 +372,10 @@ void submechanism::print_submechanism_details() const {
        << jointnames_independent_robot.size() << endl;
 
   cout << "Active Joint(s): " << endl;
-  for (unsigned int j = 0; j < jointnames_active.size(); j++)
-    cout << jointnames_active[j] << endl;
+  for (unsigned int j = 0; j < jointnames_active.size(); j++) cout << jointnames_active[j] << endl;
 
-  cout << "All the Joint(s) in the submechanism (including fixed joints): "
-       << endl;
-  for (unsigned int j = 0; j < jointnames.size(); j++)
-    cout << jointnames[j] << endl;
+  cout << "All the Joint(s) in the submechanism (including fixed joints): " << endl;
+  for (unsigned int j = 0; j < jointnames.size(); j++) cout << jointnames[j] << endl;
 
   for (uint i = 0; i < loop_constraints_submech.size(); i++) {
     cout << "Loop constraint " << i + 1 << endl;
@@ -409,11 +402,8 @@ void exoskeleton::print_exoskeleton_details() const {
     cout << jointnames_dependent[j] << endl;
 
   cout << "All the Joint(s) in the exo (including fixed joints): " << endl;
-  for (unsigned int j = 0; j < jointnames.size(); j++)
-    cout << jointnames[j] << endl;
+  for (unsigned int j = 0; j < jointnames.size(); j++) cout << jointnames[j] << endl;
   cout << "====================================" << endl;
 }
-
-
 
 }  // namespace AssembleinHyRoDyn

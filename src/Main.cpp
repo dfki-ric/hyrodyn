@@ -12,10 +12,8 @@ int main(int argc, char** argv) {
   hyrodyn::RobotModel_HyRoDyn rh5;
   rh5.welcome();
 
-  std::string filepath_urdf =
-      "robot/rh5v2/submechanisms/RH5v2.urdf";
-  std::string filepath_submechanisms =
-      "robot/rh5v2/submechanisms/submechanisms.yml";
+  std::string filepath_urdf = "robot/rh5v2/submechanisms/RH5v2.urdf";
+  std::string filepath_submechanisms = "robot/rh5v2/submechanisms/submechanisms.yml";
 
   rh5.load_robotmodel(filepath_urdf, filepath_submechanisms);
 

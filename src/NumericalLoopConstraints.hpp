@@ -54,7 +54,7 @@ struct Loop_constraints {
   std::vector<Constraint_dof> constraint_axes;
 
   /// \brief Print the loop constraint details
-  void print_loop_constraints_details() const{
+  void print_loop_constraints_details() const {
     cout << "\e[1m"
          << "<-------Loop Constraints Details------->"
          << "\e[0m" << endl;
