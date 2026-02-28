@@ -83,50 +83,7 @@ struct submechanism {
   std::vector<NUMERICALLOOPCONSTRAINTS::Loop_constraints> loop_constraints_submech;
 
   /// \brief Print the submechanism details
-  void print_submechanism_details() {
-    cout << "=========Submechanism Details=======" << endl;
-    cout << "Type: " << type << endl;
-    cout << "Popular Name: " << name << endl;
-    cout << "Name in the application context: " << contextual_name << endl;
-    cout << "Loaded file path: " << file_path << endl;
-
-    cout << "Joint(s) in spanning tree: " << endl;
-    for (unsigned int j = 0; j < jointnames_spanningtree.size(); j++)
-      cout << jointnames_spanningtree[j] << endl;
-
-    cout << "Spanning Tree DOF: " << jointnames_spanningtree.size() << endl;
-
-    cout << "Independent Joint(s): " << endl;
-    for (unsigned int j = 0; j < jointnames_independent.size(); j++)
-      cout << jointnames_independent[j] << endl;
-    cout << "Independent DOF: " << jointnames_independent.size() << endl;
-
-    cout << "Independent Joint(s) beloging to the robot: " << endl;
-    for (unsigned int j = 0; j < jointnames_independent_robot.size(); j++)
-      cout << jointnames_independent_robot[j] << endl;
-
-    cout << "Independent DOF belonging to robot (excluding free-flyer joint, "
-            "if defined): "
-         << jointnames_independent_robot.size() << endl;
-
-    cout << "Active Joint(s): " << endl;
-    for (unsigned int j = 0; j < jointnames_active.size(); j++)
-      cout << jointnames_active[j] << endl;
-
-    cout << "All the Joint(s) in the submechanism (including fixed joints): " << endl;
-    for (unsigned int j = 0; j < jointnames.size(); j++) cout << jointnames[j] << endl;
-
-    // cout <<"=========Loop Constraints Details======="<<endl;
-    for (uint i = 0; i < loop_constraints_submech.size(); i++) {
-      cout << "\e[1m"
-           << "Loop constraint " << i + 1 << "\e[1m" << endl;
-      loop_constraints_submech[i].print_loop_constraints_details();
-    }
-    cout << "Total number of joints in the submechanisms file (including fixed "
-            "joints): "
-         << jointnames.size() << endl;
-    cout << "====================================" << endl;
-  }
+  void print_submechanism_details() const;
 };
 
 // Struct for storing a exoskeleton to the mechanism
@@ -149,20 +106,7 @@ struct exoskeleton {
   std::vector<string> jointnames;
 
   /// \brief Print the exoskeleton details
-  void print_exoskeleton_details() {
-    cout << "=========Exoskeleton Details=======" << endl;
-    cout << "Name: " << name << endl;
-    cout << "Joint(s) in spanning tree: " << endl;
-    cout << "Loaded file path: " << file_path << endl;
-    for (unsigned int j = 0; j < jointnames_spanningtree.size(); j++)
-      cout << jointnames_spanningtree[j] << endl;
-    cout << "Dependent Joint(s): " << endl;
-    for (unsigned int j = 0; j < jointnames_dependent.size(); j++)
-      cout << jointnames_dependent[j] << endl;
-    cout << "All the Joint(s) in the exo (including fixed joints): " << endl;
-    for (unsigned int j = 0; j < jointnames.size(); j++) cout << jointnames[j] << endl;
-    cout << "====================================" << endl;
-  }
+  void print_exoskeleton_details() const;
 };
 
 class SubmechanismsAssembly : public ExplicitLoopConstraints::ExplicitLoopConstraintSet {

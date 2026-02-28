@@ -36,7 +36,7 @@ struct Constraint_dof {
   /// loop closure constraints
   double baumg_stab_param;
   /// \brief Print constraints information
-  void print_constraint_name_and_axis() {
+  void print_constraint_name_and_axis() const {
     cout << "Name : " << name << endl;
     cout << "Axis : " << axis.transpose() << endl;
     cout << "Baumgarte stabilization parameter : " << baumg_stab_param << endl;
@@ -54,7 +54,7 @@ struct Loop_constraints {
   std::vector<Constraint_dof> constraint_axes;
 
   /// \brief Print the loop constraint details
-  void print_loop_constraints_details() {
+  void print_loop_constraints_details() const{
     cout << "\e[1m"
          << "<-------Loop Constraints Details------->"
          << "\e[0m" << endl;

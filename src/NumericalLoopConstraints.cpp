@@ -74,8 +74,6 @@ NumericalLoopConstraints::NumericalLoopConstraints(
     Ts_k = SpatialTransform(rot_sk, pos_sk);
 
     for (uint j = 0; j < loop_constraints_set[i].constraint_axes.size(); j++) {
-      // cout << "Axis :
-      // "<<loop_constraints_set[i].constraint_axes[j].axis<<endl;
       cs.AddLoopConstraint(pred_body_id, succ_body_id, Tp_k, Ts_k,
                            loop_constraints_set[i].constraint_axes[j].axis, false,
                            loop_constraints_set[i].constraint_axes[j].baumg_stab_param,
