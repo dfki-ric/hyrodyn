@@ -122,14 +122,8 @@ Core Components:
 - rbdl  
   Integrated as a shallow git submodule and built internally. Provides rigid-body dynamics primitives.
 
-### Dependency Structure:
-
-hyrodyn ->urdfreader->rbdl
-
-
-
 ## License
-The code is licensed under the MIT license. See the [LICENSE](LICENSE) file for more details.
+HyRoDyn is distributed under the [3-clause BSD license](https://opensource.org/licenses/BSD-3-Clause). See the [LICENSE](LICENSE) file for more details.
 
 ## Contact Information:
 For further questions or collaboration inquiries, please contact the developers at:
