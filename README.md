@@ -128,20 +128,13 @@ import hyrodyn
 ## 📁 Folder Structure
 
 1. **addons/**: Contains an internal URDF parser used to construct modular robot models.
-
-2. **bin/**: Utility scripts used to generate or manage custom submechanism libraries.
-
+2. **bin/**: Utility scripts used to generate custom submechanism libraries.
 3. **external/**: Third-party libraries used by HyRoDyn. Currently includes RBDL, which provides the rigid-body dynamics primitives.
-
 4. **python/**: Optional Python bindings implemented using pybind11.
-
 5. **robot/**: Example robots including:
    - URDF robot descriptions
    - YAML files defining submechanisms
-
 6. **src/**: Main source code implementing HyRoDyn algorithms for solving the kinematics and dynamics of hybrid robots, including handling closed-loop mechanisms analytically or numerically.
-
-
 7. **docs/**: Documentation generated using Doxygen. The configuration file (`Doxyfile`) is provided to generate the API documentation for the project.
 
 ## License
