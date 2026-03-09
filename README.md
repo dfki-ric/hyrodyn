@@ -1,4 +1,4 @@
-# HyRoDyn
+# Hybrid Robot Dynamics
 [![pipeline status](https://git.hb.dfki.de/hyrodyn/hyrodyn/badges/main/pipeline.svg)](https://git.hb.dfki.de/hyrodyn/hyrodyn/-/pipelines)
 ![C++17](https://img.shields.io/badge/C++-17-blue)
 ![Python](https://img.shields.io/badge/python-3.8+-green)
