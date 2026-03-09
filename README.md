@@ -11,8 +11,8 @@ It exploits the modularity in robot design and can help you solve kinematics and
 ![HyRoDyn](docs/HyRoDyn.png)
 
 <p align="center">
-  <img src="docs/hyrodyn_abstraction.png" width="35%">
-  <img src="docs/rh5_leg_swinging_animation.gif" width="55%">
+  <img src="docs/hyrodyn_abstraction.png" width="45.7%">
+  <img src="docs/rh5_leg_swinging_animation.gif" width="49%">
 </p>
 
 ## ✨ Features
