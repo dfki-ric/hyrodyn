@@ -6,12 +6,13 @@ setup(
     description="HyRoDyn robot dynamics library",
     packages=find_packages(),
     package_data={"hyrodyn": ["*.so"]},
-    scripts=["scripts/tutorial_hyrodyn.py"],
     install_requires=[
         "numpy",
         "matplotlib",
         "pandas",
-        "robomeshcat",
+        "viser",
+        "yourdfpy",
+        "PyYAML",
     ],
-    python_requires=">=3.10",
+    python_requires=">=3.8",
 )
