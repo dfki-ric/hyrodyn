@@ -9,7 +9,9 @@
 Hybrid Robot Dynamics (HyRoDyn) is a kinematics and dynamics solver for series-parallel hybrid robots. 
 It exploits the modularity in robot design and can help you solve kinematics and dynamics of such systems analytically. 
 
-![HyRoDyn](docs/HyRoDyn.png)
+<p align="center">
+  <img src="docs/HyRoDyn.png" width="60%" alt="HyRoDyn">
+</p>
 
 <p align="center">
   <img src="docs/hyrodyn_abstraction.png" width="45.7%">
