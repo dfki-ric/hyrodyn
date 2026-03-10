@@ -114,16 +114,7 @@ make -j
 
 ### 3. Build with Python Bindings
 
-```bash
-cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_PYTHON_BINDINGS=ON ..
-make -j
-```
-
-#### You can then use it in Python:
-
-```python
-import hyrodyn
-```
+To build HyRoDyn with Python bindings, please follow the instructions in the [Python bindings section](python/README.md).
 
 ## 📁 Folder Structure
 
