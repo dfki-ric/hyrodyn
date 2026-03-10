@@ -1,6 +1,7 @@
 # Hybrid Robot Dynamics
 [![pipeline status](https://git.hb.dfki.de/hyrodyn/hyrodyn/badges/main/pipeline.svg)](https://git.hb.dfki.de/hyrodyn/hyrodyn/-/pipelines)
-![C++17](https://img.shields.io/badge/C++-17-blue)
+![Ubuntu](https://img.shields.io/badge/%2022.04-E95420?logo=ubuntu)
+![C++](https://img.shields.io/badge/C++-17-blue)
 ![Python](https://img.shields.io/badge/python-3.8+-green)
 ![License](https://img.shields.io/badge/license-BSD--3--Clause-orange)
 
@@ -28,19 +29,19 @@ It exploits the modularity in robot design and can help you solve kinematics and
 
 ### C++ Build
 
-- CMake ≥ 3.10  
-- C++17 compatible compiler  
-- Eigen3  
-- yaml-cpp  
-- Boost (all components)  
-- TinyXML  
+- CMake ≥ 3.10
+- C++17 compatible compiler
+- Eigen3
+- yaml-cpp
+- Boost (all components)
+- TinyXML
 - GoogleTest (for unit tests)
 
 ### Python Bindings (Optional)
 
-- Python ≥ 3.8  
-- pybind11  
-- Python development headers  
+- Python ≥ 3.8
+- pybind11
+- Python development headers
 
 
 ## 🔧 Build Instructions
@@ -88,7 +89,7 @@ sudo apt install python3-dev python3-pip
 pip3 install pybind11
 ```
 
-## Build HyRoDyn
+## 🔧 Build HyRoDyn
 
 ### 1. Clone the Repository
 
@@ -136,7 +137,7 @@ import hyrodyn
 6. **src/**: Main source code implementing HyRoDyn algorithms for solving the kinematics and dynamics of hybrid robots, including handling closed-loop mechanisms analytically or numerically.
 7. **docs/**: Documentation generated using Doxygen. The configuration file (`Doxyfile`) is provided to generate the API documentation for the project.
 
-## License
+## 📜 License
 HyRoDyn is distributed under the [3-clause BSD license](https://opensource.org/licenses/BSD-3-Clause). See the [LICENSE](LICENSE) file for more details.
 
 ## 📚 Citation
@@ -169,7 +170,7 @@ This project would not be possible without the contributions of the following re
 - [rbdl](https://github.com/rbdl/rbdl): provides rigid-body dynamics primitives.
 
 
-## Contact Information:
+## 📧 Contact Information:
 For further questions or collaboration inquiries, please contact the developers at:
 - [Rohit Kumar](mailto:r.kumar@dfki.de)
 

@@ -24,6 +24,7 @@ target_include_directories(hyrodyn_python
 # Python-visible module name
 set_target_properties(hyrodyn_python PROPERTIES
     OUTPUT_NAME hyrodyn
-    LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/python_bindings
+    PREFIX ""
+    LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/python/hyrodyn
 )
 

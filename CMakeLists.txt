@@ -9,7 +9,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_BUILD_TYPE Release)
 
-option(BUILD_PYTHON_BINDINGS "Build Python bindings using pybind11" OFF)
+option(BUILD_PYTHON_BINDINGS "Build Python bindings using pybind11" ON)
 option(BUILD_TESTING "Build unit tests" ON)
 option(BUILD_ADDON_BENCHMARK "Build the benchmarking tool" ON)
 # ---------------- Dependencies ----------------
