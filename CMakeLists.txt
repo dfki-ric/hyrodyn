@@ -11,6 +11,7 @@ set(CMAKE_BUILD_TYPE Release)
 
 option(BUILD_PYTHON_BINDINGS "Build Python bindings using pybind11" OFF)
 option(BUILD_TESTING "Build unit tests" ON)
+option(BUILD_ADDON_BENCHMARK "Build the benchmarking tool" ON)
 # ---------------- Dependencies ----------------
 find_package(Eigen3 REQUIRED)
 find_package(yaml-cpp REQUIRED)
@@ -59,6 +60,10 @@ include(CTest)
 if(BUILD_TESTING)
   enable_testing()
   add_subdirectory(test)
+endif()
+
+if(BUILD_ADDON_BENCHMARK)
+  add_subdirectory(addons/benchmark)
 endif()
 # ---------------- Installation ----------------
 

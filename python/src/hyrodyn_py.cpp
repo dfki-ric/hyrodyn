@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-#include "robot_model_hyrodyn.hpp"  // Adjust if your class lives elsewhere
+#include "robot_model_hyrodyn.hpp" 
 
 namespace py = pybind11;
 

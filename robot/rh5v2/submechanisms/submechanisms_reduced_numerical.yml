@@ -27,8 +27,8 @@ submechanisms:
   - BodyBR2
   - BodyActR
   name: rh5_torso
-  type: 2SPU+1U
-#  type: "NUMERICAL"
+  # type: 2SPU+1U
+  type: "NUMERICAL"
   loop_constraints:
   - cut_joint: "BodyActL"
     predecessor_body: "BodyActL_Link"
@@ -100,12 +100,12 @@ submechanisms:
   - ALElbowB11
   - ALElbowAct
   name: lambda_mechanism
-  type: rrPr
-#  type: "NUMERICAL"
+  # type: rrPr
+  type: "NUMERICAL"
   loop_constraints:
   - cut_joint: "ALElbowAct"
-    predecessor_body: "ALElbow_Link"
-    successor_body: "ALElbowAct_Link"
+    predecessor_body: "ALElbowAct_Link"
+    successor_body: "ALElbow_Link"
     constraint_axes: 
     - name: "loopTY"
       axis: [0.,0.,0.,0.,1.,0.]
@@ -160,12 +160,12 @@ submechanisms:
   - ARElbowB11
   - ARElbowAct
   name: lambda_mechanism
-  type: rrPr
-#  type: "NUMERICAL"
+  # type: rrPr
+  type: "NUMERICAL"
   loop_constraints:
   - cut_joint: "ARElbowAct"
-    predecessor_body: "ARElbow_Link"
-    successor_body: "ARElbowAct_Link"
+    predecessor_body: "ARElbowAct_Link"
+    successor_body: "ARElbow_Link"
     constraint_axes: 
     - name: "loopTY"
       axis: [0.,0.,0.,0.,1.,0.]

@@ -45,7 +45,7 @@ It exploits the modularity in robot design and can help you solve kinematics and
 
 ## 🔧 Build Instructions
 
-### Linux: HyRoDyn
+### Linux
 
 #### 1. Update System
 
@@ -69,13 +69,13 @@ sudo apt install -y --no-install-recommends \
     libgtest-dev
 ```
 
-Optional (recommended for advanced CMake configuration):
+##### Optional (recommended for advanced CMake configuration):
 
 ```bash
 sudo apt install cmake-curses-gui
 ```
 
-Optional: install clang
+##### Optional: install clang
 
 ```bash
 sudo apt install clang
@@ -90,7 +90,7 @@ pip3 install pybind11
 
 ## Build HyRoDyn
 
-### Clone the Repository
+### 1. Clone the Repository
 
 ```bash
 git clone --recursive git@git.hb.dfki.de:hyrodyn/hyrodyn.git
@@ -103,23 +103,22 @@ If already cloned without `--recursive`:
 git submodule update --init --recursive
 ```
 
-### Compile
+### 2. Compile
 
 ```bash
-mkdir build
-cd build
+mkdir build && cd build
 cmake -DCMAKE_BUILD_TYPE=Release ..
 make -j
 ```
 
-### Build with Python Bindings
+### 3. Build with Python Bindings
 
 ```bash
 cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_PYTHON_BINDINGS=ON ..
 make -j
 ```
 
-You can then use it in Python:
+#### You can then use it in Python:
 
 ```python
 import hyrodyn
