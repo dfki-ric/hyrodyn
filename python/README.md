@@ -43,5 +43,5 @@ python scripts/play_hyrodyn.py
 
 The following video demonstrates interactive robot visualization using the Python bindings and Viser.
 
-<video src="../docs/slider_gui_hyrodyn.mp4" controls width="800"></video>
+![HyRoDyn GUI](../docs/slider_gui.gif)
 ---
