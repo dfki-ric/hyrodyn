@@ -167,4 +167,4 @@ This project would not be possible without the contributions of the following re
 For further questions or collaboration inquiries, please contact the developers at:
 - [Rohit Kumar](mailto:r.kumar@dfki.de)
 
-
+Copyright 2026, DFKI GmbH / Robotics Innovation Center
