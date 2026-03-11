@@ -1,4 +1,5 @@
 build/*
 *.out
 python/hyrodyn.egg-info/*
-python/hyrodyn/
+python/hyrodyn/*.so
+python/hyrodyn/__pycache__/
