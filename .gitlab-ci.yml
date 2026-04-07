@@ -7,7 +7,6 @@ workflow:
         - bin/**/* 
         - doc/**/* 
         - docker/**/*
-        - python/**/* 
       when: never
     - when: always
 
