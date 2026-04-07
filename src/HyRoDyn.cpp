@@ -780,6 +780,43 @@ void calc_mass_interia_matrix_actuation_space_including_floating_base(
       Gu.inverse();
 }
 
+void calc_nonlinear_effects_actuation_space(Model& model, ExplicitLoopConstraintSet& elcs,
+                                            const Math::VectorNd& y, const Math::VectorNd& yd,
+                                            Math::VectorNd& Cu) {
+  // Compute the full system state from y
+  VectorXd q(model.dof_count);
+  calc_sysstate_q(model, elcs, y, q);
+
+  VectorXd qd(model.dof_count);
+  calc_sysstate_qdot(model, elcs, y, yd, qd);
+
+  // Compute the loop closure jacobian
+  MatrixXd G(elcs.get_dof_spanningtree(), elcs.get_dof_independent());
+  G = elcs.calc_loopclosure_Jacobian(y);
+
+  // Compute the actuator jacobian Gu = Q1 * G * Q2^T
+  MatrixXd Gu;
+  Gu.setZero(elcs.get_dof_active(), elcs.get_dof_active());
+  Gu = elcs.get_permutation_matrix() * G * elcs.get_permutation_matrix2().transpose();
+
+  // Compute the loop closure g term (Gdot * yd)
+  VectorNd g(elcs.get_dof_spanningtree());
+  g = elcs.calc_loopclosure_g(y, yd);
+
+  // Compute the nonlinear effects (Coriolis + gravity) in spanning tree space
+  VectorXd C(model.dof_count);
+  NonlinearEffects(model, q, qd, C);
+
+  // Compute the mass-inertia matrix in spanning tree space (needed for the g correction)
+  MatrixXd H_q;
+  H_q.setZero(model.dof_count, model.dof_count);
+  CompositeRigidBodyAlgorithm(model, q, H_q);
+
+  // Project nonlinear effects to actuation space: Cu = Gu^{-T} * G^T * (C + H*g)
+  Cu.setZero(elcs.get_dof_active());
+  Cu = Gu.inverse().transpose() * G.transpose() * (C + H_q * g);
+}
+
 SpatialVector calc_kinematicmodel_forward(Model& model, ExplicitLoopConstraintSet& elcs,
                                           const Math::VectorNd& y, const Math::VectorNd& yd,
                                           const char* body_name) {

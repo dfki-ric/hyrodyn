@@ -627,6 +627,24 @@ void calc_mass_interia_matrix_actuation_space(Model& model, ExplicitLoopConstrai
 void calc_mass_interia_matrix_actuation_space_including_floating_base(
     Model& model, ExplicitLoopConstraintSet& elcs, const Math::VectorNd& y, Math::MatrixNd& Hufb);
 
+/** \brief Compute the nonlinear effects vector (p x 1) of the robot projected
+ * in actuation space
+ *
+ * The following equations are used: \n
+ * \f$ \mathbf{q} = \gamma(\mathbf{y}) \f$ \n
+ * \f$ \mathbf{C} = NonlinearEffects(\mathbf{q}, \mathbf{\dot{q}}) \f$ \n
+ * \f$ \mathbf{H} = CRBA(\mathbf{q}) \f$ \n
+ * \f$ \mathbf{g} = \dot{\mathbf{G}}\mathbf{\dot{y}} \f$ \n
+ * \f$ \mathbf{C}_u = \mathbf{G}_u^{-T} \mathbf{G}^T (\mathbf{C} +
+ * \mathbf{H}\mathbf{g}) \f$ \param model RBDL model \param elcs Explicit Loop
+ * Constraints Set \param y vector of independent joint positions \param yd
+ * vector of independent joint velocities \param Cu nonlinear effects vector of
+ * the robot projected in actuation space (output)
+ */
+void calc_nonlinear_effects_actuation_space(Model& model, ExplicitLoopConstraintSet& elcs,
+                                            const Math::VectorNd& y, const Math::VectorNd& yd,
+                                            Math::VectorNd& Cu);
+
 /** \brief Returns the actuator forces from the input motion (y, yd, ydd) to a
  * robot by solving the inverse dynamic model
  *

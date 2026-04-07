@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-#include "robot_model_hyrodyn.hpp" 
+#include "robot_model_hyrodyn.hpp"
 
 namespace py = pybind11;
 
@@ -32,6 +32,10 @@ PYBIND11_MODULE(hyrodyn, m) {
       .def("calculate_kinetic_energy", &hyrodyn::RobotModel_HyRoDyn::calculate_kinetic_energy)
       .def("calculate_potential_energy", &hyrodyn::RobotModel_HyRoDyn::calculate_potential_energy)
       .def("calculate_total_energy", &hyrodyn::RobotModel_HyRoDyn::calculate_total_energy)
+      .def("calculate_mass_interia_matrix_actuation_space",
+           &hyrodyn::RobotModel_HyRoDyn::calculate_mass_interia_matrix_actuation_space)
+      .def("calculate_nle_actuation_space",
+           &hyrodyn::RobotModel_HyRoDyn::calculate_nle_actuation_space)
 
       // Properties (exposed as read/write numpy arrays)
       .def_readwrite("Q", &hyrodyn::RobotModel_HyRoDyn::Q)
@@ -77,5 +81,9 @@ PYBIND11_MODULE(hyrodyn, m) {
       .def_readonly("independent_dof", &hyrodyn::RobotModel_HyRoDyn::independent_dof)
       .def_readonly("submechanism_active_dof_distribution",
                     &hyrodyn::RobotModel_HyRoDyn::submechanism_active_dof_distribution)
-      .def_readonly("active_dof", &hyrodyn::RobotModel_HyRoDyn::active_dof);
+      .def_readonly("active_dof", &hyrodyn::RobotModel_HyRoDyn::active_dof)
+
+      // Actuation-space dynamic quantities (populated by calculate_* methods above)
+      .def_readonly("Hu", &hyrodyn::RobotModel_HyRoDyn::Hu)
+      .def_readonly("Cu", &hyrodyn::RobotModel_HyRoDyn::Cu);
 }

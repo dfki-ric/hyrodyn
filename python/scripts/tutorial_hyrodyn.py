@@ -101,6 +101,14 @@ def main ():
 	robot.calculate_forward_dynamics()
 	print("Forward dynamics output: ", robot.ydd)
 
+	# Mass-inertia matrix in actuation space
+	robot.calculate_mass_interia_matrix_actuation_space()
+	print("Mass-inertia matrix in actuation space (Hu):\n", robot.Hu)
+
+	# Nonlinear effects (Coriolis + gravity) in actuation space
+	robot.calculate_nle_actuation_space()
+	print("Nonlinear effects in actuation space (Cu): ", robot.Cu)
+
 if __name__ == '__main__':
 	# Call the main function
 	main()

@@ -234,6 +234,8 @@ class RobotModel_HyRoDyn {
   /// \brief Mass-inertia Matrix ((p+floating_dof)x(p+floating_dof)) projected
   /// to actuation space including floating base coordinates
   Math::MatrixNd Hufb;
+  /// \brief Non-linear effects vector (px1) projected to actuation space
+  Math::VectorNd Cu;
 
   //! Print a welcome to stdout
   void welcome();
@@ -391,6 +393,8 @@ class RobotModel_HyRoDyn {
   //! including the floating base
   void calculate_mass_interia_matrix_actuation_space_including_floatingbase();
 
+  //! Compute the Non-liner effects (Cu) from independent joint state (y, yd)
+  void calculate_nle_actuation_space();
   //! Compute the Zero Moment Point (ZMP) of the robot from independent joint
   //! state (y, yd, ydd) and contact surface definition (contact_surface_point,
   //! contact_surface_normal)

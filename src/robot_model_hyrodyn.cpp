@@ -647,6 +647,11 @@ void RobotModel_HyRoDyn::calculate_mass_interia_matrix_actuation_space_including
   HyRoDyn::calc_mass_interia_matrix_actuation_space_including_floating_base(m, *elcs, y, Hufb);
 }
 
+void RobotModel_HyRoDyn::calculate_nle_actuation_space() {
+  // compute the nonlinear effects (Coriolis + gravity) projected to actuation space
+  HyRoDyn::calc_nonlinear_effects_actuation_space(m, *elcs, y, yd, Cu);
+}
+
 void RobotModel_HyRoDyn::calculate_simplified_inverse_dynamics() {
   MatrixXd Gu;
   Gu.setZero(elcs->get_dof_active(), elcs->get_dof_active());
@@ -886,6 +891,7 @@ void RobotModel_HyRoDyn::load_robotmodel(string filepath_urdf, string filepath_s
   H = MatrixNd::Zero(independent_dof, independent_dof);
   Hu = MatrixNd::Zero(active_dof, active_dof);
   Hufb = MatrixNd::Zero(floatingbase_dof + active_dof, floatingbase_dof + active_dof);
+  Cu = VectorNd::Zero(active_dof);
 
   HyRoDyn::calc_actuatorstate_u(m, *elcs, y_zero, u);
   std::cout << "u for system: " << endl << u.transpose() << endl;
