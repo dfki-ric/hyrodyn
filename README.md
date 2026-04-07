@@ -87,8 +87,7 @@ sudo apt install clang
 #### 3. Install Python Dependencies (Optional – for Python bindings)
 
 ```bash
-sudo apt install python3-dev python3-pip
-pip3 install pybind11
+sudo apt install -y python3-dev python3-pybind11
 ```
 
 ## 🔧 Build HyRoDyn
@@ -117,6 +116,16 @@ make -j
 ### 3. Build with Python Bindings
 
 To build HyRoDyn with Python bindings, please follow the instructions in the [Python bindings section](python/README.md).
+
+## 🚀 Usage & Examples
+
+For a complete C++ usage example, see [src/Main.cpp](src/Main.cpp).
+
+For Python usage, see [python/scripts/tutorial_hyrodyn.py](python/scripts/tutorial_hyrodyn.py) and follow the setup instructions in [python/README.md](python/README.md).
+
+> **Note:** HyRoDyn requires both a URDF file and a submechanisms YAML file to define the modular robot structure.
+> Example submechanism files for the provided robots can be found under `robot/<robot_name>/urdf/submechanisms.yml`
+> (e.g. [`robot/leg/urdf/submechanisms.yml`](robot/leg/urdf/submechanisms.yml)).
 
 ## 📁 Folder Structure
 
