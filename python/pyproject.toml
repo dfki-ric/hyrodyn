@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hyrodyn"
+version = "0.1.0"
+description = "HyRoDyn robot dynamics library"
+authors = [
+    { name = "Rohit Kumar", email = "r.kumar@dfki.de" }
+]
+readme = "README.md"
+requires-python = ">=3.8"
+
+dependencies = [
+    "numpy",
+    "matplotlib",
+    "pandas",
+    "viser==1.0.24",
+    "yourdfpy",
+    "PyYAML",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["hyrodyn*"]
+
+[tool.setuptools.package-data]
+hyrodyn = ["*.so"]

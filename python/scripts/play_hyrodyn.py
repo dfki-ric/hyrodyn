@@ -115,7 +115,10 @@ def main():
     # Start Viser
     # -------------------------------------------------
 
-    server = viser.ViserServer()
+    server = viser.ViserServer(
+        host="0.0.0.0",
+        port=8080,
+    )
 
     urdf = URDF.load(path_to_urdf)
 
@@ -171,7 +174,7 @@ def main():
     # Keep server alive
     # -------------------------------------------------
 
-    print("Open browser at: http://localhost:8080")
+    # print("Open browser at: http://localhost:8080")
 
     while True:
         time.sleep(10)
