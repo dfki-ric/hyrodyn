@@ -4,9 +4,9 @@
   </description>
   <author>Shivesh Kumar/shivesh.kumar@dfki.de</author>
   <maintainer>Rohit Kumar/r.kumar@dfki.de</maintainer>
-  <license>zlib</license>
+  <license>bsd-3-clause</license>
   <url>https://git.hb.dfki.de/hyrodyn/hyrodyn</url>
-  <logo>https://git.hb.dfki.de/hyrodyn/hyrodyn/blob/main/docs/HyRoDyn.png</logo>
+  <logo>https://git.hb.dfki.de/hyrodyn/hyrodyn/raw/main/docs/HyRoDyn.png</logo>
   <depend package="cmake" />
   <depend package="eigen3" />
   <depend package="yaml-cpp" />
