@@ -1,5 +1,11 @@
 build/*
 *.out
-python/hyrodyn.egg-info/*
+python/hyrodyn.egg-info/
 python/hyrodyn/*.so
 python/hyrodyn/__pycache__/
+python/np
+python/time
+python/viser
+python/yaml
+.venv/
+docs/doxygen/
