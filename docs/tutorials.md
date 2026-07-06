@@ -29,6 +29,37 @@ Every HyRoDyn computation takes `y` (independent joint positions) as the primary
 
 Both a **URDF** file (robot geometry/inertia) and a **submechanisms YAML** file (closed-loop topology) are required to load a robot model.
 
+### Numerical submechanisms — important limitations
+
+HyRoDyn supports two strategies for solving closed-loop constraints: **analytical** (preferred when a closed-form solution exists) and **numerical** (general-purpose, used for arbitrary topologies).
+
+> **Warning — numerical solver convergence**
+>
+> The numerical solver (`CalcAssemblyQ` / `NumericalLoopConstraints`) uses a local iterative method. It can **fail, jump to a wrong branch, or diverge** if the initial joint configuration is far from the target configuration. This is especially dangerous on real hardware, where an unexpected joint-space jump can cause damage.
+>
+> **Always follow these steps when using numerical submechanisms:**
+>
+> 1. **Start from zero.** The solver is initialised at the zero-position of the URDF. Make sure the URDF zero-position is a physically valid, assembled configuration for your mechanism.
+> 2. **Interpolate, never jump.** Never command a large step directly. Instead, interpolate `y` from its current value to the target in small increments (e.g. 50–100 steps) and call `calculate_system_state()` at each step to let the solver track the solution branch continuously.
+> 3. **Validate in simulation first.** Before running any motion on a real system, replay the full trajectory in simulation and verify that `Q` evolves smoothly without discontinuities.
+> 4. **Check for divergence.** After each `calculate_system_state()` call, monitor the joint limits violation. A solution that lands outside the joint limits indicates the solver has lost the correct branch — **do not continue tracking**. Instead, damp the system (reduce velocity commands toward zero) and bring the robot back to a known-safe configuration before retrying.
+>
+> A minimal interpolation pattern in Python:
+>
+> ```python
+> import numpy as np
+>
+> y_start = np.zeros(robot.independent_dof)   # URDF zero position
+> y_target = np.array([...])                  # desired configuration
+> N = 100                                     # number of interpolation steps
+>
+> for alpha in np.linspace(0.0, 1.0, N):
+>     robot.y = (1.0 - alpha) * y_start + alpha * y_target
+>     robot.calculate_system_state()           # tracks the solution branch
+>
+> # robot.Q now holds the full spanning-tree state at y_target
+> ```
+
 ---
 
 ## Tutorial 1 — C++: Load a Robot and Compute Forward Kinematics
@@ -146,6 +177,8 @@ robot = hyrodyn.RobotModel(
 n = robot.independent_dof
 
 # ── System state ──────────────────────────────────────────────────────────────
+# If your robot uses numerical submechanisms, interpolate from zero to the
+# target rather than jumping directly — see the warning in Key Concepts.
 robot.y = np.zeros(n)
 robot.y[0] = 0.2          # move first independent joint 0.2 rad
 
@@ -161,6 +194,8 @@ print("End-effector pose:", robot.pose)
 # ── Inverse kinematics ────────────────────────────────────────────────────────
 # Store target pose and solve IK
 robot.pose_input = [robot.pose]
+# For numerical submechanisms, set y to a configuration close to the expected
+# IK solution rather than jumping to zero from a far-away pose.
 robot.y = np.zeros(n)          # reset configuration for initial guess
 robot.calculate_inverse_kinematics(["LLAnklePitch_Link"])
 print("IK solution y:", robot.y)
