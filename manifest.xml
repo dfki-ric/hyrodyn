@@ -6,7 +6,7 @@
   <maintainer>Rohit Kumar/r.kumar@dfki.de</maintainer>
   <license>zlib</license>
   <url>https://git.hb.dfki.de/hyrodyn/hyrodyn</url>
-  <logo>https://git.hb.dfki.de/hyrodyn/hyrodyn/HyRoDyn.png</logo>
+  <logo>https://git.hb.dfki.de/hyrodyn/hyrodyn/blob/main/docs/HyRoDyn.png</logo>
   <depend package="cmake" />
   <depend package="eigen3" />
   <depend package="yaml-cpp" />
