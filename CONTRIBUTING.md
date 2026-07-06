@@ -1,105 +1,188 @@
-# Coding style for HyRoDyn
+# Contributing to HyRoDyn
 
-This documents gives an overview of the coding style used in the software package Hybrid Robot Dynamics (HyRoDyn) and also the general goals of HyRoDyn.
+Thank you for your interest in contributing to Hybrid Robot Dynamics (HyRoDyn)! This document covers everything you need to know — from reporting bugs to submitting code.
 
-If you are considering contributing to this library please read the whole document.
+---
 
-## General Purpose of HyRoDyn
+## Table of Contents
 
-Hybrid Robot Dynamics (HyRoDyn) is an analytical and modular software workbench written in C++ for solving kinematics and dynamics of highly complex series-parallel hybrid robots. The main idea behind HyRoDyn is to store the closed form solutions to the loop closure constraints in a configurable mechanism library which is identified by its type (for e.g. 1-RRPR, 2SPU+1U, 2SPRR+1U, 6-UPS).  Based on submechanisms defined in a hybrid robot, HyRoDyn can modularly compose the loop closure function of the overall system in an automated way. The resulting loop closure Jacobian has a block diagonal structure that can be exploited in the computation of various forward and inverse kinematics and dynamics algorithms. HyRoDyn is implemented in C++ and utilizes recursive O(n) multi-body dynamics  algorithms  for  tree  type  systems  from  the Rigid Body Dynamics Library (RBDL) based on Featherstone's algorithms. Presently, closed form solutions to mechanisms such as 1-RRPR, 2-SPU+1U, 2-SPRR+1U, 6-RUS, 6-UPS, parallelogram chains, and numerical methods are available in its submechanism libraries and HyRoDyn can be used to analytically solve the kinematics and dynamics of arbitrary series-parallel hybrid robots composed of these submechanism modules. Actuation of the robot can be arbitrarily selected.
+- [Reporting Issues](#reporting-issues)
+- [How to Contribute Code](#how-to-contribute-code)
+- [Branch Naming](#branch-naming)
+- [Coding Style](#coding-style)
+- [Testing](#testing)
+- [Documentation](#documentation)
+- [Licensing](#licensing)
 
-Just like its parent library, the algorithmic parts of HyRoDyn's code try to follow the algorithmic or mathematical notations instead of wrapping algorithms in elegant programming patterns. 
+---
 
-### Aims and Non-Aims of HyRoDyn
+## Reporting Issues
 
-This is what HyRoDyn aims to be:
+Please open an issue on the [HyRoDyn GitLab repository](https://git.hb.dfki.de/hyrodyn/hyrodyn/-/issues) and include:
 
-* HyRoDyn aims to be lean (think before adding an unnecessary dependency) 
-* HyRoDyn aims to be easily integrated into other projects (no framework dependence to RoCK or ROS)
-* HyRoDyn aims to be suitable as a foundation for sophisticated control architectures
-* HyRoDyn gives you access to its internals and provides only a thin abstraction layer over the actual computation
+- A short, descriptive title.
+- Steps to reproduce the problem.
+- The URDF / submechanisms YAML file (or a minimal reproducer) if applicable.
+- Expected behaviour vs. actual behaviour.
+- HyRoDyn version or commit hash.
 
-And this is what HyRoDyn is ***not*** about:
+Bug reports that come with a failing test case are especially welcome.
 
-* HyRoDyn is ***not*** a fully fledged simulator with collision detection or fancy graphics or a control toolbox. 
-* HyRoDyn does not keep you from screwing up things.
+---
+
+## How to Contribute Code
+
+1. **Fork / clone** the repository:
+   ```bash
+   git clone --recursive git@git.hb.dfki.de:hyrodyn/hyrodyn.git
+   ```
+
+2. **Create a feature branch** from `main` (see [Branch Naming](#branch-naming)).
+
+3. **Implement the feature or fix**, following the [Coding Style](#coding-style) below.
+
+4. **Write or update unit tests** covering the new functionality.  
+   Bugfixes must include a test that reproduces the bug.
+
+5. **Run the full test suite** and make sure everything passes (see [Testing](#testing)).
+
+6. **Open a Merge Request** (MR) against `main`:
+   - Describe *what* the MR changes and *why*.
+   - Reference any related issues (e.g. `Closes #42`).
+   - Keep the MR focused — one logical change per MR.
+
+By submitting a Merge Request you confirm that you have the right to contribute the code and that you accept it being published under the [BSD 3-Clause License](LICENSE).
+
+---
+
+## Branch Naming
+
+| Purpose | Convention | Example |
+|---------|-----------|---------|
+| New feature | `feature/<short-description>` | `feature/new-submechanism` |
+| Bug fix | `fix/<short-description>` | `fix/fk-quaternion-sign` |
+| Documentation | `docs/<short-description>` | `docs/tutorial-python` |
+| Refactoring | `refactor/<short-description>` | `refactor/elcs-cleanup` |
+
+---
+
+## Coding Style
+
+This section gives an overview of the coding conventions used in HyRoDyn.
+
+Just like its parent library (RBDL), the algorithmic parts of HyRoDyn try to follow mathematical or algorithmic notation instead of wrapping algorithms in elaborate programming patterns.
+
+### Aims and Non-Aims
+
+HyRoDyn aims to be:
+
+* **Lean** — think before adding an unnecessary dependency.
+* **Easily integrated** — no framework dependence on RoCK or ROS.
+* **Suitable as a foundation** for sophisticated control architectures.
+* **Transparent** — only a thin abstraction layer over the actual computation.
+
+HyRoDyn is **not**:
+
+* A fully fledged simulator with collision detection or fancy graphics.
+* A safety net — it does not keep you from screwing up things.
 
 Multibody dynamics is a complicated subject and in this codebase the preference is mathematical and algorithmic clarity over elegant software architecture.
 
-## Licensing
+### Data Storage
 
-HyRoDyn is published under the very permissive zlib license that gives you a lot of freedom in the use of full library or parts of it. The core part of the library is solely using this license but addons may use different licenses. 
+HyRoDyn avoids dynamic allocations and prefers contiguous memory (`std::vector`) over fragmented structures (`std::list`, heap-allocated trees).
 
-There is no formal contributor license agreement for this project. Instead when you submit patches or create a pull request it is assumed that you have the rights to transfer the corresponding code to the HyRoDyn project and that you are okay that the code will be published as part of HyRoDyn.
+Use the **Structure-of-Arrays (SOA)** pattern where possible — e.g. the velocities `v` of all bodies are stored as a `std::vector<SpatialVector>` in the `Model` struct.
 
-## Data Storage
+### Naming Conventions
 
-HyRoDyn tries to avoid dynamic allocations and prefers contiguous memory storage such as in ```std::vectors``` over possibly fragmented memory as in ```std::list``` or heap allocated tree structures.
+1. Structs and classes: `CamelCase` — e.g. `ConstraintSet`
+2. Struct/class members: `lowerCamelCase` — e.g. `Model::dofCount`
+   - Exception: mathematical symbols from algorithm references (e.g. `S` for joint motion subspace, with subscripts via `_`).
+3. Only the first letter of an acronym is capitalised — e.g. DOF → `jointDofCount`.
+4. Local variables: `snake_case`.
 
-Where possible we use the Structure-of-Arrays (SOA) approach to store data, e.g. the velocities v of all bodies is stored in an array (```std::vector```) of ```SpatialVector```s in the ```Model``` structure.
+**Examples:**
 
-## Naming Conventions
+```cpp
+struct Model {
+  std::vector<SpatialVector> v;          // ok — v is a symbol
+  std::vector<SpatialVector> S;          // ok — S is used in the reference algorithm
+  std::vector<double> u;                 // ok
+  std::vector<Vector3d> multdof3_u;      // ok — 3-dof specialisation of u
 
-1. Structs and classes use CamelCase, e.g. ```ConstraintSet```
-2. Struct and class members use the lowerCamelCase convention, e.g.
-  ```Model::dofCount```.
-  Exceptions are:
-    1. The member variable is a mathematical symbol in an algorithm reference, E.g. ```S``` is commonly used to denote the joint motion subspace, then we use the algorithm notation. For mathematical
-    symbols we also allow the underscore ```_``` to denote a subscript.
-    2. Specializations of existing variables may be prefixed with an identifier, followed by a underscore. E.g. ```Model::S``` is the default storage for joint motion subspaces, however for the          specialized 3-DOF joints it uses the prefix ```multdof3_``` and are therefore stored in 
-```Model::multdof3_S```.
-3. Only the first letter of an acronym is using a capital letter, e.g. degree of freedom (DOF) would be used as ```jointDofCount```, or ```dofCount```.
-4. Variables that are not member variables use the ```snake_case``` convention.
+  std::vector<unsigned int> mJointIndex; // NOT OK: invalid prefix
+  unsigned int DOFCount;                 // NOT OK: only first letter of abbreviation should be upper case
+  double error_tol;                      // NOT OK: use lowerCamelCase for members
+  void CalcPositions();                  // NOT OK: member functions must start with a lower-case letter
+};
+```
 
-### Examples
+### Error Handling
 
-    struct Model {
-      std::vector<SpatialVector> v;          // ok, v is an  
-      std::vector<SpatialVector> S;          // ok, S is commonly used in a reference algorithm
-      std::vector<double> u;                 // ok
-      std::vector<Vector3d> multdof3_u;      // ok, 3-dof specialization of Model::u
+HyRoDyn fails loudly and aborts on error — this helps you spot mistakes early.  
+Code must compile **without warnings** with all compiler warnings enabled.
 
-      std::vector<unsigned int> mJointIndex; // NOT OK: invalid prefix
-      unsigned int DOFCount;                 // NOT OK: only first letter of abbreviation should be in upper case
-      double error_tol;                      // NOT OK: use camelCase instead of snake_case
-      void CalcPositions();                  // NOT OK: camelCase for member variables and function must start with lower-case name
+### Const Correctness
 
-    };
+Parameters that are not expected to change must be `const`. Use const references whenever possible.
 
-## Error Handling
+### Eigen
 
-HyRoDyn will fail loudly and abort if an error occurs. This allows you to spot errors early on.
+Use dynamic `VectorXd`/`MatrixXd` only when absolutely necessary. Always initialise them with zeros and a size before use to avoid garbage computations.
 
-Code must compile without warnings with all compiler warnings enabled.
+### Comments
 
-## Const Correctness
+The doxygen comments belong in the **header files**, not in `.cpp` files.  
+Within the code itself, comments should clarify non-obvious ideas or sections — write readable code first.
 
-This code uses const correctness, i.e. parameters that are not expected to change must be specified as const. Use const references whenever possible. For some optional variables we use pointers, but when possible use references.
-
-## Working with Eigen::VectorXd, Eigen::MatrixXd etc.
-
-Use dynamic Vectors or Matrices only when they are absolutely necessary and unavoidable. When working with such types, make sure you initiliaze them with zeros and assign them a size whenever possible. Otherwise it may lead to garbage computations in many machines.
-
-## Documentation
-
-Most importantly the code should be readable to someone who is familiar with multibody dynamics, especially with Featherstone's notation. The documentation should mainly serve to clarify the API in terms of doxygen comments. Within the code itself comments may be used to emphasize on ideas behind it or to clarify sections. But in general it is best to write readable code in the first place as comments easily become deprecated.
-
-The doxygen comments should be written in the header files and not in the ```.cpp``` files.
+---
 
 ## Testing
 
-All code contributions must provide unit tests. HyRoDyn uses Google tests as a testing framework. You can find the unit tests in ```test``` folder. Many small tests that check single features are preferred over large tests that test multiple things simultaneously.
+All code contributions must provide unit tests. HyRoDyn uses [GoogleTest](https://github.com/google/googletest).
 
-Bugfixes ideally come with a test case that reproduce the bug.
+Prefer many small tests that check single features over large tests that check multiple things simultaneously.
 
-### Working on a new feature
+### Running the Tests
 
-1. Clone the hyrodyn repository, 
-2. implement the new feature, 
-3. make sure it is properly documented, 
-4. implement a unit test which ensures its correctness, 
-5. run the remaining tests and 
-6. if everything works fine create a pull request.
+```bash
+cd build
+ctest --output-on-failure
+```
 
+Or run the test binary directly:
 
+```bash
+./hyrodyn_tests
+```
 
+The tests expect to be run from the **repository root** (the `CMakeLists.txt` in `test/` sets `WORKING_DIRECTORY` to `${CMAKE_SOURCE_DIR}`).
+
+### Adding a New Test
+
+1. Open `test/test_hyrodyn.cpp`.
+2. Add a `TEST(Hyrodyn, YourTestName)` block.
+3. Use `ASSERT_*` / `EXPECT_*` macros from GoogleTest.
+4. Re-run `make -j && ctest` to verify.
+
+---
+
+## Documentation
+
+API documentation is generated with Doxygen from the header files in `src/`.
+
+```bash
+# From the repository root
+doxygen Doxyfile
+```
+
+HTML output is written to `docs/html/`. Open `docs/html/index.html` in your browser.
+
+When adding new public functions, add a Doxygen comment in the corresponding `.hpp` file following the existing style (see `src/HyRoDyn.hpp`).
+
+---
+
+## Licensing
+
+HyRoDyn is distributed under the [BSD 3-Clause License](LICENSE). There is no formal Contributor License Agreement. By submitting patches or opening a Merge Request you confirm that you have the rights to contribute the corresponding code and that you agree it will be published under this license as part of HyRoDyn.

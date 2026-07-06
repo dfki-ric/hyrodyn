@@ -63,16 +63,7 @@ int main() {
 }
 ```
 
-### Compile and run
-
-```bash
-# From build/
-g++ -std=c++17 my_example.cpp -o my_example \
-    -I../src -L. -lhyrodyn $(pkg-config --cflags --libs eigen3)
-./my_example
-```
-
-Or add the example to `CMakeLists.txt` as a new executable target and use `make`.
+Add the example to `CMakeLists.txt` as a new executable target and use `make`.
 
 ---
 
