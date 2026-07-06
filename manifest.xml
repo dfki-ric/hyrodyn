@@ -1,0 +1,31 @@
+<package>
+  <description brief="HyRoDyn RoCK Library">
+  (Hy)brid (Ro)bot (Dyn)amics is a kinematics and dynamics solver for series-parallel hybrid robots. It exploits modularity in robot design to provide computationally efficient solutions in the robot motion software domain.
+  </description>
+  <author>Shivesh Kumar/shivesh.kumar@dfki.de</author>
+  <maintainer>Rohit Kumar/r.kumar@dfki.de</maintainer>
+  <license>zlib</license>
+  <url>https://git.hb.dfki.de/hyrodyn/hyrodyn</url>
+  <logo>https://git.hb.dfki.de/hyrodyn/hyrodyn/HyRoDyn.png</logo>
+  <depend package="cmake" />
+  <depend package="eigen3" />
+  <depend package="yaml-cpp" />
+  <depend package="boost" />
+  <depend package="tinyxml" />
+  <keywords>
+    <keyword>control</keyword>
+    <keyword>kinematics</keyword>
+    <keyword>dynamics</keyword>
+    <keyword>parallel robots</keyword>
+    <keyword>series-parallel hybrid robots</keyword>
+  </keywords>
+<stage>1</stage>
+<use>multi project</use>
+<activity>active</activity>
+<classifiers>
+    <classifier>c++</classifier>
+    <classifier>python</classifier>
+    <classifier>ubuntu</classifier>
+    <classifier>macos</classifier>
+  </classifiers>
+</package>
