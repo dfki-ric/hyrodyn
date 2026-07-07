@@ -7,10 +7,10 @@ This document provides step-by-step examples of using HyRoDyn from both C++ and 
 ## Table of Contents
 
 - [Key Concepts](#key-concepts)
-- [Tutorial 1 — C++: Load a Robot and Compute Forward Kinematics](#tutorial-1--c-load-a-robot-and-compute-forward-kinematics)
-- [Tutorial 2 — C++: Inverse Dynamics](#tutorial-2--c-inverse-dynamics)
-- [Tutorial 3 — Python: Basic Usage](#tutorial-3--python-basic-usage)
-- [Tutorial 4 — Python: Kinematics and Dynamics](#tutorial-4--python-kinematics-and-dynamics)
+- [Tutorial 1 - C++: Load a Robot and Compute Forward Kinematics](#tutorial-1--c-load-a-robot-and-compute-forward-kinematics)
+- [Tutorial 2 - C++: Inverse Dynamics](#tutorial-2--c-inverse-dynamics)
+- [Tutorial 3 - Python: Basic Usage](#tutorial-3--python-basic-usage)
+- [Tutorial 4 - Python: Kinematics and Dynamics](#tutorial-4--python-kinematics-and-dynamics)
 - [Example Robots](#example-robots)
 
 ---
