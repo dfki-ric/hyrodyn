@@ -172,9 +172,7 @@ void HyRoDyn_Utils::log_sysstate_q() {
     else
       file << "q_" + robot_model->jointnames_spanningtree[i];
   }
-  file << ","
-       << "inv_cond_loop_closure_independent_jointspace"
-       << ","
+  file << "," << "inv_cond_loop_closure_independent_jointspace" << ","
        << "inv_cond_loop_closure_active_jointspace";
   file << endl;
 
@@ -335,23 +333,8 @@ void HyRoDyn_Utils::log_forwardkinematics_x(string body_name) {
   file.exceptions(ofstream::failbit | ofstream::badbit);
 
   // prepare the header for the output file
-  file << "x"
-       << ", "
-       << "y"
-       << ", "
-       << "z"
-       << ", "
-       << "qw"
-       << ", "
-       << "qx"
-       << ", "
-       << "qy"
-       << ", "
-       << "qz"
-       << ", "
-       << "cond1_inv"
-       << ", "
-       << "cond2_inv";
+  file << "x" << ", " << "y" << ", " << "z" << ", " << "qw" << ", " << "qx" << ", " << "qy" << ", "
+       << "qz" << ", " << "cond1_inv" << ", " << "cond2_inv";
   file << endl;
 
   for (uint i = 0; i < pow(num_steps, num_input_joints); i++) {

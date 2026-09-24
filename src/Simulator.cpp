@@ -28,8 +28,7 @@ void Simulator::write_simulation_data_into_csv(const char* filename) {
     abort();
   }
 
-  output_file << "time"
-              << ",";
+  output_file << "time" << ",";
   for (std::size_t i = 0; i < robot_plant.jointnames_spanningtree.size(); ++i) {
     if (i != robot_plant.jointnames_spanningtree.size() - 1)
       output_file << "q_" + robot_plant.jointnames_spanningtree[i] << ",";

@@ -55,15 +55,11 @@ struct Loop_constraints {
 
   /// \brief Print the loop constraint details
   void print_loop_constraints_details() const {
-    cout << "\e[1m"
-         << "<-------Loop Constraints Details------->"
-         << "\e[0m" << endl;
+    cout << "\e[1m" << "<-------Loop Constraints Details------->" << "\e[0m" << endl;
     cout << "Cut joint Name: " << jointname_cut << endl;
     cout << "Predecessor body of the cut joint: " << pred_body << endl;
     cout << "Successor body of the cut joint: " << succ_body << endl;
-    cout << "\e[1m"
-         << "<---Constraint Axes ----> "
-         << "\e[0m" << endl;
+    cout << "\e[1m" << "<---Constraint Axes ----> " << "\e[0m" << endl;
 
     for (uint j = 0; j < constraint_axes.size(); j++) {
       cout << "Constraint " << j + 1 << endl;
