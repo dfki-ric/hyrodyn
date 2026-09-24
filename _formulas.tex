@@ -1,0 +1,272 @@
+\documentclass{article}
+\usepackage{iftex}
+\usepackage{ifthen}
+\usepackage{epsfig}
+\usepackage[utf8]{inputenc}
+\usepackage{xcolor}
+\ifPDFTeX
+\usepackage{newunicodechar}
+  \makeatletter
+    \def\doxynewunicodechar#1#2{%
+    \@tempswafalse
+    \edef\nuc@tempa{\detokenize{#1}}%
+    \if\relax\nuc@tempa\relax
+      \nuc@emptyargerr
+    \else
+      \edef\@tempb{\expandafter\@car\nuc@tempa\@nil}%
+      \nuc@check
+      \if@tempswa
+        \@namedef{u8:\nuc@tempa}{#2}%
+      \fi
+    \fi
+  }
+  \makeatother
+  \doxynewunicodechar{⁻}{${}^{-}$}% Superscript minus
+  \doxynewunicodechar{²}{${}^{2}$}% Superscript two
+  \doxynewunicodechar{³}{${}^{3}$}% Superscript three
+
+\fi
+\pagestyle{empty}
+\begin{document}
+$ \mathbf{q} = \mathbf{\gamma}(\mathbf{y}) $
+\pagebreak
+
+$ \mathbf{G} = \frac{\partial \gamma}{\partial \mathbf{y}} $
+\pagebreak
+
+$ \dot{\mathbf{G}} = \frac{d\mathbf{G}}{dt} $
+\pagebreak
+
+$ {\mathbf{g}} = \dot{\mathbf{G}}\dot{\mathbf{y}} $
+\pagebreak
+
+$\mathbf{q} = \mathbf{M} \mathbf{y} + \mathbf{B} $
+\pagebreak
+
+$ \dot{\mathbf{q}} =
+\mathbf{M} \dot{\mathbf{y}} $
+\pagebreak
+
+$ \ddot{\mathbf{q}} = \mathbf{M}
+\ddot{\mathbf{y}} $
+\pagebreak
+
+$ \mathbf{q} = \gamma(\mathbf{y}) $
+\pagebreak
+
+$ \mathbf{\dot{q}} = \mathbf{G}\mathbf{\dot{y}} $
+\pagebreak
+
+$ \mathbf{\ddot{q}} = \mathbf{G}\mathbf{\ddot{y}} +
+\mathbf{\dot{G}}\dot{\mathbf{y}}$
+\pagebreak
+
+$ \mathbf{u} = \mathbf{Q} \mathbf{q} $
+\pagebreak
+
+$ \mathbf{\dot{u}} = \mathbf{Q} \mathbf{\dot{q}} $
+\pagebreak
+
+$ \mathbf{\ddot{u}} = \mathbf{Q} \mathbf{\ddot{q}} $
+\pagebreak
+
+$ \mathbf{u} = \mathbf{Q} \gamma(\mathbf{y}) $
+\pagebreak
+
+$ \mathbf{\dot{u}} = \mathbf{Q} \mathbf{G} \mathbf{\dot{y}} $
+\pagebreak
+
+$ \mathbf{\ddot{u}} = \mathbf{Q} (\mathbf{G} \mathbf{\dot{y}} +
+\dot{\mathbf{G}} \dot{\mathbf{y}})$
+\pagebreak
+
+$ \mathbf{X}_i = f_i(\mathbf{y}) \quad \forall \quad i \in [1,\ldots, n]$
+\pagebreak
+
+$ \mathbf{X} = f(\mathbf{y})$
+\pagebreak
+
+$ \mathbf{y} = f^{-1}(\mathbf{X})$
+\pagebreak
+
+$ \dot{\mathbf{X}} = \mathbf{J}\mathbf{G}\mathbf{\dot{y}}$
+\pagebreak
+
+$ \dot{\mathbf{X}}_i = \mathbf{J}_i\mathbf{G}\mathbf{\dot{y}} \quad \forall
+\quad i \in [1,\ldots, n]$
+\pagebreak
+
+$ \ddot{\mathbf{X}} = \mathbf{J}\mathbf{G}\mathbf{\ddot{y}} +
+(\mathbf{\dot{J}}\mathbf{G} + \mathbf{J}\mathbf{\dot{G}})\mathbf{\ddot{y}}
+$
+\pagebreak
+
+$ \ddot{\mathbf{X}}_i = \mathbf{J}_i\mathbf{G}\mathbf{\ddot{y}} +
+(\mathbf{\dot{J}}_i\mathbf{G} +
+\mathbf{J}_i\mathbf{\dot{G}})\mathbf{\ddot{y}} \quad \forall \quad i \in
+[1,\ldots, n]$
+\pagebreak
+
+$ \mathbf{V}_s = \mathbf{J}_s(\mathbf{y})
+\mathbf{\dot{q}}$
+\pagebreak
+
+$ \mathbf{V}_b = \mathbf{J}_b(\mathbf{y})
+\mathbf{\dot{q}}$
+\pagebreak
+
+$ \mathbf{V}_s = \mathbf{J}_s(\mathbf{y})
+\mathbf{\dot{y}}$
+\pagebreak
+
+$ \mathbf{V}_b = \mathbf{J}_b(\mathbf{y})
+\mathbf{\dot{y}}$
+\pagebreak
+
+$ \mathbf{V}_s = \mathbf{J}_s(\mathbf{u})
+\mathbf{\dot{u}}$
+\pagebreak
+
+$ \mathbf{V}_b = \mathbf{J}_b(\mathbf{u})
+\mathbf{\dot{u}}$
+\pagebreak
+
+$ \mathbf{v}_s =
+\mathbf{J}_s(\mathbf{y}) \mathbf{\dot{y}}$
+\pagebreak
+
+$ \mathbf{v}_c =
+\mathbf{J}_c(\mathbf{y}) \mathbf{\dot{y}}$
+\pagebreak
+
+$ ^s\mathbf{X}_b = \left( \begin{array}{cc} ^s\mathbf{R}_b & \mathbf{0}
+\\ \mathbf{0} & ^s\mathbf{R}_b \end{array} \right) $
+\pagebreak
+
+$^s\mathbf{X}_b $
+\pagebreak
+
+$ ^s\mathbf{R}_b $
+\pagebreak
+
+$ \mathbf{V}_s =
+^s\mathbf{X}_b \mathbf{V}_b $
+\pagebreak
+
+$ \mathbf{J}_s =
+^s\mathbf{X}_b \mathbf{J}_b $
+\pagebreak
+
+$ \mathbf{W}_s =
+^s\mathbf{X}_b^* \mathbf{W}_b $
+\pagebreak
+
+$ ^s\mathbf{X}_b^* $
+\pagebreak
+
+$ ^s\mathbf{X}_b^* =
+^s\mathbf{X}_b^{-T} $
+\pagebreak
+
+$ \mathbf{G_u} = \mathbf{Q}\mathbf{G}  $
+\pagebreak
+
+$ \mathbf{g} = \dot{\mathbf{G}}\mathbf{\dot{y}} $
+\pagebreak
+
+$ \mathbf{\tau} = \mathbf{C}(\mathbf{q},\mathbf{\dot{q}}) $
+\pagebreak
+
+$ \mathbf{H} = CRBA(\mathbf{q}) $
+\pagebreak
+
+$ \mathbf{\ddot{y}} = (\mathbf{G}^T
+\mathbf{H}\mathbf{G})^{-1}\mathbf{G}^T_u \mathbf{\tau}_u -
+\mathbf{G}^T\mathbf{C} - \mathbf{G}^T \mathbf{H}\mathbf{g} $
+\pagebreak
+
+$ \mathbf{H}_y = \mathbf{G}^T \mathbf{H}\mathbf{G} $
+\pagebreak
+
+$ \mathbf{y} = NewtonRaphson(\mathbf{u}) $
+\pagebreak
+
+$ \mathbf{H}_u = \mathbf{G}_u^{-T} \mathbf{G}^T \mathbf{H}\mathbf{G}
+\mathbf{G}_u^{-1}$
+\pagebreak
+
+$ \mathbf{C} = NonlinearEffects(\mathbf{q}, \mathbf{\dot{q}}) $
+\pagebreak
+
+$ \mathbf{C}_u = \mathbf{G}_u^{-T} \mathbf{G}^T (\mathbf{C} +
+\mathbf{H}\mathbf{g}) $
+\pagebreak
+
+$ \mathbf{\ddot{q}} = \mathbf{G}\mathbf{\ddot{y}} + \mathbf{g} $
+\pagebreak
+
+$ \mathbf{\tau} = \mathbf{M}(\mathbf{q})\mathbf{\ddot{q}} +
+\mathbf{C}(\mathbf{q},\mathbf{\dot{q}}) $
+\pagebreak
+
+$ \mathbf{\tau_y} =
+\mathbf{G}^T \mathbf{\tau} $
+\pagebreak
+
+$ \mathbf{\tau}_u =
+\mathbf{G}^{-1}_u\mathbf{G}^T\mathbf{\tau} $
+\pagebreak
+
+$ \mathbf{\tau}_{ext} = (\mathbf{J}\mathbf{G})^T F_{ext} $
+\pagebreak
+
+$ F_{ext} = (\mathbf{J}\mathbf{G})^{-T} \mathbf{\tau}_{ext} $
+\pagebreak
+
+$ {\mathbf{k}} = -\dot{\mathbf{K}}\dot{\mathbf{q}} $
+\pagebreak
+
+$ \mathbf{C} = (ci: 1<=i<=6)$
+\pagebreak
+
+$ \mathbf{E} = (ei: 1<=i<=6)$
+\pagebreak
+
+$ \mathbf{l} = norm(ei-ci)$
+\pagebreak
+
+$ \mathbf{l} = sum(norm(ei-ci) - l)^2$
+\pagebreak
+
+$ \mathbf{y} = f(\mathbf{u})$
+\pagebreak
+
+$ \mathbf{u} = f^{-1}(\mathbf{y})$
+\pagebreak
+
+$ \mathbf{J} = \mathbf{Q} \frac{\partial \mathbf{\gamma}}{\partial
+\mathbf{y}} $
+\pagebreak
+
+$ \dot{\mathbf{J}} = \frac{d\mathbf{J}}{dt} $
+\pagebreak
+
+$\theta_1 = R + P $
+\pagebreak
+
+$ \theta_2 = R - P $
+\pagebreak
+
+$ \theta_3 = Y $
+\pagebreak
+
+$ \mathbf{q} = \mathbf{M} \mathbf{y} + \mathbf{B} $
+\pagebreak
+
+$ \dot{\mathbf{q}} = \mathbf{M} \dot{\mathbf{y}} $
+\pagebreak
+
+$ \ddot{\mathbf{q}} = \mathbf{M} \ddot{\mathbf{y}} $
+\pagebreak
+
+\end{document}
