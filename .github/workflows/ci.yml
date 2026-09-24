@@ -1,0 +1,90 @@
+name: CI
+
+on:
+  push:
+    paths-ignore:
+      - 'README.md'
+      - 'bin/**'
+      - 'doc/**'
+      - 'docker/**'
+  pull_request:
+    paths-ignore:
+      - 'README.md'
+      - 'bin/**'
+      - 'doc/**'
+      - 'docker/**'
+
+jobs:
+  build_and_test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-22.04, ubuntu-24.04]
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            build-essential \
+            cmake \
+            git \
+            ca-certificates \
+            libeigen3-dev \
+            libyaml-cpp-dev \
+            libboost-all-dev \
+            libtinyxml-dev \
+            libgtest-dev
+
+      - name: Build GTest
+        run: |
+          cd /usr/src/gtest
+          sudo cmake .
+          sudo make -j
+          sudo cp lib/*.a /usr/lib
+
+      - name: Build
+        run: |
+          cmake -S . -B build -DBUILD_TESTING=ON
+          cmake --build build --parallel
+
+      - name: Test
+        run: ./build/test/hyrodyn_tests
+
+  format:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install clang-format
+        run: sudo apt-get update && sudo apt-get install -y clang-format
+
+      - name: Check formatting
+        run: |
+          find src -name '*.cpp' -o -name '*.hpp' \
+            | xargs clang-format --dry-run --Werror
+
+  doxygen:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Generate docs
+        uses: mattnotmitt/doxygen-action@v1.1.0
+        with:
+          doxyfile-path: ./Doxyfile
+          working-directory: .
+
+      - name: Deploy to GitHub Pages
+        if: github.ref == 'refs/heads/main'
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs/doxygen

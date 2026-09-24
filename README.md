@@ -1,6 +1,6 @@
 # Hybrid Robot Dynamics
-[![pipeline status](https://git.hb.dfki.de/hyrodyn/hyrodyn/badges/main/pipeline.svg)](https://git.hb.dfki.de/hyrodyn/hyrodyn/-/pipelines)
-![Ubuntu](https://img.shields.io/badge/Ubuntu-22.04-orange?logo=ubuntu&logoColor=white)
+[![CI](https://github.com/dfki-ric/hyrodyn/actions/workflows/ci.yml/badge.svg)](https://github.com/dfki-ric/hyrodyn/actions/workflows/ci.yml)
+![Ubuntu](https://img.shields.io/badge/Ubuntu-22.04_|_24.04-orange?logo=ubuntu&logoColor=white)
 ![C++](https://img.shields.io/badge/C++-17-blue)
 ![Python](https://img.shields.io/badge/python-3.8+-green)
 ![License](https://img.shields.io/badge/license-BSD--3--Clause-orange)
