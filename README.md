@@ -96,7 +96,7 @@ sudo apt install -y python3-dev python3-pybind11
 ### 1. Clone the Repository
 
 ```bash
-git clone --recursive git@git.hb.dfki.de:hyrodyn/hyrodyn.git
+git clone --recursive git@github.com:dfki-ric/hyrodyn.git
 cd hyrodyn
 ```
 

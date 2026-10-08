@@ -18,7 +18,7 @@ Thank you for your interest in contributing to Hybrid Robot Dynamics (HyRoDyn)! 
 
 ## Reporting Issues
 
-Please open an issue on the [HyRoDyn GitLab repository](https://git.hb.dfki.de/hyrodyn/hyrodyn/-/issues) and include:
+Please open an issue on the [HyRoDyn GitHub repository](https://github.com/dfki-ric/hyrodyn/issues) and include:
 
 - A short, descriptive title.
 - Steps to reproduce the problem.
@@ -34,7 +34,7 @@ Bug reports that come with a failing test case are especially welcome.
 
 1. **Fork / clone** the repository:
    ```bash
-   git clone --recursive git@git.hb.dfki.de:hyrodyn/hyrodyn.git
+   git clone --recursive git@github.com:dfki-ric/hyrodyn.git
    ```
 
 2. **Create a feature branch** from `main` (see [Branch Naming](#branch-naming)).
@@ -46,12 +46,12 @@ Bug reports that come with a failing test case are especially welcome.
 
 5. **Run the full test suite** and make sure everything passes (see [Testing](#testing)).
 
-6. **Open a Merge Request** (MR) against `main`:
-   - Describe *what* the MR changes and *why*.
+6. **Open a Pull Request** (PR) against `main`:
+   - Describe *what* the PR changes and *why*.
    - Reference any related issues (e.g. `Closes #42`).
-   - Keep the MR focused — one logical change per MR.
+   - Keep the PR focused — one logical change per PR.
 
-By submitting a Merge Request you confirm that you have the right to contribute the code and that you accept it being published under the [BSD 3-Clause License](LICENSE).
+By submitting a Pull Request you confirm that you have the right to contribute the code and that you accept it being published under the [BSD 3-Clause License](LICENSE).
 
 ---
 
@@ -185,4 +185,4 @@ When adding new public functions, add a Doxygen comment in the corresponding `.h
 
 ## Licensing
 
-HyRoDyn is distributed under the [BSD 3-Clause License](LICENSE). There is no formal Contributor License Agreement. By submitting patches or opening a Merge Request you confirm that you have the rights to contribute the corresponding code and that you agree it will be published under this license as part of HyRoDyn.
+HyRoDyn is distributed under the [BSD 3-Clause License](LICENSE). There is no formal Contributor License Agreement. By submitting patches or opening a Pull Request you confirm that you have the rights to contribute the corresponding code and that you agree it will be published under this license as part of HyRoDyn.
