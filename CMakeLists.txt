@@ -76,3 +76,11 @@ install(
   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
 install(FILES ${HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/hyrodyn)
+
+install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/addons/urdfreader/urdfreader.h
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/hyrodyn/addons/urdfreader)
+
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/hyrodyn.pc.in
+               ${CMAKE_CURRENT_BINARY_DIR}/hyrodyn.pc @ONLY)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/hyrodyn.pc
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
