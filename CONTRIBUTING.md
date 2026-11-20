@@ -131,6 +131,22 @@ Parameters that are not expected to change must be `const`. Use const references
 
 Use dynamic `VectorXd`/`MatrixXd` only when absolutely necessary. Always initialise them with zeros and a size before use to avoid garbage computations.
 
+### Formatting
+
+All code must be formatted with **clang-format-18** (the default on Ubuntu 24.04 LTS). Install it with:
+
+```bash
+sudo apt-get install clang-format-18
+```
+
+To format all source files in-place:
+
+```bash
+find src -name '*.cpp' -o -name '*.hpp' | xargs clang-format-18 -i
+```
+
+The CI enforces this automatically on every PR.
+
 ### Comments
 
 The doxygen comments belong in the **header files**, not in `.cpp` files.  
